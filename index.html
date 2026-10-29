@@ -480,6 +480,7 @@
     </div>
     <div class="card">
       <h2 tabindex="-1">使用须知 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.9</span></h2>
+        <div class="notice-lang" data-lang="zh">
       <div class="spec">
 
         <div class="spec-item">
@@ -551,6 +552,77 @@
             </div>
           </div>
         </div>
+        <div class="notice-lang" data-lang="en" style="display:none">
+        <div class="spec-item">
+          <div class="spec-h">1. Information &amp; Privacy</div>
+          <div class="spec-pair">
+            <div class="spec-col enc">
+              <div class="spec-tag">Encrypted</div>
+              <p class="fielddesc" style="margin:0;">Fields are encrypted with <b>RSA-2048 + AES-256</b> (whole-block) before being written into the sequence. Until unlocked, no third party — including the platform, anyone forwarding it, or anyone screenshotting it — can read the contents. The decryption key is never transmitted inside the sequence; unlocking depends on the recipient's private key. Whole-block encryption means: you either read <b>all</b> of it, or <b>none</b> of it. There is no "partially readable" state.</p>
+            </div>
+            <div class="spec-col plain">
+              <div class="spec-tag">Not encrypted (Public)</div>
+              <p class="fielddesc" style="margin:0;">Fields are written as <b>short codes in plaintext</b>. Anyone with the sequence can base64-decode it and read all public fields against the code table. Its only purpose is to stop "28 / female / bachelor / ¥10k monthly" from being readable at a glance when you post on a forum or paste into a message. <b>It provides no confidentiality.</b></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-item">
+          <div class="spec-h">2. Server Setup</div>
+          <div class="spec-pair">
+            <div class="spec-col enc">
+              <div class="spec-tag">Encrypted</div>
+              <p class="fielddesc" style="margin:0;"><b>There is no server.</b> The sequence is self-contained ciphertext. Encoding, encryption, matching and decryption all run in your own browser (Web Crypto API). Nothing is uploaded, stored, or logged, and there is no account system. You can spread it through posts, comments or private messages.</p>
+            </div>
+            <div class="spec-col plain">
+              <div class="spec-tag">Not encrypted (Public)</div>
+              <p class="fielddesc" style="margin:0;">Public fields travel with the sequence. Since they are plaintext, whoever obtains it can read them. <b>The spread range equals the visible range</b> — this product cannot control it, and cannot take it back once forwarded.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-item">
+          <div class="spec-h">3. Decryption: Mutual Match, or a Huge Computing Cluster</div>
+          <div class="spec-pair">
+            <div class="spec-col enc">
+              <div class="spec-tag">Encrypted</div>
+              <p class="fielddesc" style="margin:0;">Decryption requires <b>two conditions at once</b>: (1) both sides match each other's criteria, and (2) you hold the matching private key. Under RSA-2048 and AES-256, brute-forcing without the private key would need a huge computing cluster and impractical time — treated as unsolvable in engineering terms. So real strength depends on <b>whether your private key leaks</b>, not on the algorithm itself.</p>
+            </div>
+            <div class="spec-col plain">
+              <div class="spec-tag">Not encrypted (Public)</div>
+              <p class="fielddesc" style="margin:0;">No decryption needed — anyone can read it, at any time. Therefore the public tier must never contain anything you would not want widely seen.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-item">
+          <div class="spec-h">4. Usage Advice</div>
+          <div class="spec-pair">
+            <div class="spec-col enc">
+              <div class="spec-tag">Encrypted (recommended default)</div>
+              <p class="fielddesc" style="margin:0;">Keep sensitive items at the default encrypted tier: age, gender, height, city, income, marital history, housing/car, health, checkup. For contact, use an <b>email address or an anonymous message-board link — never your phone number</b>. Platforms register real names in the backend but keep them private on the frontend, so as long as your number is not written into the sequence, there is no path for real-name leakage.</p>
+            </div>
+            <div class="spec-col plain">
+              <div class="spec-tag">Not encrypted (Public) / Hidden</div>
+              <p class="fielddesc" style="margin:0;">Only make <b>low-sensitivity</b> items public (education, region, long-distance acceptance) so the other side can judge before unlocking. Keep savings and bride-price expectations <b>Hidden</b> — hidden items are not written into the sequence at all, not even the field name. <b>The less you fill in, the more private the sequence.</b></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec-item">
+          <div class="spec-h">5. Data Sources &amp; Assessment Principles</div>
+          <div class="spec-pair">
+            <div class="spec-col enc">
+              <div class="spec-tag">Encrypted</div>
+              <p class="fielddesc" style="margin:0;">Personality results (Big Five + attachment tendency) are encrypted into the sequence by default, visible only after a mutual match. The assessment uses the public academic scale <b>BFI-10 (Rammstedt &amp; John, 2007)</b> plus a simplified attachment self-rating. It is scored <b>only on your device</b> and never uploaded. Results are tendency descriptions, <b>not a psychological diagnosis</b>.</p>
+            </div>
+            <div class="spec-col plain">
+              <div class="spec-tag">Not encrypted (Public)</div>
+              <p class="fielddesc" style="margin:0;">The reality check is estimated from the structure of the <b>7th National Population Census</b> and public income distribution; income is after-tax take-home. These are <b>rough orders of magnitude</b>, not official per-city statistics, and should not be the basis for any decision. All information is <b>self-reported</b> — this product does not verify education, property or marital history.</p>
+            </div>
+          </div>
+        </div>
+        </div>        </div>
 
       </div>
       <div class="mission"><b>产品使命</b>：让红娘成为软件——消除信息壁垒，促进真诚沟通，降低交友成本。</div>
@@ -3751,6 +3823,12 @@ const QUESTIONS_EN=[
 function applyLang(){
   const btn=$('btnLang'); if(btn) btn.textContent=t('lang_btn');
   const sub=$('appSub'); if(sub) sub.textContent=t('app_sub');
+  /* 使用须知：中文 / 英文 两套内容，跟随语言切换 */
+  try{
+    document.querySelectorAll('.notice-lang').forEach(el=>{
+      el.style.display = (el.getAttribute('data-lang')===(LANG==='en'?'en':'zh')) ? 'block' : 'none';
+    });
+  }catch(e){}
   try{ renderQuiz(); renderInfoFields(); renderPcard(); updateStepper(); }catch(e){}
 }
 function overseasWanted(){
