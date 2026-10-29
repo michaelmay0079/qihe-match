@@ -47,7 +47,7 @@ https://github.com/michaelmay0079/qihe-match/settings/pages
 设置：
 
 - **Source**：`Deploy from a branch`
-- **Branch**：选 `main`，目录选 `/ (root)`
+- **Branch**：⚠️ 选 **`master`**（不是 main！这个仓库的默认分支叫 master），目录选 `/ (root)`
 - 点 `Save`
 
 等 1–2 分钟，页面顶部会出现地址：
