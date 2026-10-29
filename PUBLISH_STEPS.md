@@ -56,7 +56,7 @@ https://github.com/michaelmay0079/qihe-match/settings/pages
 https://michaelmay0079.github.io/qihe-match/
 ```
 
-**这就是你要的体验链接。** 打开确认能正常显示首页。
+**这就是你要的体验链接。**（✅ 已上线，2026-10-30 05:54 验证可访问） 打开确认能正常显示首页。
 
 ---
 
@@ -70,7 +70,7 @@ https://michaelmay0079.github.io/qihe-match/
    ```
    改完在 GitHub Desktop 里 commit + push。
 
-2. **SHARE.md** 里所有 `[链接]` 替换成实际地址。
+2. **SHARE.md** 里的链接（✅ 已完成）。
 
 ---
 
