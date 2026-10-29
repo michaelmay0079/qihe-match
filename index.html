@@ -147,12 +147,12 @@
   .note{font-size:var(--fs-xs);color:var(--text-secondary);margin-top:var(--sp-4);
     border-top:1px dashed var(--border-strong);padding-top:var(--sp-3);}
 
-  /* ---------- 折叠面板（使用细则 / 校准参数） ---------- */
+  /* ---------- 折叠面板（使用须知 / 校准参数） ---------- */
   details.fold{border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:10px 12px;background:var(--gray-50);}
   details.fold summary{cursor:pointer;font-size:var(--fs-sm);color:var(--text-secondary);font-weight:600;}
   details.fold[open] summary{margin-bottom:var(--sp-3);}
   .rules li{margin:var(--sp-1) 0;font-size:var(--fs-sm);}
-  /* 使用细则：按特征划分，每条 = 加密 / 不加密 两栏对照（说明书体例） */
+  /* 使用须知：按特征划分，每条 = 加密 / 不加密 两栏对照（说明书体例） */
   .spec{margin-top:var(--sp-2);}
   .spec-item{border-top:1px solid var(--border-subtle);padding:10px 0 2px;}
   .spec-item:first-child{border-top:0;padding-top:0;}
@@ -392,11 +392,7 @@
       <h1 tabindex="-1">契合码</h1>
       <p class="lead">把你的信息编码成一个可传播的「序列」，双向达标，才解锁联系方式。</p>
       <p class="lead2">适用于交友、灵魂伴侣、搭子，不限于相亲——让红娘成为软件，消除信息壁垒。<br>所有资料均为自述，本产品不做学历 / 房产 / 婚史核验。</p>
-      <div class="btnrow" style="margin-top:var(--sp-4);">
-        <button type="button" class="btn-primary" onclick="goTo(2)">开始填写</button>
-        <button type="button" class="btn-ghost" onclick="goTo(7)">我有对方的序列，直接匹配</button>
-        <button type="button" class="btn-ghost" onclick="goTo(8)">说明与资料</button>
-      </div>
+      <p class="fielddesc" style="margin-top:var(--sp-3);">往下看「四种用法」，选一条属于你的路开始 ↓</p>
     </div>
     <div class="card">
       <h2 tabindex="-1">三步完成匹配</h2>
@@ -483,7 +479,7 @@
       </div>
     </div>
     <div class="card">
-      <h2 tabindex="-1">使用细则 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.5</span></h2>
+      <h2 tabindex="-1">使用须知 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.9</span></h2>
       <div class="spec">
 
         <div class="spec-item">
@@ -707,8 +703,8 @@
           <select id="r_housecar"><option>不限</option><option>至少准备购房</option><option>至少一套房</option><option>有房有车</option></select>
         </div>
         <div class="f">
-          <div class="f-head"><label for="r_brideprice">彩礼上限</label><span class="unit">超出则不考虑</span></div>
-          <select id="r_brideprice"><option>不限</option><option>0（不接受）</option><option>10万以内</option><option>10–20万</option><option>20–30万</option><option>30万以上</option><option>视情况</option></select>
+          <div class="f-head"><label for="r_brideprice">彩礼上限</label><span class="unit">高于此值则不考虑</span></div>
+          <select id="r_brideprice"><option>不限</option><option>0（要零彩礼）</option><option>≤10 万</option><option>≤20 万</option><option>≤30 万</option><option>30 万以上也接受</option><option>视情况</option></select>
         </div>
         <div class="f">
           <div class="f-head"><label for="r_fertility">生育意愿匹配</label></div>
@@ -959,7 +955,7 @@
             <div class="f span2"><label for="b_r_income">收入下限</label><select id="b_r_income"></select></div>
             <div class="f"><label for="b_r_marital">婚史接受上限</label><select id="b_r_marital"><option>不限</option><option>仅未婚</option><option>可到短婚未育</option><option>可到离异无孩</option><option>可到离异有孩</option><option>全接受</option></select></div>
             <div class="f"><label for="b_r_housecar">房车要求</label><select id="b_r_housecar"><option>不限</option><option>至少准备购房</option><option>至少一套房</option><option>有房有车</option></select></div>
-            <div class="f"><label for="b_r_brideprice">彩礼上限</label><select id="b_r_brideprice"><option>不限</option><option>0（不接受）</option><option>10万以内</option><option>10–20万</option><option>20–30万</option><option>30万以上</option><option>视情况</option></select></div>
+            <div class="f"><label for="b_r_brideprice">彩礼上限</label><select id="b_r_brideprice"><option>不限</option><option>0（要零彩礼）</option><option>≤10 万</option><option>≤20 万</option><option>≤30 万</option><option>30 万以上也接受</option><option>视情况</option></select></div>
             <div class="f"><label for="b_r_fertility">生育意愿匹配</label><select id="b_r_fertility"><option>不限</option><option>想要 1 个</option><option>想要 2 个</option><option>想要 3 个及以上</option><option>顺其自然</option><option>不想要</option><option>可商量</option></select></div>
           </div>
         </details>
@@ -1354,6 +1350,44 @@
         </div>
 
         <div class="spec-item">
+          <div class="spec-h">十之二、彩礼参考数据（含法律提示）</div>
+          <div class="spec-pair">
+            <div class="spec-col plain">
+              <div class="spec-tag">调研数据（非法律规定）</div>
+              <p class="fielddesc" style="margin:0;">
+                以下为<b>社会调研数据</b>，随年份与统计口径波动，仅供参考，<b>不构成任何标准</b>：<br>
+                · 全国平均彩礼：2024 年约 <b>12.27 万元</b>（他趣《2024彩礼研究报告》）<br>
+                · 省际差异：江西约 12.52 万居首（部分县市 20–30 万）；广西约 6.56 万最低，云南、广东亦偏低<br>
+                · 2025 年青年预期：男性平均 14.3 万、女性 17.0 万；嫁妆预期男 11.0 万、女 13.4 万，彩礼高于嫁妆约 3.4 万<br>
+                · 接受零彩礼比例：男性约 86.6%、女性约 41.4%<br>
+                · 趋势：5 万元以下低彩礼家庭占比，由 2022 年 16% 升至 2025 年约 27.6%
+              </p>
+            </div>
+            <div class="spec-col enc">
+              <div class="spec-tag">名义彩礼 ≠ 实际彩礼（很重要）</div>
+              <p class="fielddesc" style="margin:0;">
+                谈彩礼前先看<b>是否返还</b>，这往往比数字本身更重要：<br>
+                · <b>福建</b>：名义 20–50 万，但女方常以房产、商铺等<b>高额嫁妆等额返还</b><br>
+                · <b>浙江</b>：部分地区<b>全额返还彩礼</b><br>
+                · <b>江西</b>：名义高且<b>普遍不返还</b>，实际负担最重<br>
+                · <b>广东</b>：彩礼低（广府 1–2 万），但潮汕嫁妆丰厚<br>
+                · <b>重庆、西藏</b>：低彩礼或零彩礼，部分以牛羊替代现金<br>
+                <b>建议</b>：谈之前问清三件事——金额是多少、是否返还、是否附带房车要求。只看名义金额容易误判。
+              </p>
+            </div>
+          </div>
+          <div style="margin-top:8px;padding:10px 12px;border:2px solid var(--warning-text);border-radius:var(--radius-sm);background:#fffbeb;">
+            <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">⚖ 法律提示（务必准确理解）</div>
+            <p class="fielddesc" style="margin:0;">
+              · <b>《民法典》第一千零四十二条</b>：禁止借婚姻索取财物（同时禁止包办、买卖婚姻等干涉婚姻自由的行为）。<br>
+              · <b>《最高人民法院关于审理涉彩礼纠纷案件适用法律若干问题的规定》</b>（2024 年 1 月 18 日发布，<b>2024 年 2 月 1 日起施行</b>）：明确<b>以彩礼为名借婚姻索取财物，另一方要求返还的，人民法院应予支持</b>；并明确彩礼与恋爱期间一般赠与的区别，以及不属于彩礼的财物（节日、生日等价值不大的礼物礼金、日常消费性支出等）。<br>
+              · <b>需要注意</b>：自愿赠与的彩礼<b>并不违法</b>；<b>国家没有统一的"法定彩礼上限"</b>。各地出现的"指导价""倡导标准"（如部分治理试点地区 5–8 万元）属于<b>治理倡议或村规民约，不是法律强制规定</b>。<br>
+              · 本页数据仅作参考，<b>不构成法律意见</b>。涉及具体纠纷请咨询专业法律人士或查阅最高人民法院官网原文。
+            </p>
+          </div>
+        </div>
+
+        <div class="spec-item">
           <div class="spec-h">十一、收入分布与期望管理</div>
           <div class="spec-pair">
             <div class="spec-col plain">
@@ -1565,6 +1599,13 @@ function pngReadText(buf){
   }
   return null;
 }
+/* 文件名：嵌入日期时间，便于日后分辨是哪一版
+   形如 qihe-20261030-0540.png */
+function qiheFileName(ext){
+  const d=new Date(), p=n=>String(n).padStart(2,'0');
+  const stamp=d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes());
+  return 'qihe-'+stamp+'.'+ext;
+}
 /* 水印条：把序列以微缩等宽字印在图片底部（可视，肉眼像装饰纹） */
 function drawWatermark(ctx,W,H,wire,seed){
   const stripH=Math.min(96,Math.max(56,Math.round(H*0.085)));
@@ -1619,6 +1660,43 @@ function makePhotoCarrier(wire){
     },'image/png');
   });
 }
+/* ---------- 出生年月 → 自动算年龄 / 属相 / 星座 ----------
+   属相按公历年份推算（农历春节前后出生者可能差一年）；
+   星座按该月中旬日期估算（生日在交界日附近请以实际日期为准）；
+   二者均为民俗展示，不参与匹配计算，也不用于任何运势或命理推断。 */
+function zodiacOf(year){
+  const Z=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+  return Z[((year-4)%12+12)%12];
+}
+function constellOf(month){
+  const C=['白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手','摩羯','水瓶','双鱼'];
+  return C[(month+8)%12];   /* 按每月 15 日估算 */
+}
+function bindBirth(){
+  const ys=$('p_age_y'), ms=$('p_age_m');
+  if(!ys||!ms) return;
+  const calc=()=>{
+    const y=parseInt(ys.value,10), m=parseInt(ms.value,10);
+    const hid=$('p_age'), tip=$('p_age_auto');
+    if(!y||!m){ if(hid) hid.value=''; if(tip) tip.textContent=''; return; }
+    const now=new Date();
+    let age=now.getFullYear()-y;
+    if(now.getMonth()+1<m) age-=1;
+    if(age<18||age>100){ if(hid) hid.value=''; if(tip){ tip.textContent='年龄需在 18–100 岁之间'; tip.style.color='var(--warning-text)'; } return; }
+    if(hid) hid.value=String(age);
+    const z=zodiacOf(y), c=constellOf(m);
+    const pz=$('p_zodiac'); if(pz) pz.value=z;
+    const pc=$('p_constellation'); if(pc) pc.value=c;
+    if(tip){
+      tip.style.color='var(--text-secondary)';
+      tip.textContent='自动算出：'+age+' 岁 · 属'+z+' · '+c+'座（星座按该月中旬估算，交界日附近请以实际日期为准）';
+    }
+    try{ updateHeightRef(); }catch(e){}
+  };
+  ys.addEventListener('change',calc);
+  ms.addEventListener('change',calc);
+}
+
 /* 默认风景图（无照片时用）：矢量绘制，配色由序列哈希决定 */
 function makeLandscapeSVG(wire){
   const seed=carrierSeed(wire);
@@ -1669,7 +1747,7 @@ async function downloadPhotoCarrier(){
     const blob=new Blob([bytes],{type:'image/png'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='qihe-photo-'+Date.now().toString(36)+'.png';
+    a.download=qiheFileName('png');
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ try{URL.revokeObjectURL(a.href);}catch(e){} a.remove(); },1500);
     if(hint){
@@ -1774,7 +1852,7 @@ function downloadCarrier(kind){
     const blob=new Blob([data],{type:(isSvg?'image/svg+xml':'application/pdf')+';charset=utf-8'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='qihe-'+Date.now().toString(36)+'.'+ext;
+    a.download=qiheFileName(ext);
     document.body.appendChild(a); a.click();
     setTimeout(()=>{ try{URL.revokeObjectURL(a.href);}catch(e){} a.remove(); },1500);
     if(hint){
@@ -1921,8 +1999,8 @@ const REQ_MAR={'仅未婚':0,'可到短婚未育':1,'可到离异无孩':2,'可�
 const REQ_MAR_REV={'0':'仅未婚','1':'可到短婚未育','2':'可到离异无孩','4':'可到离异有孩','5':'全接受'};
 const REQ_HC={'至少准备购房':1,'至少一套房':3,'有房有车':4};
 const REQ_HC_REV={'1':'至少准备购房','3':'至少一套房','4':'有房有车'};
-const REQ_BP={'0（不接受）':0,'10万以内':1,'10–20万':2,'20–30万':3,'30万以上':4,'视情况':9};
-const REQ_BP_REV={'0':'0（不接受）','1':'10万以内','2':'10–20万','3':'20–30万','4':'30万以上','9':'视情况'};
+const REQ_BP={'0（要零彩礼）':0,'≤10 万':1,'≤20 万':2,'≤30 万':3,'30 万以上也接受':4,'视情况':9};
+const REQ_BP_REV={'0':'0（要零彩礼）','1':'≤10 万','2':'≤20 万','3':'≤30 万','4':'30 万以上也接受','9':'视情况'};
 
 /* ==================================================================
    编码 / 解码（协议 §1.3 §1.4）
@@ -2209,7 +2287,8 @@ const GROUP_META={
 };
 /* dirs：L1a / L2 不渲染「公开」按钮（SPEC §0.1 + 验收 #3）；L1b / L0 三项都有 */
 const FIELD_DEFS=[
-  {k:'age',g:'A',label:'年龄',ctrl:'number',min:18,max:100,unit:'岁',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'留空则不参与年龄匹配'},
+  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],
+   desc:'选年月即可，<b>年龄、属相、星座会自动算出</b>，不用自己填。留空则不参与年龄匹配'},
   {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
   {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'130–230cm；只作自愿披露，不参与匹配判定。<span id="hrefTip"></span>'},
   {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
@@ -3255,6 +3334,20 @@ function fieldHTML(d){
   if(d.ctrl==='number'){
     ctrl='<input type="number" id="'+pid+'" inputmode="numeric" min="'+d.min+'" max="'+d.max+'" placeholder="'+(d.k==='age'?'如 28':d.k==='height'?'如 165':'留空则不写入')+'">';
     if(d.unit) ctrl='<div class="inrow">'+ctrl+'<span class="unit">'+d.unit+'</span></div>';
+  }else if(d.ctrl==='birth'){
+    const nowY=new Date().getFullYear();
+    let yop='<option value="">年</option>';
+    for(let y=nowY-100;y<=nowY-18;y++){ yop+='<option>'+y+'</option>'; }
+    let mop='<option value="">月</option>';
+    for(let m=1;m<=12;m++){ mop+='<option>'+m+'</option>'; }
+    ctrl='<div class="row">'+
+      '<select id="'+pid+'_y" aria-label="出生年" style="width:auto">'+yop+'</select>'+
+      '<span class="unit">年</span>'+
+      '<select id="'+pid+'_m" aria-label="出生月" style="width:auto">'+mop+'</select>'+
+      '<span class="unit">月</span>'+
+      '<input type="hidden" id="'+pid+'">'+
+      '</div>'+
+      '<div class="fielddesc" id="'+pid+'_auto" style="margin:4px 0 0;"></div>';
   }else if(d.ctrl==='text'){
     ctrl='<input type="text" id="'+pid+'" maxlength="'+(d.maxlen||'')+'" placeholder="留空则不写入">';
   }else if(d.ctrl==='textarea'){
@@ -3324,7 +3417,7 @@ function renderInfoFields(){
   refreshChanged();
   updateRestoreHint();
   updateHeightRef();
-  ['p_gender','p_age'].forEach(id=>{
+  ['p_gender','p_age_y','p_age_m'].forEach(id=>{
     const el2=$(id);
     if(el2&&!el2.dataset.hrefBound){
       el2.dataset.hrefBound='1';
@@ -3332,6 +3425,8 @@ function renderInfoFields(){
       el2.addEventListener('input',updateHeightRef);
     }
   });
+  /* 出生年月 → 自动算年龄 / 属相 / 星座 */
+  try{ bindBirth(); }catch(e){}
 }
 /* 身高参考：按性别 + 年龄段（代际增长按 0.5–1cm/5 年递减估算）
    基准：18–44 岁平均身高 男 169.7 / 女 158.0（中国居民营养与慢性病状况报告 2020）；
