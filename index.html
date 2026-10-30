@@ -389,6 +389,72 @@
   <!-- ================= 屏1 ================= -->
   <section class="screen active" id="screen1">
     <div class="hero">
+      <svg viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;margin-bottom:-4px;" role="img" aria-label="葫芦藤开出心形花，星星点缀，月桂树下两人牵手">
+        <defs>
+          <linearGradient id="heroSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f7f5ff"/>
+            <stop offset="100%" stop-color="#ede9fc"/>
+          </linearGradient>
+          <linearGradient id="heartG2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </linearGradient>
+        </defs>
+        <rect width="680" height="220" rx="14" fill="url(#heroSky)"/>
+        <!-- 星星 -->
+        <g fill="#c9b8f5">
+          <path d="M120 38 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z"/>
+          <path d="M560 30 l2.4 6.5 6.5 2.4 -6.5 2.4 -2.4 6.5 -2.4 -6.5 -6.5 -2.4 6.5 -2.4 z" opacity=".8"/>
+          <path d="M210 68 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" opacity=".6"/>
+          <path d="M480 60 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5 z" opacity=".75"/>
+          <circle cx="300" cy="34" r="2.2" opacity=".7"/>
+          <circle cx="410" cy="44" r="1.8" opacity=".6"/>
+          <circle cx="620" cy="90" r="2" opacity=".55"/>
+          <circle cx="70" cy="95" r="1.8" opacity=".5"/>
+        </g>
+        <!-- 左月桂树 -->
+        <g>
+          <path d="M74 168 C72 150 74 140 76 132" stroke="#8f7bd8" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse cx="60" cy="118" rx="26" ry="20" fill="#b9a7ef"/>
+          <ellipse cx="88" cy="112" rx="24" ry="18" fill="#c9baf5"/>
+          <ellipse cx="73" cy="100" rx="22" ry="17" fill="#d4c8f8"/>
+          <ellipse cx="52" cy="140" rx="7" ry="3.4" fill="#a78bfa" transform="rotate(-32 52 140)"/>
+          <ellipse cx="96" cy="138" rx="7" ry="3.4" fill="#a78bfa" transform="rotate(30 96 138)"/>
+        </g>
+        <!-- 右月桂树（镜像） -->
+        <g>
+          <path d="M606 168 C608 150 606 140 604 132" stroke="#8f7bd8" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse cx="620" cy="118" rx="26" ry="20" fill="#b9a7ef"/>
+          <ellipse cx="592" cy="112" rx="24" ry="18" fill="#c9baf5"/>
+          <ellipse cx="607" cy="100" rx="22" ry="17" fill="#d4c8f8"/>
+          <ellipse cx="628" cy="140" rx="7" ry="3.4" fill="#a78bfa" transform="rotate(32 628 140)"/>
+          <ellipse cx="584" cy="138" rx="7" ry="3.4" fill="#a78bfa" transform="rotate(-30 584 138)"/>
+        </g>
+        <!-- 中央葫芦藤 -->
+        <path d="M340 186 C320 168 356 152 340 134 C326 118 354 104 340 88 C330 76 348 64 340 52"
+              stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>
+        <path d="M340 150 C356 146 362 138 366 130" stroke="#9d7ae8" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M338 112 C322 108 318 100 314 92" stroke="#9d7ae8" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="368" cy="128" rx="6.5" ry="3.2" fill="#8f7bd8" transform="rotate(-24 368 128)"/>
+        <ellipse cx="312" cy="90" rx="6.5" ry="3.2" fill="#8f7bd8" transform="rotate(20 312 90)"/>
+        <!-- 藤顶小葫芦 -->
+        <path d="M340 34 c-5 0 -8 3.4 -8 7.4 c0 3.4 2.4 5.4 2.4 8.4 c0 4 -5 4.6 -5 9.4 c0 6 4.8 9.8 10.6 9.8 c5.8 0 10.6 -3.8 10.6 -9.8 c0 -4.8 -5 -5.4 -5 -9.4 c0 -3 2.4 -5 2.4 -8.4 c0 -4 -3 -7.4 -8 -7.4 z" fill="#b9a7ef" opacity=".95"/>
+        <!-- 心形花三朵 -->
+        <path d="M300 96 c-7 -6 -13 -11 -13 -16 c0 -4.4 3.2 -7 6.6 -7 c2.8 0 5 1.6 6.4 4 c1.4 -2.4 3.6 -4 6.4 -4 c3.4 0 6.6 2.6 6.6 7 c0 5 -6 10 -13 16 z" fill="url(#heartG2)"/>
+        <path d="M382 84 c-5.6 -4.8 -10.4 -8.8 -10.4 -12.8 c0 -3.5 2.6 -5.6 5.3 -5.6 c2.2 0 4 1.3 5.1 3.2 c1.1 -1.9 2.9 -3.2 5.1 -3.2 c2.7 0 5.3 2.1 5.3 5.6 c0 4 -4.8 8 -10.4 12.8 z" fill="url(#heartG2)" opacity=".92"/>
+        <path d="M288 148 c-4.2 -3.6 -7.8 -6.6 -7.8 -9.6 c0 -2.6 1.9 -4.2 4 -4.2 c1.7 0 3 1 3.8 2.4 c0.8 -1.4 2.1 -2.4 3.8 -2.4 c2.1 0 4 1.6 4 4.2 c0 3 -3.6 6 -7.8 9.6 z" fill="url(#heartG2)" opacity=".85"/>
+        <!-- 牵手两人 -->
+        <g fill="#8f7bd8">
+          <circle cx="300" cy="182" r="9"/>
+          <path d="M286 208 C286 194 292 188 300 188 C308 188 314 194 314 208 Z"/>
+        </g>
+        <g fill="#a78bfa">
+          <circle cx="380" cy="182" r="9"/>
+          <path d="M366 208 C366 194 372 188 380 188 C388 188 394 194 394 208 Z"/>
+        </g>
+        <path d="M312 196 C322 190 358 190 368 196" stroke="#7c3aed" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="340" cy="192.5" r="3.2" fill="url(#heartG2)"/>
+      </svg>
       <div class="hero-big" aria-hidden="true">契合</div>
       <h1 tabindex="-1">契合码</h1>
       <p class="lead">把你的信息编码成一个可传播的「序列」，双向达标，才解锁联系方式。</p>
@@ -448,36 +514,26 @@
 
         <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">① 我发布 · 对方匹配 · 对方拿到我</div>
-          <p class="fielddesc" style="margin:0;">
-            我生成图发出去（屏6 选「<b>开放模式</b>」）。<br>
-            对方下载图 → 打开软件 → 判定达标 → <b>当场看到我的联系方式</b>。<br>
-            <b style="color:var(--brand-700);">适合：</b>我愿意主动亮码，让对方来找我。
-          </p>
+          <p class="fielddesc" style="margin:0 0 6px;">我发布 → 对方匹配 → <b>当场看到我</b></p>
+          <p class="fielddesc" style="margin:0;color:var(--brand-700);">适合：我愿意主动亮码，让对方来找我。</p>
         </div>
 
         <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">② 我拿到对方的图 · 我匹配 · 我拿到对方</div>
-          <p class="fielddesc" style="margin:0;">
-            对方设了「开放模式」。<br>
-            我打开软件 → 导入对方的图 → 判定 → <b>当场看到对方联系方式</b>。<br>
-            <b style="color:var(--brand-700);">适合：</b>看到心仪的人，主动上前。
-          </p>
+          <p class="fielddesc" style="margin:0 0 6px;">对方图 → 我匹配 → <b>当场看到对方</b></p>
+          <p class="fielddesc" style="margin:0;color:var(--brand-700);">适合：看到心仪的人，主动上前。</p>
         </div>
 
         <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">③ 我发布 · 对方匹配 · 经第三方地址</div>
-          <p class="fielddesc" style="margin:0;">
-            我设「<b>双向解锁</b>」。对方判定后把 <b>S2 贴到贴吧/评论区</b> → 我拿回来解密 → 生成 <b>S3 贴回原处</b> → 对方解 S3 拿到我。<br>
-            <b style="color:var(--state-encrypted);">好处：</b>我不用公开亮码，还能先看到对方条件再决定。
-          </p>
+          <p class="fielddesc" style="margin:0 0 6px;">我发布 → 对方贴 S2 → 我回 S3 → <b>对方看到我</b></p>
+          <p class="fielddesc" style="margin:0;color:var(--state-encrypted);">好处：不公开亮码，先看对方条件再决定。</p>
         </div>
 
         <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">④ 我拿到对方的图 · 我匹配 · 经第三方地址</div>
-          <p class="fielddesc" style="margin:0;">
-            对方设了「双向解锁」。我判定后把 <b>S2 贴出去</b> → 对方解出 <b>S3 贴回</b> → 我解 S3 拿到对方。<br>
-            <b style="color:var(--state-encrypted);">好处：</b>我先把条件交给对方，对方认可才亮联系方式。
-          </p>
+          <p class="fielddesc" style="margin:0 0 6px;">对方图 → 我贴 S2 → 对方回 S3 → <b>我看到对方</b></p>
+          <p class="fielddesc" style="margin:0;color:var(--state-encrypted);">好处：先交条件，对方认可才亮联系方式。</p>
         </div>
       </div>
 
