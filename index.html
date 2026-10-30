@@ -136,8 +136,14 @@
     z-index:0;pointer-events:none;user-select:none;line-height:1;letter-spacing:-4px;}
   .hero h1{position:relative;z-index:1;font-size:36px;letter-spacing:3px;margin:0 0 var(--sp-2);}
   .hero .lead{position:relative;z-index:1;font-size:var(--fs-lg);max-width:520px;margin:0 0 var(--sp-1);}
-  .hero .lead2{position:relative;z-index:1;font-size:var(--fs-sm);color:var(--text-secondary);max-width:520px;margin:0 0 var(--sp-4);}
-  .flow{display:flex;margin:var(--sp-3) 0;}
+    .hero .lead2{position:relative;z-index:1;font-size:var(--fs-sm);color:var(--text-secondary);max-width:520px;margin:0 0 var(--sp-4);}
+    .hero > *:not(svg):not(.hero-big){position:relative;z-index:1;}
+    /* 四种用法：极简小标题卡片 */
+    .usecards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px;}
+    .ucard{padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-600);border-radius:var(--radius-sm);background:var(--brand-100);}
+    .ucard-t{font-weight:700;font-size:var(--fs-md);margin-bottom:4px;color:var(--gray-900);}
+    .ucard-d{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.5;}
+    .flow{display:flex;margin:var(--sp-3) 0;}
   .flow-step{flex:1;text-align:center;position:relative;padding:0 var(--sp-2);}
   .flow-step:not(:last-child)::after{content:"";position:absolute;top:17px;left:calc(50% + 26px);
     width:calc(100% - 52px);height:2px;background:var(--gray-200);}
@@ -156,6 +162,16 @@
   /* 使用须知：按特征划分，每条 = 加密 / 不加密 两栏对照（说明书体例） */
   .spec{margin-top:var(--sp-2);}
   .spec-item{border-top:1px solid var(--border-subtle);padding:10px 0 2px;}
+  /* 首页折叠面板：把长说明收起来，首屏只留结论 */
+  details.fold{border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--gray-50);}
+  details.fold>summary{cursor:pointer;list-style:none;padding:12px 14px;font-weight:600;font-size:var(--fs-sm);
+    display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  details.fold>summary::-webkit-details-marker{display:none;}
+  details.fold>summary::after{content:'展开 ▾';flex:none;color:var(--text-secondary);
+    font-size:var(--fs-xs);font-weight:400;}
+  details.fold[open]>summary::after{content:'收起 ▴';}
+  details.fold>summary .fold-sub{font-weight:400;font-size:var(--fs-xs);color:var(--text-secondary);}
+  details.fold>.fold-body{padding:0 14px 12px;}
   .spec-item:first-child{border-top:0;padding-top:0;}
   .spec-h{font-weight:600;font-size:var(--fs-md);margin-bottom:6px;}
   .spec-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;}
@@ -301,7 +317,7 @@
   .calempty .tier .tval b{color:var(--gray-500);font-size:var(--fs-xl);}
 
   /* ================= v0.5.1 增量 ================= */
-  .cal-excluded{margin:var(--sp-3) 0 0;padding:11px 14px;background:#fff;border:1px solid #ecd9b6;
+  .cal-excluded{margin:var(--sp-3) 0 0;padding:11px 14px;background:var(--card);border:1px solid var(--border-subtle);
     border-left:3px solid var(--warning);border-radius:var(--radius-md);font-size:var(--fs-sm);color:var(--text-primary);line-height:1.6;}
   .cal-excluded b{color:var(--warning-text);font-weight:700;}
   .judge-list{display:flex;flex-direction:column;gap:2px;margin:var(--sp-2) 0;}
@@ -389,7 +405,7 @@
   <!-- ================= 屏1 ================= -->
   <section class="screen active" id="screen1">
     <div class="hero">
-      <svg viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;margin-bottom:-4px;" role="img" aria-label="葫芦藤开出心形花，星星点缀，月桂树下两人牵手">
+      <svg viewBox="0 0 680 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.4;pointer-events:none;" role="img" aria-label="葫芦藤开出心形花，星星点缀，月桂树下两人牵手">
         <defs>
           <linearGradient id="heroSky" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#f7f5ff"/>
@@ -463,24 +479,10 @@
         <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">这个工具是写给谁的</div>
 
         <p class="fielddesc" style="margin:0;">
-          <b>如果他：</b>想认真找长期伴侣，却缺少可靠途径——<b>直来直去的理工思维、偏好智性交流、圈子窄、不擅长也不想在社交场合周旋</b>。这里不看你会不会说话，只看条件与为人。
+          <b>想认真找长期伴侣，却缺少可靠途径的人</b>——这里不看你社交多会来事，只看条件与为人。资料逐项可选加密，条件不匹配的人根本看不到你；双向都达标才交换联系方式；联系方式建议用邮箱或匿名留言板，<b>不必留手机号</b>。性格测评（大五人格 + 依恋倾向）才是重点：你需要知道相处起来什么感觉，而不是表格上填了什么。
         </p>
-
         <p class="fielddesc" style="margin:8px 0 0;">
-          <b>如果她：</b>在意的往往不是"他收入多少"，而是——<b>这个人值不值得信任、遇事怎么处理、亲密之后是什么样子、会不会认真对待我</b>。<br>
-          你可能担心过这些：说了真实想法被评判、刚接触就被索要联系方式、聊天记录被截图外传、或者遇到只想速成的。<b>这个工具正是针对这些设计的</b>——资料逐项可选加密，条件不匹配的人根本看不到你；双向都达标才交换联系方式；联系方式建议用邮箱或匿名留言板，<b>不必留手机号</b>。
-        </p>
-
-        <p class="fielddesc" style="margin:8px 0 0;">
-          <b>它不只比条件。</b>条件只是门槛，性格测评（大五人格 + 依恋倾向）才是重点——<b>你需要知道的是相处起来什么感觉，而不是表格上填了什么</b>。
-        </p>
-
-        <p class="fielddesc" style="margin:8px 0 0;">
-          <b>它解决不了：</b>碰运气、广撒网、短期关系、搭讪。擅长在很短时间内建立吸引、或只想随便聊聊的人，这里不适合你。
-        </p>
-
-        <p class="fielddesc" style="margin:8px 0 0;">
-          <b>关于时长：</b>完整测评 48 题，约 5–8 分钟。<b>愿意花这几分钟，本身就是一种筛选</b>——它替你挡掉只想速成的人，也替对方证明你是认真的。这不是负担，是门槛。
+          <b>愿意花 5–8 分钟填完 48 题，本身就是一种筛选</b>——它替你挡掉只想速成的人，也向对方证明你是认真的。碰运气、广撒网、短期关系、搭讪，这里不适合。
         </p>
       </div>
       <p class="fielddesc" style="margin-top:var(--sp-3);">往下看「四种用法」，选一条属于你的路开始 ↓</p>
@@ -510,60 +512,49 @@
       <h2 tabindex="-1">四种用法 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">这是本产品的核心，请先看这里</span></h2>
       <p class="fielddesc" style="margin-top:-6px;">同一个软件，分「<b>我发布</b>」和「<b>我匹配</b>」两个方向，各有「<b>直接给码</b>」和「<b>经第三方地址中转</b>」两种方式，合起来就是四条路。<b>你只需要走自己那一条</b>，其余三条不用管。</p>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-top:10px;">
-
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:var(--brand-100);">
-          <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">① 我发布 · 对方匹配 · 对方拿到我</div>
-          <p class="fielddesc" style="margin:0 0 6px;">我发布 → 对方匹配 → <b>当场看到我</b></p>
-          <p class="fielddesc" style="margin:0;color:var(--brand-700);">适合：我愿意主动亮码，让对方来找我。</p>
+      <div class="usecards">
+        <div class="ucard">
+          <div class="ucard-t">我发布（单向）</div>
+          <div class="ucard-d">你发码，对方当场匹配、看到你</div>
         </div>
-
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:var(--brand-100);">
-          <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">② 我拿到对方的图 · 我匹配 · 我拿到对方</div>
-          <p class="fielddesc" style="margin:0 0 6px;">对方图 → 我匹配 → <b>当场看到对方</b></p>
-          <p class="fielddesc" style="margin:0;color:var(--brand-700);">适合：看到心仪的人，主动上前。</p>
+        <div class="ucard">
+          <div class="ucard-t">我发布（双向）</div>
+          <div class="ucard-d">你发码，经第三方地址中转来回</div>
         </div>
-
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:var(--brand-100);">
-          <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">③ 我发布 · 对方匹配 · 经第三方地址</div>
-          <p class="fielddesc" style="margin:0 0 6px;">我发布 → 对方贴 S2 → 我回 S3 → <b>对方看到我</b></p>
-          <p class="fielddesc" style="margin:0;color:var(--state-encrypted);">好处：不公开亮码，先看对方条件再决定。</p>
+        <div class="ucard">
+          <div class="ucard-t">我匹配（单向）</div>
+          <div class="ucard-d">你有对方图，当场匹配、看到对方</div>
         </div>
-
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:var(--brand-100);">
-          <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">④ 我拿到对方的图 · 我匹配 · 经第三方地址</div>
-          <p class="fielddesc" style="margin:0 0 6px;">对方图 → 我贴 S2 → 对方回 S3 → <b>我看到对方</b></p>
-          <p class="fielddesc" style="margin:0;color:var(--state-encrypted);">好处：先交条件，对方认可才亮联系方式。</p>
+        <div class="ucard">
+          <div class="ucard-t">我匹配（双向）</div>
+          <div class="ucard-d">你有对方图，经第三方地址中转</div>
         </div>
       </div>
 
       <div class="note" style="margin-top:12px;">
-        <b>① 与 ② 是「即时」的</b>——当场出结果，适合当面或同一天完成。<br>
-        <b>③ 与 ④ 是「异步」的</b>——中间可能隔几天，靠贴吧/评论区传话。走③④时，软件会<b>强制你导出密钥</b>（第 2 步，不能跳过），因为私钥一丢，对方贴出的码就永远解不开了。<br>
-        <b>可以同时回应很多人</b>：你回应 5 个人会生成 5 份不同的 S2，各自只能被对应的人解开；对方贴回的 S3 里带引用号，软件会告诉你<b>这是谁回的</b>，不用你自己记。<br>
+        你只需走自己那一条路，其余三条不用管。<b>走「双向」路线时，软件会强制你导出密钥</b>——私钥一丢，对方贴回的码就永远解不开。<br>
         <span style="color:var(--warning-text);"><b>不需要账号、不需要服务器、不需要联网</b>——对方拿着图片和你发的软件文件（一个 HTML）就能用。</span>
       </div>
 
-      <div style="margin-top:12px;padding:10px 12px;border:1px dashed var(--border-subtle);border-radius:var(--radius-sm);">
-        <div style="font-weight:600;font-size:var(--fs-sm);margin-bottom:4px;">想打印出来贴相亲角？</div>
-        <p class="fielddesc" style="margin:0;">
-          照片载体是<b>文件</b>，打印会毁掉里面的数据。打印版需要<b>两个二维码并排</b>：<br>
-          左：<b>下载软件</b>（指向发布页的短链接）· 右：<b>我的相亲码</b>（1,300 字符，印 8cm 宽即可扫）。<br>
-          <b style="color:var(--warning-text);">二维码里只放公开的 S1，绝不放私钥</b>——私钥只该待在你自己的电脑里。<br>
-          <span style="opacity:.8;">（二维码生成功能尚未实装，当前版本请用文件传输）</span>
-        </p>
-      </div>
+      <details class="fold" style="margin-top:12px;">
+        <summary><span>想打印贴相亲角？<span class="fold-sub">打印会毁掉载体数据，需改用二维码（待实装）</span></span></summary>
+        <div class="fold-body">
+          <p class="fielddesc" style="margin:0;">
+            照片载体是<b>文件</b>，打印会毁掉数据。打印版需<b>两个二维码并排</b>：左「下载软件」指发布页短链，右「我的相亲码」（约 1,300 字符，印 8cm 宽即可扫）。二维码生成功能尚未实装，当前版本请用<b>文件传输</b>。
+          </p>
+        </div>
+      </details>
 
       <div class="btnrow" style="margin-top:12px;">
-        <button type="button" class="btn-primary" onclick="goTo(2)">我要发布（走 ① 或 ③）</button>
-        <button type="button" class="btn-ghost" onclick="goTo(7)">我要匹配别人的图（走 ② 或 ④）</button>
+        <button type="button" class="btn-primary" onclick="goTo(2)">我要发布（单向 / 双向）</button>
+        <button type="button" class="btn-ghost" onclick="goTo(7)">我要匹配别人的图（单向 / 双向）</button>
       </div>
     </div>
     <div class="card">
-      <h2 tabindex="-1">使用须知 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.9</span></h2>
-
-      <!-- ===== 中文 ===== -->
-      <div class="notice-lang" data-lang="zh">
+      <details class="fold">
+        <summary><span>使用须知 <span class="fold-sub">隐私与加密 · 服务器设置 · 解密原则 · 使用建议 · 数据来源（中/英）</span></span></summary>
+        <div class="fold-body">
+<div class="notice-lang" data-lang="zh">
         <div class="spec">
 
           <div class="spec-item">
@@ -640,7 +631,8 @@
       </div>
 
       <!-- ===== English ===== -->
-      <div class="notice-lang" data-lang="en" style="display:none">
+      
+<div class="notice-lang" data-lang="en" style="display:none">
         <div class="spec">
 
           <div class="spec-item">
@@ -715,12 +707,10 @@
 
         </div>
       </div>
-
+        </div>
+      </details>
       <div class="mission"><b>产品使命</b>：让红娘成为软件——消除信息壁垒，促进真诚沟通，降低交友成本。</div>
-      <div class="note">
-        本页为开源原型（v0.9）：性格测评采用公开学术量表 BFI-44（John &amp; Srivastava, 1999 / Goldberg, 1993；44 题）+ 依恋倾向自评，结果仅供参考，不构成心理诊断。
-        图片隐写高安全层、AI 语义评估、cloud-service 同步为后续里程碑。
-      </div>
+    </div>
     </div>
   </section>
 
@@ -4263,7 +4253,7 @@ function renderCalHTML(c,params){
         cross='<div style="margin-top:4px;color:var(--warning-text);font-weight:600;">⚠ 你要求的收入位置是「前 '+(reqShare*100).toFixed(1)+'%」，而你自己的位置是「前 '+(p*100).toFixed(0)+'%」——相差约 '+
           (p/Math.max(reqShare,1e-6)).toFixed(0)+' 倍。这类跨层匹配现实中极少发生：不是概率低，而是<b>社交圈层本身就不重叠</b>，你们大概率不会出现在彼此的视野里。</div>';
       }
-      selfRef='<div class="fielddesc" style="margin-top:6px;padding:6px 10px;border-left:3px solid var(--brand-400);">你自己填的收入「'+escapeHtml(myInc)+'」，在'+ref.label+'约处于<b>前 '+(p*100).toFixed(0)+'%</b>。这是对方看你的位置，也是你要求对方时的参照——双向都在同一把尺子上。'+cross+netTxt+'</div>';
+      selfRef='<div class="fielddesc" style="margin-top:6px;padding:6px 10px;border-left:3px solid var(--brand-600);">你自己填的收入「'+escapeHtml(myInc)+'」，在'+ref.label+'约处于<b>前 '+(p*100).toFixed(0)+'%</b>。这是对方看你的位置，也是你要求对方时的参照——双向都在同一把尺子上。'+cross+netTxt+'</div>';
     }
   }catch(e){}
   const ageHint=ageNarrowHint();
