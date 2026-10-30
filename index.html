@@ -141,6 +141,7 @@
     .hero > *:not(svg):not(.hero-big){position:relative;z-index:1;}
     /* 四种用法：极简小标题卡片 */
     .usecards{display:grid;grid-auto-flow:column;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,auto);gap:10px;margin-top:10px;}
+  .btnpair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
     .ucard{padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-600);border-radius:var(--radius-sm);background:rgba(243,240,255,0.78);}
     .ucard-t{font-weight:700;font-size:var(--fs-md);margin-bottom:4px;color:var(--gray-900);}
     .ucard-d{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.5;}
@@ -368,6 +369,7 @@
     .flow-step{padding:var(--sp-2) 0;}
     .hero-big{font-size:90px;top:-12px;}
     .usecards{grid-auto-flow:row;grid-template-columns:1fr;grid-template-rows:auto;}
+    .btnpair{grid-template-columns:1fr;}
     .hero h1{font-size:28px;}
     .ghint{display:none;}
     .grp>summary{position:sticky;top:0;background:#fff;z-index:2;}
@@ -528,7 +530,7 @@
         </div>
       </div>
 
-            <div class="usecards" style="margin-top:14px;">
+            <div class="btnpair" style="margin-top:14px;">
         <button type="button" class="btn-primary" style="margin:0;width:100%;" onclick="goTo(2)">我要发布（单向 / 双向）</button>
         <button type="button" class="btn-ghost" style="margin:0;width:100%;background:rgba(227,240,248,0.9);border-color:#0072B2;color:#0b5c8a;" onclick="goTo(7)">我要匹配别人的图（单向 / 双向）</button>
       </div>
