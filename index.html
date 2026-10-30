@@ -140,7 +140,7 @@
     .hero .lead2{position:relative;z-index:1;font-size:var(--fs-sm);color:var(--text-secondary);max-width:520px;margin:0 0 var(--sp-4);}
     .hero > *:not(svg):not(.hero-big){position:relative;z-index:1;}
     /* 四种用法：极简小标题卡片 */
-    .usecards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px;}
+    .usecards{display:grid;grid-auto-flow:column;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,auto);gap:10px;margin-top:10px;}
     .ucard{padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-600);border-radius:var(--radius-sm);background:rgba(243,240,255,0.78);}
     .ucard-t{font-weight:700;font-size:var(--fs-md);margin-bottom:4px;color:var(--gray-900);}
     .ucard-d{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.5;}
@@ -367,7 +367,7 @@
     .flow-step:not(:last-child)::after{top:calc(50% + 26px);left:17px;width:2px;height:calc(100% - 52px);}
     .flow-step{padding:var(--sp-2) 0;}
     .hero-big{font-size:90px;top:-12px;}
-    .usecards{grid-template-columns:1fr;}
+    .usecards{grid-auto-flow:row;grid-template-columns:1fr;grid-template-rows:auto;}
     .hero h1{font-size:28px;}
     .ghint{display:none;}
     .grp>summary{position:sticky;top:0;background:#fff;z-index:2;}
