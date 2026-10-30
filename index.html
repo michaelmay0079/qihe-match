@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>契合码 v0.5 · 交友关系匹配</title>
+<title>契合码 v0.9 · 交友关系匹配</title>
 <style>
   :root{
     --gray-50:#f7f8fc;--gray-100:#eef0f6;--gray-200:#e3e5ec;--gray-300:#e6e8f0;--gray-500:#6b6f7a;--gray-600:#4a4e58;--gray-900:#1d1d28;
@@ -11,6 +11,7 @@
     --green-600:#1d9e75;--green-700:#15785a;--green-100:#e6f4ef;
     --amber-600:#ba7517;--amber-700:#8a5a11;--amber-100:#f9f1e4;
     --red-600:#a32d2d;--red-100:#f7e9e9;
+    --surface-sunken:var(--gray-100);--danger-track:#eccfcf;
     --bg:var(--gray-50);--surface:var(--gray-50);--card:#fff;--text-primary:var(--gray-900);--text-secondary:var(--gray-500);--text-muted:var(--gray-500);
     --border-subtle:var(--gray-200);--border-strong:#c9cdd8;--focus-ring:0 0 0 3px rgba(83,74,183,.18);
     --state-public:var(--green-600);--state-public-bg:var(--green-100);--state-public-text:var(--green-700);
@@ -22,7 +23,7 @@
     --surface-recessed:var(--gray-50);
     --seg-fg-public:var(--state-public-text);--seg-fg-enc:var(--state-encrypted);--seg-fg-hidden:var(--gray-600);
     --seg-h:30px;
-    --button-primary-bg:var(--brand-600);--button-primary-bg-hover:var(--brand-700);--button-ghost-bg:var(--gray-100);--button-ghost-bg-hover:#e2e5ef;
+    --button-primary-bg:var(--brand-600);--button-primary-bg-hover:var(--brand-700);--button-ghost-bg:var(--gray-100);--button-ghost-bg-hover:var(--gray-200);
     --stepper-current-bg:var(--brand-600);--stepper-done-bg:var(--brand-100);
     --fs-2xl:26px;--fs-xl:20px;--fs-lg:15px;--fs-md:14px;--fs-sm:13px;--fs-xs:12px;
     --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
@@ -159,8 +160,8 @@
   .spec-h{font-weight:600;font-size:var(--fs-md);margin-bottom:6px;}
   .spec-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;}
   .spec-col{padding:8px 10px;border-radius:var(--radius-sm);background:var(--gray-50);border-left:3px solid var(--gray-300);}
-  .spec-col.enc{background:#f3f0ff;border-left-color:var(--state-encrypted);}
-  .spec-col.plain{background:#fff7ed;border-left-color:var(--warning-text);}
+  .spec-col.enc{background:var(--brand-100);border-left-color:var(--state-encrypted);}
+  .spec-col.plain{background:var(--warning-bg);border-left-color:var(--warning-text);}
   .spec-tag{font-size:var(--fs-xs);font-weight:700;color:var(--text-secondary);margin-bottom:2px;}
   .spec-col.enc .spec-tag{color:var(--state-encrypted);}
   .spec-col.plain .spec-tag{color:var(--warning-text);}
@@ -333,7 +334,7 @@
     border-radius:var(--radius-md);color:var(--danger);font-size:var(--fs-sm);display:none;}
   .breaker.show{display:block;}
   .breaker b{font-weight:700;font-variant-numeric:tabular-nums;}
-  .breaker-track{margin-top:8px;height:3px;border-radius:var(--radius-pill);background:#eccfcf;overflow:hidden;}
+  .breaker-track{margin-top:8px;height:3px;border-radius:var(--radius-pill);background:var(--danger-track);overflow:hidden;}
   .breaker-track i{display:block;height:100%;background:var(--danger);transform-origin:left;
     animation:breakerRun 15s linear forwards;}
   @keyframes breakerRun{from{transform:scaleX(1)}to{transform:scaleX(0)}}
@@ -445,7 +446,7 @@
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-top:10px;">
 
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:#fafaff;">
+        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">① 我发布 · 对方匹配 · 对方拿到我</div>
           <p class="fielddesc" style="margin:0;">
             我生成图发出去（屏6 选「<b>开放模式</b>」）。<br>
@@ -454,7 +455,7 @@
           </p>
         </div>
 
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:#fafaff;">
+        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--brand-500);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">② 我拿到对方的图 · 我匹配 · 我拿到对方</div>
           <p class="fielddesc" style="margin:0;">
             对方设了「开放模式」。<br>
@@ -463,7 +464,7 @@
           </p>
         </div>
 
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:#f7f5ff;">
+        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">③ 我发布 · 对方匹配 · 经第三方地址</div>
           <p class="fielddesc" style="margin:0;">
             我设「<b>双向解锁</b>」。对方判定后把 <b>S2 贴到贴吧/评论区</b> → 我拿回来解密 → 生成 <b>S3 贴回原处</b> → 对方解 S3 拿到我。<br>
@@ -471,7 +472,7 @@
           </p>
         </div>
 
-        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:#f7f5ff;">
+        <div style="padding:12px;border:1px solid var(--border-subtle);border-left:3px solid var(--state-encrypted);border-radius:var(--radius-sm);background:var(--brand-100);">
           <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">④ 我拿到对方的图 · 我匹配 · 经第三方地址</div>
           <p class="fielddesc" style="margin:0;">
             对方设了「双向解锁」。我判定后把 <b>S2 贴出去</b> → 对方解出 <b>S3 贴回</b> → 我解 S3 拿到对方。<br>
@@ -504,154 +505,164 @@
     </div>
     <div class="card">
       <h2 tabindex="-1">使用须知 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.9</span></h2>
-        <div class="notice-lang" data-lang="zh">
-      <div class="spec">
 
-        <div class="spec-item">
-          <div class="spec-h">一、信息与隐私保密</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">加密</div>
-              <p class="fielddesc" style="margin:0;">字段经 RSA-2048 + AES-256 整块加密后写入序列。未解锁状态下，任何第三方（含平台方、转发者、截图保存者）均无法读取其中内容。解密密钥不在序列中传输，解开内容依赖对方私钥。整块加密意味着：要么完整读到，要么完全读不到，不存在「读出一部分」的中间状态。</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">不加密（公开）</div>
-              <p class="fielddesc" style="margin:0;">字段以短码形式明文写入序列外壳。任何取得序列者均可使用公开工具 base64 解码，并对照码表读出全部公开字段。其唯一作用是避免在贴吧发帖、私信粘贴时被一眼看到「28岁 / 女 / 本科 / 月入1万」，不具备保密性。</p>
+      <!-- ===== 中文 ===== -->
+      <div class="notice-lang" data-lang="zh">
+        <div class="spec">
+
+          <div class="spec-item">
+            <div class="spec-h">一、信息与隐私保密</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">加密</div>
+                <p class="fielddesc" style="margin:0;">字段值经 <b>AES-256-GCM</b> 加密；加密所用的 AES 密钥再由接收方的 <b>RSA-2048 公钥（RSA-OAEP）</b> 封装，并随序列一同传输。私钥仅在生成方本机产生与保存，不写入序列、不上传、不向任何第三方提供。未解锁状态下，序列持有者只能看到密文与已设为公开的字段。整块加密意味着读取结果只有两种：完整读出，或完全读不到，不存在「读出一部分」的中间状态。</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">不加密（公开）</div>
+                <p class="fielddesc" style="margin:0;">字段以短码明文写入序列外壳。任何取得序列者可使用公开工具 base64 解码，并对照码表读出全部公开字段。其作用是避免资料在贴文、评论、私信中被一眼看全，<b>不具备保密性</b>。</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="spec-item">
-          <div class="spec-h">二、服务器设置</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">加密</div>
-              <p class="fielddesc" style="margin:0;">本产品不设服务器。编码、加密、判定、解密全过程在本机浏览器内完成（Web Crypto API），不上传、不落库、不留存日志、无账号体系。序列为自包含密文，可经帖子、评论、私信等任意渠道传播，其安全性不依赖任何中心服务。</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">不加密（公开）</div>
-              <p class="fielddesc" style="margin:0;">公开字段随序列一同传播。因其明文可读，传播范围即等于其可见范围，该范围不受本产品控制，亦无法在转发后回收。凡设为公开的内容，应视为已向所有可能取得该序列的人公开。</p>
+          <div class="spec-item">
+            <div class="spec-h">二、服务器设置</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">加密</div>
+                <p class="fielddesc" style="margin:0;">本产品不设服务器，亦无后端接口、数据库与账号体系。编码、加密、判定、解密全部在本机浏览器内完成（Web Crypto API）。序列为自包含密文，可经任意渠道传播，其安全性不依赖任何中心服务是否在线。</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">不加密（公开）</div>
+                <p class="fielddesc" style="margin:0;">公开字段随序列一同传播，因此传播范围即等于可见范围。该范围不由本产品控制，亦无法在转发后回收。凡设为公开的内容，应视为已向所有可能取得该序列的人公开。</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="spec-item">
-          <div class="spec-h">三、解密原则：双向达标，或超大计算机集群破解</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">加密</div>
-              <p class="fielddesc" style="margin:0;">解密需同时满足两项条件：① 双方条件互相判定达标；② 持有对应私钥。在 RSA-2048 与 AES-256 下，脱离私钥的暴力破解需要超大计算机集群与不可行的耗时，工程上视为不可解。因此加密内容的实际保密强度，取决于私钥是否泄露，而不取决于算法本身。</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">不加密（公开）</div>
-              <p class="fielddesc" style="margin:0;">无需解密，任何时刻、任何人可直接读取。故公开档位不应包含任何不愿被广泛看到的信息。若某项内容你不希望被陌生人完整获知，不应将其设为公开。</p>
+          <div class="spec-item">
+            <div class="spec-h">三、解密原则：双向达标，或超大计算机集群破解</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">加密</div>
+                <p class="fielddesc" style="margin:0;">解密路径有两条，且均不由本产品掌握。① 双方条件互相判定达标后，由持有私钥的一方解开；② 不持有私钥时，需对 RSA-2048 与 AES-256 实施暴力破解——这需要超大计算机集群与不可行的耗时，在可接受时间内不可行。本产品未设置后门，不能代为解密，亦无法找回私钥。私钥一旦泄露，相应内容即失去保护；私钥一旦丢失，相应内容无法恢复。</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">不加密（公开）</div>
+                <p class="fielddesc" style="margin:0;">无需解密，任何取得序列者可在任何时刻直接读取。公开档位不应包含任何不愿被陌生人完整获知的信息。</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="spec-item">
-          <div class="spec-h">四、使用建议</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">加密（推荐默认）</div>
-              <p class="fielddesc" style="margin:0;">年龄、性别、身高、城市、收入、婚史、房车等敏感项建议保持默认加密档。联系方式建议在加密档内填写邮箱或匿名留言板链接，<b>不建议填写手机号</b>——贴吧等平台实行后台实名、前台匿名，账号信息由平台保密登记，只要不将手机号写入序列，即不存在实名信息外泄路径。</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">不加密（公开）/ 隐藏</div>
-              <p class="fielddesc" style="margin:0;">仅建议将学历、地区、异地接受度等低敏感项设为公开，用于让对方在解锁前做初步判断。存款、彩礼期望等建议保持「隐藏」——隐藏项完全不写入序列，连字段本身都不存在。填得越少，序列越隐秘。</p>
+          <div class="spec-item">
+            <div class="spec-h">四、使用建议</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">加密（建议默认）</div>
+                <p class="fielddesc" style="margin:0;">年龄、性别、身高、城市、收入、婚史、房车、健康等敏感项建议保持默认加密档。联系方式建议填写邮箱或匿名留言板链接；<b>不建议填写手机号</b>——手机号一经写入序列，其可见范围即等同于序列的传播范围。</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">不加密（公开）/ 隐藏</div>
+                <p class="fielddesc" style="margin:0;">仅建议将学历、地区、异地接受度等低敏感项设为公开，用于让对方在解锁前做初步判断。存款、彩礼期望建议保持「隐藏」：隐藏项完全不写入序列，连字段本身都不存在。所有字段均可留空，留空项不写入序列。</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="spec-item">
-          <div class="spec-h">五、数据来源及测评原则</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">加密</div>
-              <p class="fielddesc" style="margin:0;">性格测评结果（大五人格 + 依恋倾向）默认加密写入序列，仅双向达标后对方可见。测评采用公开学术量表 <b>BFI-44</b>（Big Five Inventory, John &amp; Srivastava 1999 / Goldberg 1993；44 题，含 16 道反向题）与依恋倾向自评，仅在本机计分，不上传。结果为倾向描述，不构成心理诊断。</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">不加密（公开）</div>
-              <p class="fielddesc" style="margin:0;">现实校准基于第七次全国人口普查结构与收入分布公开要点推算，收入按到手（税后）口径。该数值为粗估量级，非官方逐城统计，不作为任何决策依据。所有资料均为自述，本产品不做学历 / 房产 / 婚史核验。</p>
+          <div class="spec-item">
+            <div class="spec-h">五、数据来源及测评原则</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">加密</div>
+                <p class="fielddesc" style="margin:0;">性格测评结果（大五人格 + 依恋倾向）默认加密写入序列，仅双向达标后对方可见。测评采用公开学术量表 <b>BFI-44</b>（John &amp; Srivastava, 1999 / Goldberg, 1993；44 题）与依恋倾向自评，共 48 题，仅在本机计分，不上传。结果为倾向描述，不构成心理诊断，亦不作为能力或品行评价。</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">不加密（公开）</div>
+                <p class="fielddesc" style="margin:0;">现实校准的数值来自第七次全国人口普查结构要点与公开收入分布推算，收入按到手（税后）口径。结果为粗估量级，非官方逐城统计，仅供认知锚定，不作为任何决策依据。本产品不核验任何资料，所有内容均为用户自述。</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="notice-lang" data-lang="en" style="display:none">
-        <div class="spec-item">
-          <div class="spec-h">1. Information &amp; Privacy</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">Encrypted</div>
-              <p class="fielddesc" style="margin:0;">Fields are encrypted with <b>RSA-2048 + AES-256</b> (whole-block) before being written into the sequence. Until unlocked, no third party — including the platform, anyone forwarding it, or anyone screenshotting it — can read the contents. The decryption key is never transmitted inside the sequence; unlocking depends on the recipient's private key. Whole-block encryption means: you either read <b>all</b> of it, or <b>none</b> of it. There is no "partially readable" state.</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">Not encrypted (Public)</div>
-              <p class="fielddesc" style="margin:0;">Fields are written as <b>short codes in plaintext</b>. Anyone with the sequence can base64-decode it and read all public fields against the code table. Its only purpose is to stop "28 / female / bachelor / ¥10k monthly" from being readable at a glance when you post on a forum or paste into a message. <b>It provides no confidentiality.</b></p>
-            </div>
-          </div>
-        </div>
 
-        <div class="spec-item">
-          <div class="spec-h">2. Server Setup</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">Encrypted</div>
-              <p class="fielddesc" style="margin:0;"><b>There is no server.</b> The sequence is self-contained ciphertext. Encoding, encryption, matching and decryption all run in your own browser (Web Crypto API). Nothing is uploaded, stored, or logged, and there is no account system. You can spread it through posts, comments or private messages.</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">Not encrypted (Public)</div>
-              <p class="fielddesc" style="margin:0;">Public fields travel with the sequence. Since they are plaintext, whoever obtains it can read them. <b>The spread range equals the visible range</b> — this product cannot control it, and cannot take it back once forwarded.</p>
-            </div>
-          </div>
         </div>
-
-        <div class="spec-item">
-          <div class="spec-h">3. Decryption: Mutual Match, or a Huge Computing Cluster</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">Encrypted</div>
-              <p class="fielddesc" style="margin:0;">Decryption requires <b>two conditions at once</b>: (1) both sides match each other's criteria, and (2) you hold the matching private key. Under RSA-2048 and AES-256, brute-forcing without the private key would need a huge computing cluster and impractical time — treated as unsolvable in engineering terms. So real strength depends on <b>whether your private key leaks</b>, not on the algorithm itself.</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">Not encrypted (Public)</div>
-              <p class="fielddesc" style="margin:0;">No decryption needed — anyone can read it, at any time. Therefore the public tier must never contain anything you would not want widely seen.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="spec-item">
-          <div class="spec-h">4. Usage Advice</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">Encrypted (recommended default)</div>
-              <p class="fielddesc" style="margin:0;">Keep sensitive items at the default encrypted tier: age, gender, height, city, income, marital history, housing/car, health, checkup. For contact, use an <b>email address or an anonymous message-board link — never your phone number</b>. Platforms register real names in the backend but keep them private on the frontend, so as long as your number is not written into the sequence, there is no path for real-name leakage.</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">Not encrypted (Public) / Hidden</div>
-              <p class="fielddesc" style="margin:0;">Only make <b>low-sensitivity</b> items public (education, region, long-distance acceptance) so the other side can judge before unlocking. Keep savings and bride-price expectations <b>Hidden</b> — hidden items are not written into the sequence at all, not even the field name. <b>The less you fill in, the more private the sequence.</b></p>
-            </div>
-          </div>
-        </div>
-
-        <div class="spec-item">
-          <div class="spec-h">5. Data Sources &amp; Assessment Principles</div>
-          <div class="spec-pair">
-            <div class="spec-col enc">
-              <div class="spec-tag">Encrypted</div>
-              <p class="fielddesc" style="margin:0;">Personality results (Big Five + attachment tendency) are encrypted into the sequence by default, visible only after a mutual match. The assessment uses the public academic scale <b>BFI-44 (John &amp; Srivastava, 1999 / Goldberg, 1993; 44 items)</b> plus a simplified attachment self-rating. It is scored <b>only on your device</b> and never uploaded. Results are tendency descriptions, <b>not a psychological diagnosis</b>.</p>
-            </div>
-            <div class="spec-col plain">
-              <div class="spec-tag">Not encrypted (Public)</div>
-              <p class="fielddesc" style="margin:0;">The reality check is estimated from the structure of the <b>7th National Population Census</b> and public income distribution; income is after-tax take-home. These are <b>rough orders of magnitude</b>, not official per-city statistics, and should not be the basis for any decision. All information is <b>self-reported</b> — this product does not verify education, property or marital history.</p>
-            </div>
-          </div>
-        </div>
-        </div>        </div>
-
       </div>
+
+      <!-- ===== English ===== -->
+      <div class="notice-lang" data-lang="en" style="display:none">
+        <div class="spec">
+
+          <div class="spec-item">
+            <div class="spec-h">1. Information and Privacy</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">Encrypted</div>
+                <p class="fielddesc" style="margin:0;">Field values are encrypted with <b>AES-256-GCM</b>. The AES key is then wrapped with the recipient's <b>RSA-2048 public key (RSA-OAEP)</b> and travels with the sequence. The private key is generated and stored only on its owner's device: it is never written into the sequence, never uploaded, and never disclosed to any third party. Until unlocked, a holder of the sequence sees only ciphertext and the fields set to public. Encryption is whole-block: the result is either fully readable or not readable at all. There is no partially readable state.</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">Not encrypted (Public)</div>
+                <p class="fielddesc" style="margin:0;">Field values are written as short codes in plaintext. Anyone with the sequence can base64-decode it and read every public field against the code table. Its purpose is to stop a profile from being readable at a glance in a post, comment or private message. <b>It provides no confidentiality.</b></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-item">
+            <div class="spec-h">2. Server Setup</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">Encrypted</div>
+                <p class="fielddesc" style="margin:0;">This product has no server, no backend API, no database and no account system. Encoding, encryption, matching and decryption all run inside your browser (Web Crypto API). The sequence is self-contained ciphertext; it can travel through any channel, and its security does not depend on any central service being online.</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">Not encrypted (Public)</div>
+                <p class="fielddesc" style="margin:0;">Public fields travel with the sequence. The range of its spread is therefore the range of its visibility. This product does not control that range and cannot recall content once it has been forwarded. Treat anything set to public as disclosed to everyone who may obtain the sequence.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-item">
+            <div class="spec-h">3. Decryption: Mutual Match, or a Very Large Computing Cluster</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">Encrypted</div>
+                <p class="fielddesc" style="margin:0;">There are two decryption paths, neither of which this product controls. (1) After both sides match each other's criteria, the holder of the private key unlocks the content. (2) Without the private key, one would have to brute-force RSA-2048 and AES-256 — this requires a very large computing cluster and impractical time, and is not feasible within an acceptable period. This product contains no backdoor, cannot decrypt on your behalf, and cannot recover a lost private key. If a private key leaks, the corresponding content loses its protection; if it is lost, the content cannot be recovered.</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">Not encrypted (Public)</div>
+                <p class="fielddesc" style="margin:0;">No decryption is required. Anyone holding the sequence can read it at any time. The public tier must not contain anything you would not want a stranger to read in full.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-item">
+            <div class="spec-h">4. Usage Advice</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">Encrypted (recommended default)</div>
+                <p class="fielddesc" style="margin:0;">Keep sensitive items at the default encrypted tier: age, gender, height, city, income, marital history, housing and car, and health. For contact details, use an email address or an anonymous message-board link. <b>A phone number is not recommended</b>: once written into the sequence, its visibility equals the spread of the sequence.</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">Not encrypted (Public) / Hidden</div>
+                <p class="fielddesc" style="margin:0;">Set only low-sensitivity items to public (education, region, acceptance of long distance) so that the other side can make a preliminary judgement before unlocking. Keep savings and bride-price expectations set to <b>Hidden</b>: hidden items are not written into the sequence at all, not even the field itself. Every field may be left blank; blank fields are not written into the sequence.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-item">
+            <div class="spec-h">5. Data Sources and Assessment Principles</div>
+            <div class="spec-pair">
+              <div class="spec-col enc">
+                <div class="spec-tag">Encrypted</div>
+                <p class="fielddesc" style="margin:0;">Personality results (Big Five and attachment tendency) are encrypted into the sequence by default and are visible only after a mutual match. The assessment uses the public academic scale <b>BFI-44</b> (John &amp; Srivastava, 1999 / Goldberg, 1993; 44 items) plus an attachment self-rating, 48 items in total, scored only on your device and never uploaded. Results are tendency descriptions, not a psychological diagnosis, and not an evaluation of ability or character.</p>
+              </div>
+              <div class="spec-col plain">
+                <div class="spec-tag">Not encrypted (Public)</div>
+                <p class="fielddesc" style="margin:0;">The reality-check figures are derived from the structure of the Seventh National Population Census and public income-distribution data; income is stated on an after-tax, take-home basis. The figures are rough orders of magnitude, not official per-city statistics. They are provided for orientation only and are not a basis for decisions. This product does not verify any information; all content is self-reported.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <div class="mission"><b>产品使命</b>：让红娘成为软件——消除信息壁垒，促进真诚沟通，降低交友成本。</div>
       <div class="note">
-        本页为开源原型（v0.5）：性格测评采用公开学术量表 BFI-44（John &amp; Srivastava, 1999 / Goldberg, 1993；44 题）+ 依恋倾向自评，结果仅供参考，不构成心理诊断。
+        本页为开源原型（v0.9）：性格测评采用公开学术量表 BFI-44（John &amp; Srivastava, 1999 / Goldberg, 1993；44 题）+ 依恋倾向自评，结果仅供参考，不构成心理诊断。
         图片隐写高安全层、AI 语义评估、cloud-service 同步为后续里程碑。
       </div>
     </div>
@@ -945,7 +956,7 @@
       </div>
 
       <!-- 第 2 步：导出密钥（异步模式强制） -->
-      <div id="exportStep" style="display:none;margin-top:var(--sp-4);padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:#fffbeb;">
+      <div id="exportStep" style="display:none;margin-top:var(--sp-4);padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:var(--warning-bg);">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
           <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--warning-text);color:#fff;font-size:12px;font-weight:700;">2</span>
           <b style="font-size:var(--fs-sm);">导出密钥备份 —— 这一步不能跳过</b>
@@ -1068,7 +1079,7 @@
           </div>
 
           <!-- B 侧第 2 步：导出回应密钥（必须） -->
-          <div id="respExportStep" style="margin-top:10px;padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:#fffbeb;">
+          <div id="respExportStep" style="margin-top:10px;padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:var(--warning-bg);">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
               <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--warning-text);color:#fff;font-size:12px;font-weight:700;">2</span>
               <b style="font-size:var(--fs-sm);">导出回应密钥 —— 这一步不能跳过</b>
@@ -1128,14 +1139,14 @@
   <!-- ================= 屏8 说明与资料 ================= -->
   <section class="screen" id="screen8">
     <div class="card">
-      <h2 tabindex="-1">说明与资料 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.5</span></h2>
+      <h2 tabindex="-1">说明与资料 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">版本 v0.9</span></h2>
       <p class="fielddesc" style="margin-top:-6px;">本页汇总版本信息、原理说明、使用建议与参考资料链接。所有外部链接仅供参考，本产品不对其内容负责。</p>
 
       <div class="spec">
         <div class="spec-item">
           <div class="spec-h">一、版本信息</div>
           <p class="fielddesc" style="margin:0;">
-            契合码 <b>v0.5</b>（序列协议 v3）· 单文件离线原型 · 无后端、无账号、无数据上传。<br>
+            契合码 <b>v0.9</b>（序列协议 v3）· 单文件离线原型 · 无后端、无账号、无数据上传。<br>
             加密实现：RSA-2048（会话密钥封装）+ AES-256-GCM（内容整块加密），基于浏览器 Web Crypto API。<br>
             性格测评：BFI-44 大五人格完整版（Big Five Inventory, John &amp; Srivastava 1999 / Goldberg 1993；44 题 + 依恋 4 题，约 5–8 分钟）。<br>
             数据口径：第七次全国人口普查结构 + 收入分布公开要点粗估，收入按到手（税后）口径。<br>
@@ -1332,7 +1343,7 @@
 
         <div class="spec-item">
           <div class="spec-h">八之二、异地恋与异国恋：请先看风险</div>
-          <div style="padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-sm);background:#fffbeb;">
+          <div style="padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-sm);background:var(--warning-bg);">
             <p class="fielddesc" style="margin:0 0 8px;">
               <b>两个人的差异，远不止距离。</b>成长环境、文化逻辑、道德观念、生活习惯、甚至一日三餐吃什么——这些是二三十年沉淀下来的东西，不是靠喜欢就能抹平的。<b>指望只靠"三观相符"就让差异巨大的两个人善终，近乎异想天开。</b>
             </p>
@@ -1504,7 +1515,7 @@
               </p>
             </div>
           </div>
-          <div style="margin-top:8px;padding:10px 12px;border:2px solid var(--warning-text);border-radius:var(--radius-sm);background:#fffbeb;">
+          <div style="margin-top:8px;padding:10px 12px;border:2px solid var(--warning-text);border-radius:var(--radius-sm);background:var(--warning-bg);">
             <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">⚖ 法律提示（务必准确理解）</div>
             <p class="fielddesc" style="margin:0;">
               · <b>《民法典》第一千零四十二条</b>：禁止借婚姻索取财物（同时禁止包办、买卖婚姻等干涉婚姻自由的行为）。<br>
