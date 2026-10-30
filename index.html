@@ -70,6 +70,7 @@
   .card h2{font-size:var(--fs-lg);margin:0 0 var(--sp-3);font-weight:600;}
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-3) var(--sp-4);}
   .f{display:flex;flex-direction:column;gap:var(--sp-1);min-width:0;}
+  .grid > .f:nth-child(even){background:rgba(248,247,252,0.7);}
   .f .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
   .fielddesc{font-size:var(--fs-xs);color:var(--text-secondary);}
   input[type=text],input[type=number],select,textarea{width:100%;border:1px solid var(--border-subtle);
@@ -193,6 +194,7 @@
 
   /* ---------- 屏3：性格测评 ---------- */
   .qrow{display:flex;gap:var(--sp-2);align-items:center;padding:var(--sp-2) 0;border-bottom:1px dashed var(--border-subtle);flex-wrap:wrap;}
+  .qrow:nth-of-type(even){background:rgba(247,248,252,0.85);border-radius:var(--radius-sm);}
   .qrow:last-of-type{border-bottom:none;}
   .qtext{flex:1;min-width:220px;font-size:var(--fs-sm);}
   .likert{display:flex;gap:6px;align-items:center;}
@@ -2153,6 +2155,7 @@ const FIELD_CODE={age:'a',gender:'g',height:'ht',edu:'e',region:'r',city:'l',
   asset:'as',brideprice:'bp',spend:'sp',
   longdist:'ld',zodiac:'z',constellation:'cs',intro:'in',personality:'p',contact:'x',
   smoking:'sm',drinking:'dk',mahjong:'mj',fishing:'fh',
+  weight:'wt',child_sex:'ch',
   reading:'rd',pcgame:'pg',mobilegame:'mb',sports:'st'};
 const FIELD_CODE_REV={}; for(const k in FIELD_CODE) FIELD_CODE_REV[FIELD_CODE[k]]=k;
 
@@ -2162,13 +2165,15 @@ const FIELD_TYPE={age:'int',gender:'enum',height:'int',edu:'enum',region:'enum',
   car:'enum',asset:'enum',brideprice:'enum',spend:'enum',
   longdist:'enum',zodiac:'enum',constellation:'enum',intro:'str',
   smoking:'enum',drinking:'enum',mahjong:'enum',fishing:'enum',
+  weight:'int',child_sex:'enum',
   reading:'str',pcgame:'str',mobilegame:'str',sports:'str',
   personality:'str',contact:'str'};
 const FIELD_RANGE={age:[18,100],height:[130,230],gender:[1,2],edu:[0,5],region:[1,5],
   income:[0,8],marital:[0,5],fertility:[0,5],marry_timeline:[0,3],health:[0,3],checkup:[0,4],housecar:[0,4],house:[0,3],car:[0,2],
   asset:[1,5],spend:[0,5],
   zodiac:[0,11],constellation:[0,11],
-  smoking:[0,4],drinking:[0,4],mahjong:[0,2],fishing:[0,2]};
+  smoking:[0,4],drinking:[0,4],mahjong:[0,2],fishing:[0,2],
+  weight:[30,150],child_sex:[0,3]};
 const FIELD_STRLEN={city:20,intro:200,personality:200,contact:200};
 /* 要求端专用值域（必须与信息端分离：复用信息端 130–230 会让「最高 240」被静默丢弃） */
 const REQ_RANGE={height:[100,250]};
@@ -2198,6 +2203,7 @@ const VAL_CODE={
   drinking:{'不喝酒':0,'偶尔（社交）':1,'每周 1–2 次':2,'每周 3 次以上':3,'几乎每天':4},
   mahjong:{'不玩':0,'偶尔':1,'经常':2},
   fishing:{'不玩':0,'偶尔':1,'经常':2},
+  child_sex:{'无':0,'有男孩':1,'有女孩':2,'男女都有':3},
   spend:{'2000以内':0,'2001–4000':1,'4001–6000':2,'6001–8000':3,'8001–1万':4,'1万以上':5},
   brideprice:{'0（不要）':0,'10万以内':1,'10–20万':2,'20–30万':3,'30万以上':4,'视情况':9},
   longdist:{'接受异地':0,'仅同城':1,'同省可接受':2},
@@ -2505,15 +2511,17 @@ const GROUP_META={
 };
 /* dirs：L1a / L2 不渲染「公开」按钮（SPEC §0.1 + 验收 #3）；L1b / L0 三项都有 */
 const FIELD_DEFS=[
-  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],
+  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'public',dirs:['encrypted','hidden'],
    desc:'选年月即可，<b>年龄、属相、星座会自动算出</b>，不用自己填。留空则不参与年龄匹配'},
-  {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
-  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'130–230cm；只作自愿披露，不参与匹配判定。<span id="hrefTip"></span>'},
+  {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'public',dirs:['encrypted','hidden']},
+  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'public',dirs:['encrypted','hidden'],desc:'130–230cm；只作自愿披露，不参与匹配判定。<span id="hrefTip"></span>'},
+  {k:'weight',g:'A',label:'体重',ctrl:'number',min:30,max:150,unit:'kg',L:'L1a',def:'public',dirs:['public','encrypted','hidden'],desc:'行业基本信息，建议保持公开'},
   {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
-  {k:'region',g:'A',label:'地区',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
+  {k:'region',g:'A',label:'地点',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
   {k:'city',g:'A',label:'城市',ctrl:'text',maxlen:20,L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
 
   {k:'marital',g:'B',label:'婚史',ctrl:'select',opts:['未婚','短婚未育','离异无孩','离异有孩（归对方）','离异有孩（自己抚养）','丧偶'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
+  {k:'child_sex',g:'B',label:'孩子性别',ctrl:'select',opts:['无','有男孩','有女孩','男女都有'],L:'L1a',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'离异带孩子的填这项；不带孩子选「无」'},
   {k:'fertility',g:'B',label:'生育意愿',ctrl:'select',opts:['想要 1 个','想要 2 个','想要 3 个及以上','顺其自然','不想要','可商量'],L:'L1b',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'含数量倾向；判定按「是否可调和」，数量不同只提示沟通、不算不合格'},
   {k:'health',g:'B',label:'健康状况',ctrl:'select',opts:['健康','有慢性病（可控）','有既往病史（已愈）','不便告知'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'自述项，本产品不做核验；仅作自愿披露'},
   {k:'checkup',g:'B',label:'近期体检',ctrl:'select',opts:['一年內已体检（正常）','一年內已体检（有异常项）','两年内体检过','两年以上未体检','不便告知'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'自述项；建议在确认关系前交换正规体检报告，不以本项替代'},
