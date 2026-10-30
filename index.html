@@ -681,7 +681,7 @@
       </details>
 
       <details class="grp" data-group="D">
-        <summary><span class="gdot">D</span><span class="gname">其他</span><span class="gdots" id="dots_D"></span><span class="gcount" id="cnt_D">已填 0/6</span><span class="ghint">默认 公开（介绍/性格码加密且不可公开）</span><span class="chev"></span></summary>
+        <summary><span class="gdot">D</span><span class="gname">补充与生活习惯</span><span class="gdots" id="dots_D"></span><span class="gcount" id="cnt_D">已填 0/14</span><span class="ghint">默认 公开（介绍/性格码加密且不可公开）</span><span class="chev"></span></summary>
         <div class="grid" id="grid_D"></div>
       </details>
 
@@ -2061,7 +2061,9 @@ const CODER_VER='1', PROTO_VER=3, WIRE_PREFIX='QH3.';
 const FIELD_CODE={age:'a',gender:'g',height:'ht',edu:'e',region:'r',city:'l',
   marital:'m',fertility:'f',marry_timeline:'mt',health:'he',checkup:'cu',income:'n',housecar:'hc',house:'hs',car:'cr',
   asset:'as',brideprice:'bp',spend:'sp',
-  longdist:'ld',zodiac:'z',constellation:'cs',intro:'in',personality:'p',contact:'x'};
+  longdist:'ld',zodiac:'z',constellation:'cs',intro:'in',personality:'p',contact:'x',
+  smoking:'sm',drinking:'dk',mahjong:'mj',fishing:'fh',
+  reading:'rd',pcgame:'pg',mobilegame:'mb',sports:'st'};
 const FIELD_CODE_REV={}; for(const k in FIELD_CODE) FIELD_CODE_REV[FIELD_CODE[k]]=k;
 
 /* 注意：下面三张表一律按【长字段名】索引，encodeField/decodeField 的入参也是长名 */
@@ -2069,11 +2071,14 @@ const FIELD_TYPE={age:'int',gender:'enum',height:'int',edu:'enum',region:'enum',
   marital:'enum',fertility:'enum',marry_timeline:'enum',health:'enum',checkup:'enum',income:'enum',housecar:'enum',house:'enum',
   car:'enum',asset:'enum',brideprice:'enum',spend:'enum',
   longdist:'enum',zodiac:'enum',constellation:'enum',intro:'str',
+  smoking:'enum',drinking:'enum',mahjong:'enum',fishing:'enum',
+  reading:'str',pcgame:'str',mobilegame:'str',sports:'str',
   personality:'str',contact:'str'};
 const FIELD_RANGE={age:[18,100],height:[130,230],gender:[1,2],edu:[0,5],region:[1,4],
   income:[0,8],marital:[0,5],fertility:[0,5],marry_timeline:[0,3],health:[0,3],checkup:[0,4],housecar:[0,4],house:[0,3],car:[0,2],
   asset:[1,5],spend:[0,5],
-  zodiac:[0,11],constellation:[0,11]};
+  zodiac:[0,11],constellation:[0,11],
+  smoking:[0,4],drinking:[0,4],mahjong:[0,2],fishing:[0,2]};
 const FIELD_STRLEN={city:20,intro:200,personality:200,contact:200};
 /* 要求端专用值域（必须与信息端分离：复用信息端 130–230 会让「最高 240」被静默丢弃） */
 const REQ_RANGE={height:[100,250]};
@@ -2081,6 +2086,9 @@ const REQ_RANGE={height:[100,250]};
 const INC_LABEL=['2000及以下','2001–3000','3001–4500','4501–6000','6001–8000',
   '8001–9999','1万–1.5万','1.5万–2万','2万以上'];
 const INC_LOWER=[0,2001,3001,4501,6001,8001,10000,15000,20000];
+const SMOKING=['不吸烟','偶尔（社交场合）','每天半包以内','每天约一包','每天一包以上'];
+const DRINKING=['不喝酒','偶尔（社交）','每周 1–2 次','每周 3 次以上','几乎每天'];
+const FREQ3=['不玩','偶尔','经常'];
 const ZODIAC=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
 const CONSTELL=['白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手','摩羯','水瓶','双鱼'];
 
@@ -2096,6 +2104,10 @@ const VAL_CODE={
   house:{'无':0,'有房（贷款中）':1,'有房（无贷）':2,'多套':3},
   car:{'无':0,'代步车':1,'中高档':2},
   asset:{'无':1,'10万以内':2,'10–50万':3,'50–100万':4,'100万以上':5},
+  smoking:{'不吸烟':0,'偶尔（社交场合）':1,'每天半包以内':2,'每天约一包':3,'每天一包以上':4},
+  drinking:{'不喝酒':0,'偶尔（社交）':1,'每周 1–2 次':2,'每周 3 次以上':3,'几乎每天':4},
+  mahjong:{'不玩':0,'偶尔':1,'经常':2},
+  fishing:{'不玩':0,'偶尔':1,'经常':2},
   spend:{'2000以内':0,'2001–4000':1,'4001–6000':2,'6001–8000':3,'8001–1万':4,'1万以上':5},
   brideprice:{'0（不要）':0,'10万以内':1,'10–20万':2,'20–30万':3,'30万以上':4,'视情况':9},
   longdist:{'接受异地':0,'仅同城':1,'同省可接受':2},
@@ -2426,6 +2438,14 @@ const FIELD_DEFS=[
   {k:'brideprice',g:'C',label:'彩礼期望',ctrl:'select',opts:['0（不要）','10万以内','10–20万','20–30万','30万以上','视情况'],L:'L2',def:'hidden',dirs:['encrypted','hidden']},
 
   {k:'longdist',g:'D',label:'异地接受度',ctrl:'select',opts:['接受异地','同省可接受','仅同城'],L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'只是自述，不参与自动判定；A 解密后会看到这一项'},
+  {k:'smoking',g:'D',label:'吸烟',ctrl:'select',opts:SMOKING,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'按程度选择'},
+  {k:'drinking',g:'D',label:'喝酒',ctrl:'select',opts:DRINKING,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'按程度选择'},
+  {k:'mahjong',g:'D',label:'打麻将',ctrl:'select',opts:FREQ3,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'娱乐习惯'},
+  {k:'fishing',g:'D',label:'钓鱼',ctrl:'select',opts:FREQ3,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'休闲习惯'},
+  {k:'reading',g:'D',label:'读书',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每月 2 本，偏好历史与科幻」'},
+  {k:'pcgame',g:'D',label:'电脑游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「几乎不玩」'},
+  {k:'mobilegame',g:'D',label:'手机游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填'},
+  {k:'sports',g:'D',label:'运动',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每周跑步两次」'},
   {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'intro',g:'D',label:'自我介绍',ctrl:'textarea',maxlen:200,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'≤200 字，本项不做荒谬拦截（「我属猪」是正常自述）'},
