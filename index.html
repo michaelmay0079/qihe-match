@@ -103,6 +103,8 @@
   .btn-ghost:hover{background:var(--button-ghost-bg-hover);}
   button:disabled{cursor:not-allowed;transform:none;}
   .btn-primary:disabled,.btn-ghost:disabled{background:var(--gray-200);color:var(--gray-600);opacity:1;}
+  /* 禁用是「状态」不是「可交互变化」：不要从紫色渐变成灰，瞬间到位 */
+  .btn-primary:disabled,.btn-ghost:disabled{transition:none;}
   .btn-sm{padding:5px 11px;font-size:var(--fs-sm);}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:var(--sp-3);}
 
@@ -231,6 +233,17 @@
   .sec-t{font-size:var(--fs-lg);font-weight:600;}
   .sec{padding-top:var(--sp-2);margin-bottom:var(--sp-4);}
   .sec + .sec{border-top:1px dashed var(--border-strong);padding-top:var(--sp-4);}
+  /* ---- v0.9 屏7 两身份分区 ---- */
+  .pick{margin:10px 0 14px;padding:10px 12px;border:1px solid var(--border-subtle);
+        border-radius:var(--radius-md);background:var(--gray-50);}
+  .pick-t{font-weight:600;font-size:var(--fs-sm);margin-bottom:6px;}
+  .zone{scroll-margin-top:12px;border-radius:var(--radius-md);
+        transition:background-color 300ms var(--ease),box-shadow 300ms var(--ease);}
+  .zone.hl{background:var(--brand-100);box-shadow:0 0 0 10px var(--brand-100);}
+  .zone-h{font-size:var(--fs-lg);font-weight:600;margin:0 0 var(--sp-1);line-height:1.45;}
+  .zone + .zone{border-top:1px solid var(--border-strong);padding-top:var(--sp-4);margin-top:var(--sp-4);}
+  @media(max-width:640px){ .pick .btn-ghost{flex:1 0 100%;} }
+  @media(prefers-reduced-motion:reduce){ .zone{transition:none;} }
 
   /* ================= v0.5 新增：分组折叠 ================= */
   .grp{border:1px solid var(--border-subtle);border-radius:var(--radius-md);margin-bottom:var(--sp-3);background:#fff;overflow:hidden;}
@@ -1086,143 +1099,146 @@
   <section class="screen" id="screen7">
     <div class="card">
       <h2 tabindex="-1">匹配握手</h2>
-      <p class="fielddesc" style="margin-top:-6px;">你和对方各用自己的电脑或手机。下面三段对应「发布方 A」与「回应方 B」的操作，<b>你只需要走自己那一侧</b>。先看清四张图你属于哪一种：</p>
+      <p class="fielddesc" style="margin-top:-6px;">你和对方各用自己的电脑或手机。<b>先选你现在的身份，只用其中一区。</b></p>
 
-      <div style="margin:10px 0 14px;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--gray-50);">
-        <div style="font-weight:600;font-size:var(--fs-sm);margin-bottom:6px;">四种用法：先分清你手里有什么、你想拿到什么</div>
-
-        <div style="font-size:var(--fs-sm);line-height:1.7;">
-          <div style="margin-bottom:6px;"><b>① 我发布 · 对方匹配 · 对方拿到我的联系方式</b><br>
-          <span class="fielddesc" style="display:block;margin:0;">前提：我在屏6 把联系方式设为「<b>开放模式</b>」。对方下载我的图 → 打开软件 → 判定达标 → <b>当场看到我的联系方式</b>。<br>
-          适合：我愿意主动亮出联系方式，让对方来找我。</span></div>
-
-          <div style="margin-bottom:6px;"><b>② 我拿到对方的图 · 我匹配 · 我拿到对方联系方式</b><br>
-          <span class="fielddesc" style="display:block;margin:0;">前提：对方设了「开放模式」。我做第 1 段（粘贴 S1 → 判定）→ <b>当场看到对方联系方式</b>。<br>
-          适合：看到心仪的对象，主动去匹配。</span></div>
-
-          <div style="margin-bottom:6px;"><b>③ 我发布 · 对方匹配 · 经第三方地址二次交换</b><br>
-          <span class="fielddesc" style="display:block;margin:0;">前提：我设了「<b>双向解锁</b>」。对方判定后把 <b>S2 贴到公开的地方</b>（贴吧回帖、评论区、群里）→ 我把 S2 拿回来解密（第 2 段）→ 生成 <b>S3 贴回同一处</b> → 对方解 S3 拿到我的联系方式。<br>
-          <b>好处</b>：我不用公开亮码，对方的 S2 我也能先看到他的条件再决定。</span></div>
-
-          <div style="margin-bottom:0;"><b>④ 我拿到对方的图 · 我匹配 · 经第三方地址二次交换</b><br>
-          <span class="fielddesc" style="display:block;margin:0;">前提：对方设了「双向解锁」。我做第 1 段生成 <b>S2 贴到公开的地方</b> → 对方解密后生成 <b>S3 贴回</b> → 我在第 3 段解 S3，拿到对方联系方式。<br>
-          <b>好处</b>：我先把条件交给对方，对方判定达标才亮联系方式。</span></div>
+      <!-- 二选一引导：只跳转，不隐藏任何分区 -->
+      <div class="pick">
+        <div class="pick-t">你手里现在有什么？</div>
+        <div class="btnrow" style="margin-top:0;">
+          <button type="button" class="btn-ghost" aria-controls="zoneResponder" onclick="focusZone('zoneResponder')">我拿到了别人发的码或图</button>
+          <button type="button" class="btn-ghost" aria-controls="zonePublisher" onclick="focusZone('zonePublisher')">对方回应了我之前发的码</button>
         </div>
-
-        <p class="fielddesc" style="margin:8px 0 0;padding-top:6px;border-top:1px dashed var(--border-subtle);">
-          <b>③④ 的关键提醒</b>：二次交换是<b>异步</b>的，可能间隔几天。中间如果你清空了浏览器数据，私钥就没了，对方贴出的码你将永远解不开。所以走③④之前，先去屏6 <b>导出密钥备份</b>存好。
-        </p>
       </div>
 
-      <div class="sec">
-        <div class="sec-h"><span class="sec-num">1</span><span class="sec-t">B 视角：收到 S1，判定并回传 S2</span></div>
-        <label style="font-size:var(--fs-sm);">B：粘贴发布者的 S1</label>
-        <textarea id="in_s1" placeholder="在此粘贴发布者的 S1 序列（QH3. 开头，旧版 {&quot;v&quot;:2… 也支持）"></textarea>
-        <div class="btnrow" style="margin:6px 0 0;">
-          <span class="fielddesc" style="margin:0;">收到的是 SVG / PDF 载体文件？</span>
-          <button type="button" class="btn-ghost btn-sm" onclick="document.getElementById('carrierFile').click()">选择文件并自动提取</button>
-          <input type="file" id="carrierFile" accept=".svg,.pdf,.txt,.png,image/svg+xml,application/pdf,text/plain,image/png" style="display:none" onchange="loadCarrier(this)">
-          <span class="hint" id="hint_carrier_in"></span>
-        </div>
-        <div class="errmsg" id="err_in_s1"></div>
-        <div class="grid" style="margin-top:10px;">
-          <div class="f"><label for="b_age">B 年龄</label><input type="number" id="b_age" value="27" inputmode="numeric"></div>
-          <div class="f"><label for="b_gender">B 性别</label><select id="b_gender"><option value="">未披露</option><option>女</option><option>男</option></select></div>
-          <div class="f"><label for="b_region">B 地区</label><select id="b_region"><option value="">未披露</option><option>一线</option><option>新一线</option><option>二线</option><option>三线</option><option>县域农村</option></select></div>
-          <div class="f"><label for="b_edu">B 学历</label><select id="b_edu"><option value="">未披露</option><option>初中及以下</option><option>高中</option><option>大专</option><option>本科</option><option>硕士</option><option>博士及以上</option></select></div>
-          <div class="f"><label for="b_income">B 月收入（税后）</label><select id="b_income"></select><div class="errmsg" id="err_b_income">该数值超出可表示范围。</div></div>
-          <div class="f"><label for="b_spend">B 月支出（税后）</label><select id="b_spend"><option value="">未披露</option><option>2000以内</option><option>2001–4000</option><option>4001–6000</option><option>6001–8000</option><option>8001–1万</option><option>1万以上</option></select></div>
-          <div class="f"><label for="b_height">B 身高 cm</label><input type="number" id="b_height" value="165" inputmode="numeric"></div>
-          <div class="f"><label for="b_marital">B 婚史</label><select id="b_marital"><option value="">未披露</option><option>未婚</option><option>短婚未育</option><option>离异无孩</option><option>离异有孩（归对方）</option><option>离异有孩（自己抚养）</option><option>丧偶</option></select></div>
-          <div class="f"><label for="b_housecar">B 房车总览</label><select id="b_housecar"><option value="">未披露</option><option>有房有车</option><option>有房无车</option><option>有车无房</option><option>准备购房</option><option>无房无车</option></select></div>
-          <div class="f"><label for="b_brideprice">B 彩礼期望</label><select id="b_brideprice"><option value="">未披露</option><option>0（不要）</option><option>10万以内</option><option>10–20万</option><option>20–30万</option><option>30万以上</option><option>视情况</option></select></div>
-          <div class="f"><label for="b_fertility">B 生育意愿</label><select id="b_fertility"><option value="">未披露</option><option>想要 1 个</option><option>想要 2 个</option><option>想要 3 个及以上</option><option>顺其自然</option><option>不想要</option><option>可商量</option></select></div>
-          <div class="f"><label for="b_health">B 健康状况</label><select id="b_health"><option value="">未披露</option><option>健康</option><option>有慢性病（可控）</option><option>有既往病史（已愈）</option></select></div>
-          <div class="f"><label for="b_checkup">B 近期体检</label><select id="b_checkup"><option value="">未披露</option><option>一年內已体检（正常）</option><option>一年內已体检（有异常项）</option><option>两年内体检过</option><option>两年以上未体检</option></select></div>
-        </div>
+      <!-- ================= 分区 A：我是回应方 ================= -->
+      <div class="zone" id="zoneResponder">
+        <h3 class="zone-h">我是回应方 · 我拿到了别人发的码或图</h3>
+        <p class="fielddesc">如果你拿到的是<b>别人</b>发出来的图或一串码，用这一区。<br>
+          你要做两步：先给出你的回应（第 1 步），等对方回复后再解锁对方的联系方式（第 2 步）。两步之间可能隔几天。</p>
 
-        <details class="fold" style="margin-top:var(--sp-3);">
-          <summary>B 的要求（用于双向判定，可留空 = 不限）</summary>
+        <div class="sec">
+          <div class="sec-h"><span class="sec-num">1</span><span class="sec-t">第 1 步 · 给对方我的回应</span></div>
+          <label for="in_s1" style="font-size:var(--fs-sm);">粘贴对方的码</label>
+          <textarea id="in_s1" placeholder="把对方发出来的那串码整段粘贴进来（以 QH3. 开头）"></textarea>
+          <div class="btnrow" style="margin:6px 0 0;">
+            <span class="fielddesc" style="margin:0;">收到的是图片 / PDF / SVG 载体文件？</span>
+            <button type="button" class="btn-ghost btn-sm" onclick="document.getElementById('carrierFile').click()">选择文件并自动提取</button>
+            <input type="file" id="carrierFile" accept=".svg,.pdf,.txt,.png,image/svg+xml,application/pdf,text/plain,image/png" style="display:none" onchange="loadCarrier(this)">
+            <span class="hint" id="hint_carrier_in"></span>
+          </div>
+          <div class="errmsg" id="err_in_s1" role="alert"></div>
+
+          <div class="fielddesc" style="margin:12px 0 6px;font-weight:600;color:var(--text-primary);font-size:var(--fs-sm);">我的资料（用于让对方判断我是否达标）</div>
           <div class="grid">
-            <div class="f"><label for="b_r_gender">要求性别</label><select id="b_r_gender"><option value="">不限</option><option>女</option><option>男</option></select></div>
-            <div class="f"><label for="b_r_ageMin">要求年龄区间</label>
-              <div class="row"><input type="number" id="b_r_ageMin" inputmode="numeric" style="width:60px" placeholder="最小" aria-label="B 最小年龄"><span>~</span><input type="number" id="b_r_ageMax" inputmode="numeric" style="width:60px" placeholder="最大" aria-label="B 最大年龄"></div></div>
-            <div class="f"><label for="b_r_region">要求地区</label><select id="b_r_region"><option>不限</option><option>一线</option><option>新一线</option><option>二线</option><option>三线</option><option>县域农村</option></select></div>
-            <div class="f"><label for="b_r_edu">学历下限</label><select id="b_r_edu"><option>不限</option><option>初中及以下</option><option>高中</option><option>大专</option><option>本科</option><option>硕士</option><option>博士及以上</option></select></div>
-            <div class="f span2"><label for="b_r_income">收入下限</label><select id="b_r_income"></select></div>
-            <div class="f"><label for="b_r_marital">婚史接受上限</label><select id="b_r_marital"><option>不限</option><option>仅未婚</option><option>可到短婚未育</option><option>可到离异无孩</option><option>可到离异有孩</option><option>全接受</option></select></div>
-            <div class="f"><label for="b_r_housecar">房车要求</label><select id="b_r_housecar"><option>不限</option><option>至少准备购房</option><option>至少一套房</option><option>有房有车</option></select></div>
-            <div class="f"><label for="b_r_brideprice">彩礼上限</label><select id="b_r_brideprice"><option>不限</option><option>0（要零彩礼）</option><option>≤10 万</option><option>≤20 万</option><option>≤30 万</option><option>30 万以上也接受</option><option>视情况</option></select></div>
-            <div class="f"><label for="b_r_fertility">生育意愿匹配</label><select id="b_r_fertility"><option>不限</option><option>想要 1 个</option><option>想要 2 个</option><option>想要 3 个及以上</option><option>顺其自然</option><option>不想要</option><option>可商量</option></select></div>
-          </div>
-        </details>
-
-        <div class="btnrow"><button type="button" class="btn-primary" id="btnGenS2" onclick="uiGenS2()">B：判定并生成 S2</button></div>
-        <div class="out" id="out_s2" style="display:none;"></div>
-        <div id="out_s2_open" style="display:none;margin-top:var(--sp-3);"></div>
-        <div id="s2CipherBlock" style="display:none;">
-          <label style="font-size:var(--fs-sm);">S2 密文（复制回传给 A）</label>
-          <div class="out" id="out_s2_cipher"></div>
-          <div class="btnrow">
-            <button type="button" class="btn-ghost" onclick="copy('out_s2_cipher')">复制 S2</button>
-            <span class="hint" id="hint_out_s2_cipher">S2 已复制 ✓</span>
+            <div class="f"><label for="b_age">我的年龄</label><input type="number" id="b_age" value="27" inputmode="numeric"></div>
+            <div class="f"><label for="b_gender">我的性别</label><select id="b_gender"><option value="">未披露</option><option>女</option><option>男</option></select></div>
+            <div class="f"><label for="b_region">我的地区</label><select id="b_region"><option value="">未披露</option><option>一线</option><option>新一线</option><option>二线</option><option>三线</option><option>县域农村</option></select></div>
+            <div class="f"><label for="b_edu">我的学历</label><select id="b_edu"><option value="">未披露</option><option>初中及以下</option><option>高中</option><option>大专</option><option>本科</option><option>硕士</option><option>博士及以上</option></select></div>
+            <div class="f"><label for="b_income">我的月收入（税后）</label><select id="b_income"></select><div class="errmsg" id="err_b_income">该数值超出可表示范围。</div></div>
+            <div class="f"><label for="b_spend">我的月支出（税后）</label><select id="b_spend"><option value="">未披露</option><option>2000以内</option><option>2001–4000</option><option>4001–6000</option><option>6001–8000</option><option>8001–1万</option><option>1万以上</option></select></div>
+            <div class="f"><label for="b_height">我的身高 cm</label><input type="number" id="b_height" value="165" inputmode="numeric"></div>
+            <div class="f"><label for="b_marital">我的婚史</label><select id="b_marital"><option value="">未披露</option><option>未婚</option><option>短婚未育</option><option>离异无孩</option><option>离异有孩（归对方）</option><option>离异有孩（自己抚养）</option><option>丧偶</option></select></div>
+            <div class="f"><label for="b_housecar">我的房车总览</label><select id="b_housecar"><option value="">未披露</option><option>有房有车</option><option>有房无车</option><option>有车无房</option><option>准备购房</option><option>无房无车</option></select></div>
+            <div class="f"><label for="b_brideprice">我的彩礼期望</label><select id="b_brideprice"><option value="">未披露</option><option>0（不要）</option><option>10万以内</option><option>10–20万</option><option>20–30万</option><option>30万以上</option><option>视情况</option></select></div>
+            <div class="f"><label for="b_fertility">我的生育意愿</label><select id="b_fertility"><option value="">未披露</option><option>想要 1 个</option><option>想要 2 个</option><option>想要 3 个及以上</option><option>顺其自然</option><option>不想要</option><option>可商量</option></select></div>
+            <div class="f"><label for="b_health">我的健康状况</label><select id="b_health"><option value="">未披露</option><option>健康</option><option>有慢性病（可控）</option><option>有既往病史（已愈）</option></select></div>
+            <div class="f"><label for="b_checkup">我的近期体检</label><select id="b_checkup"><option value="">未披露</option><option>一年內已体检（正常）</option><option>一年內已体检（有异常项）</option><option>两年内体检过</option><option>两年以上未体检</option></select></div>
           </div>
 
-          <!-- B 侧第 2 步：导出回应密钥（必须） -->
-          <div id="respExportStep" style="margin-top:10px;padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:var(--warning-bg);">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-              <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--warning-text);color:#fff;font-size:12px;font-weight:700;">2</span>
-              <b style="font-size:var(--fs-sm);">导出回应密钥 —— 这一步不能跳过</b>
+          <details class="fold" style="margin-top:var(--sp-3);">
+            <summary>我的要求（用于双向判定，可留空 = 不限）</summary>
+            <div class="grid">
+              <div class="f"><label for="b_r_gender">要求性别</label><select id="b_r_gender"><option value="">不限</option><option>女</option><option>男</option></select></div>
+              <div class="f"><label for="b_r_ageMin">要求年龄区间</label>
+                <div class="row"><input type="number" id="b_r_ageMin" inputmode="numeric" style="width:60px" placeholder="最小" aria-label="我的最小年龄"><span>~</span><input type="number" id="b_r_ageMax" inputmode="numeric" style="width:60px" placeholder="最大" aria-label="我的最大年龄"></div></div>
+              <div class="f"><label for="b_r_region">要求地区</label><select id="b_r_region"><option>不限</option><option>一线</option><option>新一线</option><option>二线</option><option>三线</option><option>县域农村</option></select></div>
+              <div class="f"><label for="b_r_edu">学历下限</label><select id="b_r_edu"><option>不限</option><option>初中及以下</option><option>高中</option><option>大专</option><option>本科</option><option>硕士</option><option>博士及以上</option></select></div>
+              <div class="f span2"><label for="b_r_income">收入下限</label><select id="b_r_income"></select></div>
+              <div class="f"><label for="b_r_marital">婚史接受上限</label><select id="b_r_marital"><option>不限</option><option>仅未婚</option><option>可到短婚未育</option><option>可到离异无孩</option><option>可到离异有孩</option><option>全接受</option></select></div>
+              <div class="f"><label for="b_r_housecar">房车要求</label><select id="b_r_housecar"><option>不限</option><option>至少准备购房</option><option>至少一套房</option><option>有房有车</option></select></div>
+              <div class="f"><label for="b_r_brideprice">彩礼上限</label><select id="b_r_brideprice"><option>不限</option><option>0（要零彩礼）</option><option>≤10 万</option><option>≤20 万</option><option>≤30 万</option><option>30 万以上也接受</option><option>视情况</option></select></div>
+              <div class="f"><label for="b_r_fertility">生育意愿匹配</label><select id="b_r_fertility"><option>不限</option><option>想要 1 个</option><option>想要 2 个</option><option>想要 3 个及以上</option><option>顺其自然</option><option>不想要</option><option>可商量</option></select></div>
             </div>
-            <p class="fielddesc" style="margin:0 0 8px;">
-              你把 S2 贴出去后，对方可能<b>过几天</b>才把 S3 贴回来。解锁 S3 要用你这台电脑里的私钥。<br>
-              清缓存、换设备、无痕模式都会让私钥消失——那样对方贴出的 S3 你<b>永远解不开</b>。<br>
-              所以：<b>现在导出一次，存到手机或网盘</b>（几 KB 的 JSON 文件）。
-            </p>
-            <div class="btnrow" style="margin:0;flex-wrap:wrap;">
-              <button type="button" class="btn-primary btn-sm" onclick="exportProfiles()">导出密钥备份（必须）</button>
-              <span class="fielddesc" id="respExportHint" style="margin:0;"></span>
+          </details>
+
+          <div class="btnrow"><button type="button" class="btn-primary" id="btnGenS2" onclick="uiGenS2()">判定并生成我的回应码</button></div>
+          <div class="out" id="out_s2" style="display:none;"></div>
+          <div id="out_s2_open" style="display:none;margin-top:var(--sp-3);"></div>
+          <div id="s2CipherBlock" style="display:none;">
+            <label style="font-size:var(--fs-sm);">我的回应码（复制后发给对方）</label>
+            <div class="out" id="out_s2_cipher"></div>
+            <div class="btnrow">
+              <button type="button" class="btn-ghost" onclick="copy('out_s2_cipher')">复制回应码</button>
+              <span class="hint" id="hint_out_s2_cipher">回应码已复制 ✓</span>
+            </div>
+
+            <!-- 本区第 1 步的最后一步：导出回应密钥（必须） -->
+            <div id="respExportStep" style="margin-top:10px;padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:var(--warning-bg);">
+              <b style="font-size:var(--fs-sm);">导出回应密钥 —— 本区第 1 步的最后一步，不能跳过</b>
+              <p class="fielddesc" style="margin:6px 0 8px;">
+                你把回应码发出去后，对方可能<b>过几天</b>才回复。解锁对方的回复要用你这台设备里的密钥。<br>
+                清缓存、换设备、无痕模式都会让密钥消失——那样对方回给你的码你<b>永远解不开</b>。<br>
+                所以：<b>现在导出一次，存到手机或网盘</b>（几 KB 的 JSON 文件）。
+              </p>
+              <div class="btnrow" style="margin:0;flex-wrap:wrap;">
+                <button type="button" class="btn-primary btn-sm" onclick="exportProfiles()">导出密钥备份（必须）</button>
+                <span class="fielddesc" id="respExportHint" style="margin:0;"></span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 我回应过谁：多人台账 -->
-        <div id="s2LogBox" style="display:none;margin-top:var(--sp-3);padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--gray-50);">
-          <div style="font-weight:600;font-size:var(--fs-sm);margin-bottom:4px;">我回应过的人 <span id="s2LogCount" style="font-weight:400;color:var(--text-secondary);font-size:var(--fs-xs);"></span></div>
-          <p class="fielddesc" style="margin:0 0 6px;">每回应一个人就记一条。<b>对方贴回 S3 时，软件会按引用号告诉你这是谁</b>——你不用自己记。</p>
-          <div id="s2LogList" style="font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.7;"></div>
-        </div>
-      </div>
+        <div class="sec">
+          <div class="sec-h"><span class="sec-num">2</span><span class="sec-t">第 2 步 · 对方回复后，解锁对方联系方式</span></div>
+          <p class="fielddesc">这一区要等对方回复你之后才会用到。对方回复后，把那串码贴进来就能看到联系方式。</p>
 
-      <div class="sec">
-        <div class="sec-h"><span class="sec-num">2</span><span class="sec-t">A 视角：收到 S2，解密并双向判定</span></div>
-        <label style="font-size:var(--fs-sm);">A：粘贴 B 回传的 S2</label>
-        <textarea id="in_s2" placeholder="在此粘贴 B 回传的 S2 序列"></textarea>
-        <div class="errmsg" id="err_in_s2"></div>
-        <div class="btnrow"><button type="button" class="btn-primary" id="btnResolveS2" onclick="uiResolveS2()">A：解密并双向判定 → 生成 S3</button></div>
-        <div class="out" id="out_s3" style="display:none;"></div>
-        <div id="s3CipherBlock" style="display:none;">
-          <label style="font-size:var(--fs-sm);">S3 密文（复制回传给 B）</label>
-          <div class="out" id="out_s3_cipher"></div>
-          <div class="btnrow">
-            <button type="button" class="btn-ghost" onclick="copy('out_s3_cipher')">复制 S3</button>
-            <span class="hint" id="hint_out_s3_cipher">S3 已复制 ✓</span>
+          <!-- 我回应过谁：多人台账（位于第 2 步顶部，贴回码时用来认人） -->
+          <div id="s2LogBox" style="display:none;margin:0 0 var(--sp-3);padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--gray-50);">
+            <div style="font-weight:600;font-size:var(--fs-sm);margin-bottom:4px;">我回应过的人 <span id="s2LogCount" style="font-weight:400;color:var(--gray-600);font-size:var(--fs-xs);"></span></div>
+            <p class="fielddesc" style="margin:0 0 6px;">每回应一个人就记一条。<b>对方把解锁码回给你时，软件会按引用号告诉你这是谁</b>——你不用自己记。</p>
+            <div id="s2LogList" style="font-size:var(--fs-xs);color:var(--gray-600);line-height:1.7;"></div>
+          </div>
+
+          <label for="in_s3" style="font-size:var(--fs-sm);">粘贴对方回给我的码</label>
+          <textarea id="in_s3" placeholder="对方回复你的那串码，整段粘贴进来"></textarea>
+          <div class="errmsg" id="err_in_s3" role="alert"></div>
+          <div class="btnrow"><button type="button" class="btn-primary" id="btnOpenS3" onclick="uiOpenS3()">解锁对方联系方式</button></div>
+          <div class="out" id="out_contact" style="display:none;"></div>
+          <div class="btnrow" id="contactCopyRow" style="display:none;">
+            <button type="button" class="btn-ghost" id="btnCopyContact" onclick="copy('out_contact_copy')">复制联系方式</button>
+            <span class="hint" id="hint_out_contact_copy">已复制 ✓</span>
           </div>
         </div>
       </div>
 
-      <div class="sec" style="margin-bottom:0;">
-        <div class="sec-h"><span class="sec-num">3</span><span class="sec-t">B 视角：收到 S3，解锁联系方式</span></div>
-        <label style="font-size:var(--fs-sm);">B：粘贴 A 解锁的 S3</label>
-        <textarea id="in_s3" placeholder="在此粘贴 A 解锁的 S3 序列"></textarea>
-        <div class="errmsg" id="err_in_s3"></div>
-        <div class="btnrow"><button type="button" class="btn-primary" id="btnOpenS3" onclick="uiOpenS3()">B：解密联系方式</button></div>
-        <div class="out" id="out_contact" style="display:none;"></div>
-        <div class="btnrow" id="contactCopyRow" style="display:none;">
-          <button type="button" class="btn-ghost" id="btnCopyContact" onclick="copy('out_contact_copy')">复制联系方式</button>
-          <span class="hint" id="hint_out_contact_copy">已复制 ✓</span>
+      <!-- ================= 分区 B：我是发布方 ================= -->
+      <div class="zone" id="zonePublisher">
+        <h3 class="zone-h">我是发布方 · 我发了码，对方回应我了</h3>
+        <p class="fielddesc">如果你之前在<b>生成与发布</b>那一步发出了自己的码，现在对方把回应码发给你了，用这一区。<br>
+          你要做的：把对方的回应码贴进来 → 看双方是否互相达标 → 生成解锁码发回给对方。</p>
+
+        <div class="sec-note">走这一区之前，请先在「生成与发布」那一步<b>导出密钥备份</b>。对方的回应码要用你这台设备里的密钥才能解开。</div>
+
+        <div class="sec">
+          <div class="sec-h"><span class="sec-num">1</span><span class="sec-t">第 1 步 · 解密对方的回应，判断双方是否互相达标</span></div>
+          <p class="fielddesc">这一区要等有人回应你发的码之后才会用到。</p>
+          <label for="in_s2" style="font-size:var(--fs-sm);">粘贴对方回应我的码</label>
+          <textarea id="in_s2" placeholder="对方回应你的那串码，整段粘贴进来"></textarea>
+          <div class="errmsg" id="err_in_s2" role="alert"></div>
+          <div class="btnrow"><button type="button" class="btn-primary" id="btnResolveS2" onclick="uiResolveS2()">解密并判断双方是否互相达标</button></div>
+          <div class="fielddesc" id="zoneBHint" style="display:none;">先导出密钥备份，才能解密对方的回应。</div>
+          <div class="out" id="out_s3" style="display:none;"></div>
+          <div id="s3CipherBlock" style="display:none;">
+            <label style="font-size:var(--fs-sm);">解锁码（复制后发回给对方）</label>
+            <div class="out" id="out_s3_cipher"></div>
+            <div class="btnrow">
+              <button type="button" class="btn-ghost" onclick="copy('out_s3_cipher')">复制解锁码</button>
+              <span class="hint" id="hint_out_s3_cipher">解锁码已复制 ✓</span>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="btnrow" style="margin-top:var(--sp-4);">
         <button type="button" class="btn-ghost" onclick="goTo(1)">返回首页</button>
         <button type="button" class="btn-ghost" onclick="goTo(8)">防诈与相处资料</button>
@@ -1720,7 +1736,7 @@
             </div>
           </div>
           <p class="fielddesc" style="margin:8px 0 0;">
-            <b>接收方怎么取：</b>在屏7 的 S1 输入框上方点「选择文件并自动提取」，选中对方发来的 PNG / SVG / PDF 即可。<br>
+            <b>接收方怎么取：</b>在屏7「粘贴对方的码」输入框上方点「选择文件并自动提取」，选中对方发来的 PNG / SVG / PDF 即可。<br>
             <b>⚠ 打印场景请注意：</b>打印会把图片里的数据一并毁掉（纸面无法携带文件信息，底部微缩文字印出来只有约 0.4 毫米，拍照必然糊掉）。<b>要贴在公园相亲角，请改用二维码</b>——把「下载软件」和「我的契合码」做成两个二维码并排即可。
           </p>
         </div>
@@ -3464,10 +3480,11 @@ function exportProfiles(){
     const arr2=loadProfiles().map(r=>Object.assign({},r,{exported:true}));
     persistProfiles(arr2);
     refreshProfileBar();
+    try{updateZoneGate();}catch(e){}
     const nE=arr.length, nR=loadRespKeys().length;
     setProfileHint('✓ 已导出（'+nE+' 份发布档案 + '+nR+' 份回应密钥）· 存好了再继续',false);
     const rh=$('respExportHint');
-    if(rh) rh.textContent='✓ 已导出，可以贴出 S2 了';
+    if(rh) rh.textContent='✓ 已导出，可以贴出回应码了';
     const rs=$('respExportStep');
     if(rs) rs.style.borderColor='var(--border-subtle)';
   }catch(e){ setProfileHint('导出失败：'+zhErr(e,'浏览器不支持'),true); }
@@ -3596,7 +3613,7 @@ let B_kp=null, B_s2wire=null, B_self=null, B_ctx=null;
 async function genS2(S1wire,Bself,BreqChinese,opts){
   const u=unpackWire(S1wire);
   const S1=u.obj;
-  if(S1.role!=='pub') throw new Error('这不是发布序列（S1），请确认粘贴的是对方的 S1');
+  if(S1.role!=='pub') throw new Error('这不是别人发布的码，请确认你粘贴的是对方发给你的那串码。');
   const Areq=decodeReq(S1.rq);
 
   /* B 本地判定：自己是否满足 A 的要求 */
@@ -3633,7 +3650,7 @@ async function resolveS2(S2wire,Apriv,Aself,Areq,Acontact){
   if(!Apriv) throw new Error('未检测到本页生成的私钥，请从第 6 步重新生成 S1');
   const u=unpackWire(S2wire);
   const S2=u.obj;
-  if(S2.role!=='resp') throw new Error('这不是应答序列（S2），请确认粘贴的是对方的 S2');
+  if(S2.role!=='resp') throw new Error('这不是对方的回应码，请确认你粘贴的是对方回应你的那串码。');
 
   let inner=null;
   if(S2.enc_self){
@@ -3648,8 +3665,8 @@ async function resolveS2(S2wire,Apriv,Aself,Areq,Acontact){
   const Bself=decodeP(inner.self||{});
   const Brq=decodeReq(inner.rq||{});
 
-  const meetB=meet(Areq,Bself);          /* B 是否满足 A 的要求 */
-  const meetA=meet(Brq,Aself);           /* A 是否满足 B 的要求 */
+  const meetB=meet(Areq,Bself);          /* 对方（回应方）是否满足我的要求 */
+  const meetA=meet(Brq,Aself);           /* 我是否满足对方的要求 */
   const both=verdictUnlocks(meetB.verdict)&&verdictUnlocks(meetA.verdict);
 
   let s3wire=null;
@@ -3681,7 +3698,7 @@ async function openS3(S3wire,Bpriv){
   if(!Bpriv) throw new Error('请先在第 1 段生成 S2');
   const u=unpackWire(S3wire);
   const S3=u.obj;
-  if(S3.role!=='unlock') throw new Error('这不是解锁序列（S3）');
+  if(S3.role!=='unlock') throw new Error('这不是对方回给你的解锁码，请确认你粘贴的是对方回给你的那串码。');
   if(S3.c) return {contact:await blockDecrypt(S3.c,Bpriv,true), ref:S3.r||null};
   if(S3.contact_enc) return {contact:String(await blockDecrypt(S3.contact_enc,Bpriv,false)), ref:S3.r||null};
   throw new Error('解锁序列缺少密文段');
@@ -4009,13 +4026,14 @@ function updateStepper(){
   $('stepMobile').textContent=(LANG==='en'?('Step '+cur+' of 8 · '+nm):('第 '+cur+' / 8 步 · '+nm));
 }
 function goTo(n){
-  if(n<1||n>8)return;
+  if(n<1||n>9)return;
   if(n===7&&!s1Ready)return;
   cur=n;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $('screen'+n).classList.add('active');
   if(n===5){prefillCal();renderPcard();}
   if(n===6)renderSummary();
+  if(n===7){try{updateZoneGate();}catch(e){}}
   updateStepper();
   window.scrollTo({top:0,behavior:'smooth'});
   const h=$('screen'+n).querySelector('h2');
@@ -5002,9 +5020,60 @@ function closeS2Modal(){
   const m=$('s2Modal'); if(m) m.style.display='none';
   if(modalLastFocus&&modalLastFocus.focus) modalLastFocus.focus();
 }
+/* ---------- v0.9 屏7：二选一引导 + 贴错分区检测 + 发布方门禁 ---------- */
+function focusZone(id){
+  const el=$(id); if(!el) return;
+  const reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  try{ el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); }
+  catch(e){ try{el.scrollIntoView(true);}catch(e2){} }
+  el.classList.remove('hl');
+  void el.offsetWidth;                       /* 强制重排：连点同一按钮也能重新触发高亮 */
+  el.classList.add('hl');
+  clearTimeout(el._hlTimer);
+  el._hlTimer=setTimeout(()=>el.classList.remove('hl'), reduce?300:600);
+}
+/* 从码里读出 role（pub/resp/unlock）；读不出返回空串 —— 不猜 */
+function wireRole(raw){
+  const v=String(raw||'').trim();
+  if(!v) return '';
+  try{ const u=unpackWire(v); return (u&&u.obj&&u.obj.role)||''; }catch(e){ return ''; }
+}
+const ZONE_MSG={
+  empty:'请先粘贴对方的码。',
+  bad:'这串码不完整或格式不对，请整段重新复制一次。',
+  s1:'这串码是回应码或解锁码。如果你之前发过自己的码、现在是收到对方回应的那一方，请用下面「我是发布方」那一区。',
+  s3_pub:'这串码是别人发布的码，不是对方回给你的。要回应别人的码，请贴在「第 1 步 · 粘贴对方的码」那个框里。',
+  s3_resp:'这是回应码，不是对方回给你的解锁码。回应码是要发给对方的，不要贴在这里。',
+  s2_pub:'这串码是别人发布的码。如果你是拿到别人的码去匹配的那一方，请用上面「我是回应方」那一区。',
+  s2_unlock:'这串码是解锁码，不是对方的回应码。解锁码只在「我是回应方」那一区第 2 步使用。'
+};
+/* 返回 null 表示通过；返回字符串表示要显示的错误文案 */
+function zoneRoleGuard(raw,expect,zone){
+  const v=String(raw||'').trim();
+  if(!v) return ZONE_MSG.empty;
+  const role=wireRole(v);
+  if(role===expect) return null;
+  if(!role) return ZONE_MSG.bad;
+  if(zone==='s1') return ZONE_MSG.s1;
+  if(zone==='s3') return role==='pub'?ZONE_MSG.s3_pub:ZONE_MSG.s3_resp;
+  if(zone==='s2') return role==='pub'?ZONE_MSG.s2_pub:ZONE_MSG.s2_unlock;
+  return ZONE_MSG.bad;
+}
+/* 发布方分区门禁：未导出密钥备份 → 禁用主按钮 + 灰字（不搬 btnExportKeys 过来） */
+function updateZoneGate(){
+  const btn=$('btnResolveS2'), hint=$('zoneBHint');
+  if(!btn||!hint) return;
+  let need=false;
+  try{ need=!exportGateOpen(); }catch(e){ need=false; }
+  btn.disabled=need;
+  hint.style.display=need?'block':'none';
+}
+
 async function uiGenS2(){
   $('err_in_s1').classList.remove('show');
   if(cryptoUnavailable()){showFieldErr('err_in_s1','加密功能不可用，请通过 http/localhost 打开本页');return;}
+  const zg1=zoneRoleGuard($('in_s1').value,'pub','s1');
+  if(zg1){showFieldErr('err_in_s1',zg1);return;}
   const btn=$('btnGenS2');
   setBusy(btn,'判定中…');
   try{
@@ -5052,7 +5121,7 @@ function postGenS2UI(r){
   const el=$('out_s2');
   const b=verdictBanner(r.details,r.stats);
   el.style.display='block';
-  el.innerHTML='<div class="banner '+b[0]+'">B 是否满足 A 的要求</div>'+
+  el.innerHTML='<div class="banner '+b[0]+'">我是否满足对方的要求</div>'+
     '<div class="banner '+b[0]+'" style="margin-top:0;">'+b[1]+'</div>'+
     judgeListHTML(r.details);
   if(!r.wire){
@@ -5081,6 +5150,8 @@ function postGenS2UI(r){
 async function uiResolveS2(){
   $('err_in_s2').classList.remove('show');
   if(cryptoUnavailable()){showFieldErr('err_in_s2','加密功能不可用，请通过 http/localhost 打开本页');return;}
+  const zg2=zoneRoleGuard($('in_s2').value,'resp','s2');
+  if(zg2){showFieldErr('err_in_s2',zg2);return;}
   const btn=$('btnResolveS2');
   setBusy(btn,'解密中…');
   try{
@@ -5092,7 +5163,7 @@ async function uiResolveS2(){
       const hit=await findProfileForS2($('in_s2').value);
       if(!hit){
         showFieldErr('err_in_s2',loadProfiles().length
-          ? '这份 S2 与本机保存的发布档案都不匹配。请确认对方回应的是你某一版的 S1；或先导入密钥备份文件。'
+          ? '这份回应码与本机保存的发布档案都不匹配。请确认对方回应的是你发出去的那一版码；或先导入密钥备份文件。'
           : '本机没有保存发布档案，无法解密。请先在第 6 步生成 S1（会自动保存档案），或导入密钥备份文件。');
         return;
       }
@@ -5112,10 +5183,10 @@ function postResolveUI(r){
   const bB=verdictBanner(r.meetBdetail,r.meetB);
   const bA=verdictBanner(r.meetAdetail,r.meetA);
   let html='<div class="banner '+(r.both?'banner-success':'banner-warning')+'">双向达标：<b class="'+
-    (r.both?'ok':'undis')+'">'+(r.both?'是 ✓ 已生成 S3':'否 ✗ 联系方式保持加密')+'</b></div>';
-  html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">B 是否满足 A 的要求</div>'+
+    (r.both?'ok':'undis')+'">'+(r.both?'是 ✓ 已生成解锁码':'否 ✗ 联系方式保持加密')+'</b></div>';
+  html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">对方是否满足我的要求</div>'+
     '<div class="banner '+bB[0]+'" style="margin-top:0;">'+bB[1]+'</div>'+judgeListHTML(r.meetBdetail);
-  html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">A 是否满足 B 的要求</div>'+
+  html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">我是否满足对方的要求</div>'+
     '<div class="banner '+bA[0]+'" style="margin-top:0;">'+bA[1]+'</div>'+judgeListHTML(r.meetAdetail);
   if(r.reason) html+='<div class="mutline" style="white-space:normal;">原因：'+escapeHtml(r.reason)+'</div>';
   el.style.display='block';
@@ -5131,6 +5202,8 @@ function postResolveUI(r){
 async function uiOpenS3(){
   $('err_in_s3').classList.remove('show');
   if(cryptoUnavailable()){showFieldErr('err_in_s3','加密功能不可用，请通过 http/localhost 打开本页');return;}
+  const zg3=zoneRoleGuard($('in_s3').value,'unlock','s3');
+  if(zg3){showFieldErr('err_in_s3',zg3);return;}
   const btn=$('btnOpenS3');
   setBusy(btn,'解密中…');
   try{
@@ -5142,7 +5215,7 @@ async function uiOpenS3(){
       const hit=await findRespKeyForS3($('in_s3').value);
       if(!hit){
         showFieldErr('err_in_s3', loadRespKeys().length
-          ? '这份 S3 与本机保存的回应密钥都不匹配。请确认对方解锁的是你这一轮发出的 S2。'
+          ? '这份解锁码与本机保存的回应密钥都不匹配。请确认对方解锁的是你这一轮发出去的回应码。'
           : '本机没有保存回应密钥，无法解锁。你需要在第 1 段生成过 S2，或导入密钥备份。');
         return;
       }
@@ -5158,7 +5231,7 @@ async function uiOpenS3(){
 function postOpenS3UI(contact,ref){
   const el=$('out_contact');
   el.style.display='block';
-  /* 用 S3 里的 r 反查「这是回给谁的」 */
+  /* 用解锁码里的引用号反查「这是回给谁的」 */
   let who='';
   try{
     if(ref){
@@ -5170,7 +5243,7 @@ function postOpenS3UI(contact,ref){
           '</b> 那位 · 你当时在 '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+
           ' '+pad(d.getHours())+':'+pad(d.getMinutes())+' 发出的码</div>';
       }else{
-        who='<div class="fielddesc" style="margin:6px 0 0;">（这份 S3 没有带引用号，可能是旧版生成的）</div>';
+        who='<div class="fielddesc" style="margin:6px 0 0;">（这份解锁码没有带引用号，可能是旧版生成的）</div>';
       }
     }
   }catch(e){}
