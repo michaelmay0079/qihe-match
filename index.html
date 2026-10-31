@@ -1015,6 +1015,31 @@
           </p>
         </div>
       </div>
+      <div class="sec" style="margin-top:var(--sp-4);">
+        <div class="sec-t">二维码（打印用）</div>
+        <p class="fielddesc" style="margin:0 0 8px;">
+          要贴到公园相亲角或发给不方便收文件的人时，把下面两个码<b>并排打印</b>：左边扫码下载软件，右边是你的契合码。<b>建议打印宽度 ≥10cm</b>，太小会扫不出来。
+        </p>
+        <div class="btnrow" style="margin:0 0 10px;">
+          <button type="button" class="btn-ghost" onclick="renderQR()">生成 / 刷新二维码</button>
+          <button type="button" class="btn-ghost" onclick="qrPng('download')">下载「软件码」PNG</button>
+          <button type="button" class="btn-ghost" onclick="qrPng('mine')">下载「契合码」PNG</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+          <div style="text-align:center;">
+            <div id="qrDownload" style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:6px;min-height:120px;"></div>
+            <div class="fielddesc" style="margin:4px 0 0;">① 扫码下载软件</div>
+          </div>
+          <div style="text-align:center;">
+            <div id="qrMine" style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:6px;min-height:120px;"></div>
+            <div class="fielddesc" style="margin:4px 0 0;">② 我的契合码</div>
+          </div>
+        </div>
+        <p class="fielddesc" style="margin:8px 0 0;font-size:var(--fs-xs);color:var(--text-secondary);" id="qrHint">
+          提示：契合码内容较长，二维码较密，务必打印足够大；纸张平整、不要折叠压痕。点上方按钮后才会生成。
+        </p>
+      </div>
+
       <div class="btnrow">
         <button type="button" class="btn-primary" id="btnGo7" onclick="goTo(7)" disabled>进入匹配握手</button>
         <span class="fielddesc" id="go7Hint">先生成 S1，才能进入匹配握手</span>
@@ -1853,6 +1878,299 @@
 <div id="toast"></div>
 
 <script>
+/* ===== QR 编码器（byte 模式，算法对齐 qrcode 8.2；数据表来自 barcode-studio） ===== */
+/* QR 数据表（由 barcode-studio 的 qr_tables.json 生成，与 qrcode 8.2 同源） */
+const QR_RS='1,26,19;1,26,16;1,26,13;1,26,9;1,44,34;1,44,28;1,44,22;1,44,16;1,70,55;1,70,44;2,35,17;2,35,13;1,100,80;2,50,32;2,50,24;4,25,9;1,134,108;2,67,43;2,33,15,2,34,16;2,33,11,2,34,12;2,86,68;4,43,27;4,43,19;4,43,15;2,98,78;4,49,31;2,32,14,4,33,15;4,39,13,1,40,14;2,121,97;2,60,38,2,61,39;4,40,18,2,41,19;4,40,14,2,41,15;2,146,116;3,58,36,2,59,37;4,36,16,4,37,17;4,36,12,4,37,13;2,86,68,2,87,69;4,69,43,1,70,44;6,43,19,2,44,20;6,43,15,2,44,16;4,101,81;1,80,50,4,81,51;4,50,22,4,51,23;3,36,12,8,37,13;2,116,92,2,117,93;6,58,36,2,59,37;4,46,20,6,47,21;7,42,14,4,43,15;4,133,107;8,59,37,1,60,38;8,44,20,4,45,21;12,33,11,4,34,12;3,145,115,1,146,116;4,64,40,5,65,41;11,36,16,5,37,17;11,36,12,5,37,13;5,109,87,1,110,88;5,65,41,5,66,42;5,54,24,7,55,25;11,36,12,7,37,13;5,122,98,1,123,99;7,73,45,3,74,46;15,43,19,2,44,20;3,45,15,13,46,16;1,135,107,5,136,108;10,74,46,1,75,47;1,50,22,15,51,23;2,42,14,17,43,15;5,150,120,1,151,121;9,69,43,4,70,44;17,50,22,1,51,23;2,42,14,19,43,15;3,141,113,4,142,114;3,70,44,11,71,45;17,47,21,4,48,22;9,39,13,16,40,14;3,135,107,5,136,108;3,67,41,13,68,42;15,54,24,5,55,25;15,43,15,10,44,16;4,144,116,4,145,117;17,68,42;17,50,22,6,51,23;19,46,16,6,47,17;2,139,111,7,140,112;17,74,46;7,54,24,16,55,25;34,37,13;4,151,121,5,152,122;4,75,47,14,76,48;11,54,24,14,55,25;16,45,15,14,46,16;6,147,117,4,148,118;6,73,45,14,74,46;11,54,24,16,55,25;30,46,16,2,47,17;8,132,106,4,133,107;8,75,47,13,76,48;7,54,24,22,55,25;22,45,15,13,46,16;10,142,114,2,143,115;19,74,46,4,75,47;28,50,22,6,51,23;33,46,16,4,47,17;8,152,122,4,153,123;22,73,45,3,74,46;8,53,23,26,54,24;12,45,15,28,46,16;3,147,117,10,148,118;3,73,45,23,74,46;4,54,24,31,55,25;11,45,15,31,46,16;7,146,116,7,147,117;21,73,45,7,74,46;1,53,23,37,54,24;19,45,15,26,46,16;5,145,115,10,146,116;19,75,47,10,76,48;15,54,24,25,55,25;23,45,15,25,46,16;13,145,115,3,146,116;2,74,46,29,75,47;42,54,24,1,55,25;23,45,15,28,46,16;17,145,115;10,74,46,23,75,47;10,54,24,35,55,25;19,45,15,35,46,16;17,145,115,1,146,116;14,74,46,21,75,47;29,54,24,19,55,25;11,45,15,46,46,16;13,145,115,6,146,116;14,74,46,23,75,47;44,54,24,7,55,25;59,46,16,1,47,17;12,151,121,7,152,122;12,75,47,26,76,48;39,54,24,14,55,25;22,45,15,41,46,16;6,151,121,14,152,122;6,75,47,34,76,48;46,54,24,10,55,25;2,45,15,64,46,16;17,152,122,4,153,123;29,74,46,14,75,47;49,54,24,10,55,25;24,45,15,46,46,16;4,152,122,18,153,123;13,74,46,32,75,47;48,54,24,14,55,25;42,45,15,32,46,16;20,147,117,4,148,118;40,75,47,7,76,48;43,54,24,22,55,25;10,45,15,67,46,16;19,148,118,6,149,119;18,75,47,31,76,48;34,54,24,34,55,25;20,45,15,61,46,16';
+const QR_AL=';6,18;6,22;6,26;6,30;6,34;6,22,38;6,24,42;6,26,46;6,28,50;6,30,54;6,32,58;6,34,62;6,26,46,66;6,26,48,70;6,26,50,74;6,30,54,78;6,30,56,82;6,30,58,86;6,34,62,90;6,28,50,72,94;6,26,50,74,98;6,30,54,78,102;6,28,54,80,106;6,32,58,84,110;6,30,58,86,114;6,34,62,90,118;6,26,50,74,98,122;6,30,54,78,102,126;6,26,52,78,104,130;6,30,56,82,108,134;6,34,60,86,112,138;6,30,58,86,114,142;6,34,62,90,118,146;6,30,54,78,102,126,150;6,24,50,76,102,128,154;6,28,54,80,106,132,158;6,32,58,84,110,136,162;6,26,54,82,110,138,166;6,30,58,86,114,142,170';
+
+/* ============================================================
+   极简 QR 编码器（byte 模式）
+   算法与 barcode-studio 的 qr_pure.py（对位 qrcode 8.2）一致：
+   GF(256)、RS 纠错、8 种掩码 + ISO 四规则评分、标准放置。
+   数据表由 qr_tables.json 生成（QR_RS / QR_AL）。
+   ============================================================ */
+(function (global) {
+  'use strict';
+
+  const RS_TAB = QR_RS.split(';').map(s => s.split(',').map(Number));
+  const AL_TAB = QR_AL.split(';').map(s => s ? s.split(',').map(Number) : []);
+
+  // qrcode 库的 EC 常量：L=1, M=0, Q=3, H=2；表内偏移按此映射
+  const EC_CONST = { L: 1, M: 0, Q: 3, H: 2 };
+  const RS_OFFSET = { '1': 0, '0': 1, '3': 2, '2': 3 };
+
+  /* ---------- GF(256) ---------- */
+  const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  (function () {
+    let x = 1;
+    for (let i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11d; }
+    for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  })();
+  const gmul = (a, b) => (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]];
+
+  function rsGen(n) {
+    let g = [1];
+    for (let i = 0; i < n; i++) {
+      const ng = new Array(g.length + 1).fill(0);
+      for (let j = 0; j < g.length; j++) { ng[j] ^= g[j]; ng[j + 1] ^= gmul(g[j], EXP[i]); }
+      g = ng;
+    }
+    return g;
+  }
+  function rsEc(data, ecLen) {
+    const g = rsGen(ecLen);
+    const res = new Uint8Array(data.length + ecLen);
+    res.set(data);
+    for (let i = 0; i < data.length; i++) {
+      const c = res[i]; if (!c) continue;
+      for (let j = 0; j < g.length; j++) res[i + j] ^= gmul(g[j], c);
+    }
+    return res.slice(data.length);
+  }
+
+  /* ---------- 块结构 ---------- */
+  function blocksOf(ver, ec) {
+    const off = RS_OFFSET[String(EC_CONST[ec])];
+    const e = RS_TAB[(ver - 1) * 4 + off];
+    const out = [];
+    for (let i = 0; i < e.length; i += 3) {
+      const cnt = e[i], total = e[i + 1], data = e[i + 2];
+      for (let k = 0; k < cnt; k++) out.push([data, total - data]);
+    }
+    return out;
+  }
+  const ccBits = v => v < 10 ? 8 : 16;
+
+  function pickVersion(len, ec) {
+    for (let v = 1; v <= 40; v++) {
+      const cap = blocksOf(v, ec).reduce((a, b) => a + b[0], 0);
+      if (4 + ccBits(v) + 8 * len <= cap * 8) return v;
+    }
+    return null;
+  }
+
+  /* ---------- 位流 ---------- */
+  function bitStream(bytes, ver, ec) {
+    const cap = blocksOf(ver, ec).reduce((a, b) => a + b[0], 0);
+    const maxBits = cap * 8;
+    const bits = [];
+    const push = (val, n) => { for (let i = n - 1; i >= 0; i--) bits.push((val >> i) & 1); };
+    push(4, 4);                       // byte mode
+    push(bytes.length, ccBits(ver));
+    for (const b of bytes) push(b, 8);
+    for (let i = 0; i < 4 && bits.length < maxBits; i++) bits.push(0);   // terminator
+    while (bits.length % 8) bits.push(0);
+    const pad = [0xEC, 0x11]; let pi = 0;
+    while (bits.length < maxBits) { const p = pad[pi++ % 2]; for (let i = 7; i >= 0; i--) bits.push((p >> i) & 1); }
+    const out = new Uint8Array(bits.length / 8);
+    for (let i = 0; i < out.length; i++) { let v = 0; for (let j = 0; j < 8; j++) v = (v << 1) | bits[i * 8 + j]; out[i] = v; }
+    return out;
+  }
+
+  function codewords(bytes, ver, ec) {
+    const bl = blocksOf(ver, ec);
+    let pos = 0; const db = [], eb = [];
+    for (const [dlen, elen] of bl) {
+      const d = bytes.slice(pos, pos + dlen); pos += dlen;
+      db.push(d); eb.push(rsEc(d, elen));
+    }
+    const out = [];
+    const maxD = Math.max(...bl.map(b => b[0]));
+    for (let i = 0; i < maxD; i++) for (const d of db) if (i < d.length) out.push(d[i]);
+    const maxE = Math.max(...bl.map(b => b[1]));
+    for (let i = 0; i < maxE; i++) for (const e of eb) if (i < e.length) out.push(e[i]);
+    return out;
+  }
+
+  /* ---------- BCH ---------- */
+  const bl = v => { let n = 0; while (v) { n++; v >>>= 1; } return n; };
+  function bchFormat(data) {
+    let d = data << 10;
+    while (bl(d) - bl(0x537) >= 0) d ^= (0x537 << (bl(d) - bl(0x537)));
+    return ((data << 10) | d) ^ 0x5412;
+  }
+  function bchVersion(data) {
+    let d = data << 12;
+    while (bl(d) - bl(0x1f25) >= 0) d ^= (0x1f25 << (bl(d) - bl(0x1f25)));
+    return (data << 12) | d;
+  }
+
+  /* ---------- 掩码 ---------- */
+  function maskFunc(p) {
+    switch (p) {
+      case 0: return (i, j) => (i + j) % 2 === 0;
+      case 1: return (i) => i % 2 === 0;
+      case 2: return (i, j) => j % 3 === 0;
+      case 3: return (i, j) => (i + j) % 3 === 0;
+      case 4: return (i, j) => (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0;
+      case 5: return (i, j) => (i * j) % 2 + (i * j) % 3 === 0;
+      case 6: return (i, j) => ((i * j) % 2 + (i * j) % 3) % 2 === 0;
+      case 7: return (i, j) => ((i * j) % 3 + (i + j) % 2) % 2 === 0;
+    }
+  }
+
+  /* ---------- 矩阵搭建 ---------- */
+  function makeImpl(ver, ec, data, mask, test) {
+    const n = ver * 4 + 17;
+    const m = Array.from({ length: n }, () => new Array(n).fill(null));
+
+    // finder + separator
+    const finder = (r, c) => {
+      for (let i = -1; i <= 7; i++) for (let j = -1; j <= 7; j++) {
+        const rr = r + i, ccc = c + j;
+        if (rr < 0 || rr >= n || ccc < 0 || ccc >= n) continue;
+        const on = (i >= 0 && i <= 6 && (j === 0 || j === 6)) ||
+                   (j >= 0 && j <= 6 && (i === 0 || i === 6)) ||
+                   (i >= 2 && i <= 4 && j >= 2 && j <= 4);
+        m[rr][ccc] = on ? 1 : 0;
+      }
+    };
+    finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
+
+
+
+    // alignment
+    const al = AL_TAB[ver - 1];
+    for (const r of al) for (const c of al) {
+      if (m[r][c] !== null) continue;
+      for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++) {
+        const on = (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0));
+        m[r + i][c + j] = on ? 1 : 0;
+      }
+    }
+    // timing
+    for (let i = 8; i < n - 8; i++) m[6][i] = m[i][6] = (i % 2 === 0) ? 1 : 0;
+    // version info
+    if (ver >= 7) {
+      const vb = bchVersion(ver);
+      for (let i = 0; i < 18; i++) {
+        const mod = (test ? 0 : ((vb >> i) & 1));
+        m[Math.floor(i / 3)][i % 3 + n - 8 - 3] = mod;
+        m[i % 3 + n - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    }
+
+    // format info
+    const bits = bchFormat((EC_CONST[ec] << 3) | mask);
+    for (let i = 0; i < 15; i++) {
+      const mod = (test ? 0 : ((bits >> i) & 1));
+      if (i < 6) m[i][8] = mod;
+      else if (i < 8) m[i + 1][8] = mod;
+      else m[n - 15 + i][8] = mod;
+      if (i < 8) m[8][n - i - 1] = mod;
+      else if (i < 9) m[8][15 - i - 1 + 1] = mod;
+      else m[8][15 - i - 1] = mod;
+    }
+    m[n - 8][8] = test ? 0 : 1;      // dark module
+
+    // data
+    const mf = maskFunc(mask);
+    let inc = -1, row = n - 1, bitIndex = 7, byteIndex = 0;
+    /* 列序列预先固定（range 语义），col<=6 时的减一不影响后续迭代 */
+    const cols = [];
+    for (let c0 = n - 1; c0 > 0; c0 -= 2) cols.push(c0);
+    for (const colRaw of cols) {
+      let col = colRaw;
+      if (col <= 6) col--;
+      while (true) {
+        for (let c = 0; c < 2; c++) {
+          if (m[row][col - c] === null) {
+            let dark = 0;
+            if (byteIndex < data.length) dark = ((data[byteIndex] >> bitIndex) & 1);
+            if (mf(row, col - c)) dark = dark ? 0 : 1;
+            m[row][col - c] = dark;
+            bitIndex--;
+            if (bitIndex === -1) { byteIndex++; bitIndex = 7; }
+          }
+        }
+        row += inc;
+        if (row < 0 || row >= n) { row -= inc; inc = -inc; break; }
+      }
+    }
+    return m;
+  }
+
+  /* ---------- ISO 四规则评分 ---------- */
+  function lostPoint(m) {
+    const n = m.length; let lost = 0;
+    // 1. 连续 5+ 同色
+    for (let r = 0; r < n; r++) {
+      let same = 1;
+      for (let c = 1; c < n; c++) {
+        if (m[r][c] === m[r][c - 1]) { same++; if (same === 5) lost += 3; else if (same > 5) lost++; }
+        else same = 1;
+      }
+    }
+    for (let c = 0; c < n; c++) {
+      let same = 1;
+      for (let r = 1; r < n; r++) {
+        if (m[r][c] === m[r - 1][c]) { same++; if (same === 5) lost += 3; else if (same > 5) lost++; }
+        else same = 1;
+      }
+    }
+    // 2. 2x2 同色
+    for (let r = 0; r < n - 1; r++) for (let c = 0; c < n - 1; c++) {
+      const s = m[r][c] + m[r][c + 1] + m[r + 1][c] + m[r + 1][c + 1];
+      if (s === 0 || s === 4) lost += 3;
+    }
+    // 3. 1011101 模式（前后带 4 个 0）
+    const pat = [1, 0, 1, 1, 1, 0, 1];
+    const chk = (arr) => {
+      for (let i = 0; i + 6 < arr.length; i++) {
+        let ok = true;
+        for (let k = 0; k < 7; k++) if (arr[i + k] !== pat[k]) { ok = false; break; }
+        if (!ok) continue;
+        const before = arr.slice(Math.max(0, i - 4), i);
+        const after = arr.slice(i + 7, i + 11);
+        if (before.length === 4 && before.every(v => v === 0)) lost += 40;
+        if (after.length === 4 && after.every(v => v === 0)) lost += 40;
+      }
+    };
+    for (let r = 0; r < n; r++) chk(m[r]);
+    for (let c = 0; c < n; c++) chk(m.map(r => r[c]));
+    // 4. 深浅比例
+    let dark = 0;
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (m[r][c]) dark++;
+    lost += Math.floor(Math.abs(dark * 100 / (n * n) - 50) / 5) * 10;
+    return lost;
+  }
+
+  /* ---------- 对外接口 ---------- */
+  function qrMatrix(text, ecLevel) {
+    const ec = (ecLevel || 'M').toUpperCase();
+    if (!(ec in EC_CONST)) throw new Error('EC 级别只能是 L/M/Q/H');
+    const bytes = new TextEncoder().encode(text);
+    const ver = pickVersion(bytes.length, ec);
+    if (!ver) throw new Error('内容过长（最多约 2300 字符）');
+    const cw = codewords(bitStream(bytes, ver, ec), ver, ec);
+
+    let best = 0, bestLost = Infinity;
+    for (let p = 0; p < 8; p++) {
+      const mm = makeImpl(ver, ec, cw, p, true);
+      const l = lostPoint(mm);
+      if (l < bestLost) { bestLost = l; best = p; }
+    }
+    return { matrix: makeImpl(ver, ec, cw, best, false), version: ver, ec: ec, mask: best };
+  }
+
+  /* 转 SVG（含静区） */
+  function qrSvg(text, opts) {
+    const o = Object.assign({ ec: 'M', scale: 4, quiet: 4, dark: '#111', light: '#fff' }, opts || {});
+    const r = qrMatrix(text, o.ec);
+    const n = r.matrix.length, q = o.quiet, dim = (n + q * 2) * o.scale;
+    let path = '';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      if (r.matrix[y][x]) path += 'M' + ((x + q) * o.scale) + ' ' + ((y + q) * o.scale) + 'h' + o.scale + 'v' + o.scale + 'h-' + o.scale + 'z';
+    }
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + dim + ' ' + dim + '" shape-rendering="crispEdges">' +
+      '<rect width="' + dim + '" height="' + dim + '" fill="' + o.light + '"/>' +
+      '<path d="' + path + '" fill="' + o.dark + '"/></svg>';
+  }
+
+  global.QRLite = { qrMatrix, qrSvg };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+
 /* ==================================================================
    契合码 v0.9
    编码只在序列化边界发生，内存态保持中文原样。
@@ -4548,6 +4866,54 @@ function renderSummary(){
     ? '<p class="fielddesc" style="color:var(--warning-text);font-weight:600;margin:6px 0 0;">存在张力项：你的彩礼期望为「'+escapeHtml(bpSelf)+'」，要求里写「不接受彩礼」。对方解密后会同时看到这两条。</p>'
     : '';
   $('sum_req').innerHTML=req.map(r=>'<dt>'+r[0]+'</dt><dd>'+escapeHtml(r[1])+'</dd>').join('')+tension;
+}
+
+/* ---------- 二维码：渲染与 PNG 下载 ---------- */
+const QH_SITE = 'https://michaelmay0079.github.io/qihe-match/';
+function renderQR(){
+  const box1 = $('qrDownload'), box2 = $('qrMine');
+  if (!box1 || !box2) return;
+  try {
+    box1.innerHTML = QRLite.qrSvg(QH_SITE, { ec: 'M', scale: 4, quiet: 4 });
+    const s1 = ($('out_s1') && $('out_s1').value || '').trim();
+    if (s1.length > 20) {
+      box2.innerHTML = QRLite.qrSvg(s1, { ec: 'L', scale: 3, quiet: 4 });
+      const hint = $('qrHint');
+      if (hint) hint.textContent = '契合码 ' + s1.length + ' 字符，二维码较密：请打印 ≥10cm，纸张平整无折痕。';
+    } else {
+      box2.innerHTML = '<p class="fielddesc" style="margin:20px 0;">先生成序列，再点「生成 / 刷新二维码」</p>';
+    }
+  } catch (e) {
+    box1.innerHTML = '<p class="fielddesc">生成失败：' + (e && e.message || e) + '</p>';
+  }
+}
+function qrPng(which){
+  const el = $(which === 'download' ? 'qrDownload' : 'qrMine');
+  if (!el || !el.querySelector('svg')) { renderQR(); }
+  const el2 = $(which === 'download' ? 'qrDownload' : 'qrMine');
+  const svg = el2 && el2.querySelector('svg');
+  if (!svg) { alert('还没有二维码，请先点击「生成 / 刷新二维码」'); return; }
+  const px = which === 'download' ? 600 : 1200;
+  const txt = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([txt], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = function(){
+    const c = document.createElement('canvas');
+    c.width = px; c.height = px;
+    const cx = c.getContext('2d');
+    cx.fillStyle = '#fff'; cx.fillRect(0, 0, px, px);
+    cx.drawImage(img, 0, 0, px, px);
+    c.toBlob(function(b){
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = qiheFileName('png').replace('.png', '-' + (which === 'download' ? '软件码' : '契合码') + '.png');
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); URL.revokeObjectURL(url); }, 1500);
+    }, 'image/png');
+  };
+  img.onerror = function(){ alert('导出失败，请截图保存'); };
+  img.src = url;
 }
 
 async function uiGenS1(){
