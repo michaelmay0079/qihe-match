@@ -2615,15 +2615,35 @@ function extractFromCarrier(text){
   const t=String(text||'');
   let m=t.match(/<desc[^>]*id="qh-code"[^>]*>([\s\S]*?)<\/desc>/i);
   if(m&&m[1].trim().indexOf('QH3.')===0) return m[1].trim();
+  /* PDF 内容流：本产品的 PDF 载体按 95 字符分段，段间夹 ") Tj T* ("。
+     不把接缝去掉，正则会在第一个 ")" 处停下 —— 序列被截断在第一段。
+     只在"内容确实像 PDF 内容流"时才归一化；SVG / TXT / 普通文本走原逻辑，一个字节不动。
+     注意：只丢括号与 Tj/T* 操作符，序列自身的 + / = _ - . 全部保留。 */
+  let src=t;
+  const looksPdf=(t.indexOf('%PDF-')!==-1)||(/\)\s*Tj/.test(t)&&/T\*\s*\(/.test(t));
+  if(looksPdf){
+    /* 完整性闸门：有 PDF 头却没有 %%EOF，说明文件是残的（下载中断/读了一半）。
+       半截序列比"没找到"更糟——下游会拿它去解密，报错指向不明。直接判无。 */
+    if(t.indexOf('%PDF-')!==-1&&t.indexOf('%%EOF')===-1) return null;
+    const parts=[];
+    const re=/\(([^()]*)\)\s*Tj/g;
+    let g;
+    while((g=re.exec(t))!==null){
+      /* 只收"纯序列字符"的内容串，页眉那几句说明含空格/逗号/句号，自然被排除 */
+      if(/^[A-Za-z0-9+/=_.-]+$/.test(g[1])) parts.push(g[1]);
+    }
+    const joined=parts.join('');
+    if(joined.indexOf('QH3.')===0||joined.indexOf('QH3.')>0) src=joined;
+  }
   /* PDF 复制出来的文本可能带换行：先去掉所有空白再匹配 */
-  const flat=t.replace(/[\s\u200b-\u200f\ufeff\u3000]/g,'');
+  const flat=src.replace(/[\s\u200b-\u200f\ufeff\u3000]/g,'');
   const i=flat.indexOf('QH3.');
   if(i>=0){
     const tail=flat.slice(i);
     const mm=tail.match(/^QH3\.[A-Za-z0-9+/=_-]+/);
     if(mm) return mm[0];
   }
-  m=t.match(/QH3\.[A-Za-z0-9+/=_-]+/);
+  m=src.match(/QH3\.[A-Za-z0-9+/=_-]+/);
   return m?m[0]:null;
 }
 function bufToB64(buf){const b=new Uint8Array(buf);let s='';for(let i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
