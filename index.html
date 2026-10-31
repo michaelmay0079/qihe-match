@@ -2345,8 +2345,8 @@ function makePhotoCarrier(wire){
   return new Promise((resolve,reject)=>{
     if(!PHOTO||!PHOTO.img) return reject(new Error('未选择照片'));
     const img=PHOTO.img;
-    const maxW=900;
-    const scale=Math.min(1,maxW/img.naturalWidth);
+    const maxW=900, maxH=950;
+    const scale=Math.min(1,maxW/img.naturalWidth,maxH/img.naturalHeight);
     const W=Math.round(img.naturalWidth*scale);
     const H=Math.round(img.naturalHeight*scale);
     const cv=document.createElement('canvas');
