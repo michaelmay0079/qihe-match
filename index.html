@@ -774,7 +774,7 @@
       </details>
 
       <div class="restore">
-        <button type="button" class="btn-ghost btn-sm" onclick="restoreDefaults()">把 23 项披露级别恢复为隐私默认值</button>
+        <button type="button" class="btn-ghost btn-sm" onclick="restoreDefaults()">把 24 项披露级别恢复为隐私默认值</button>
         <span class="fielddesc" id="restoreHint"></span>
       </div>
 
@@ -1198,6 +1198,11 @@
           <span class="hint" id="hint_out_contact_copy">已复制 ✓</span>
         </div>
       </div>
+      <div class="btnrow" style="margin-top:var(--sp-4);">
+        <button type="button" class="btn-ghost" onclick="goTo(1)">返回首页</button>
+        <button type="button" class="btn-ghost" onclick="goTo(8)">防诈与相处资料</button>
+        <button type="button" class="btn-primary" onclick="goTo(9)">软件说明与数据来源</button>
+      </div>
     </div>
   </section>
 
@@ -1205,6 +1210,10 @@
   <section class="screen" id="screen8">
     <div class="card">
       <h2 tabindex="-1">防诈与相处 · 资料 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">识人、防骗、见面、异地</span></h2>
+      <p class="fielddesc" style="margin:4px 0 10px;font-size:var(--fs-xs);">
+        本页为「防诈与相处」资料，共 6 节；版本、序列、载体与统计口径见
+        <a href="javascript:void(0)" onclick="goTo(9)" style="color:var(--brand-700);font-weight:600;">软件说明与数据来源 →</a>
+      </p>
 <div class="spec-item">
           <div class="spec-h">一、交友防诈手册</div>
           <p class="fielddesc" style="margin:0 0 8px;">
@@ -1332,7 +1341,7 @@
               · <b>全国互联网账号"一证通查"</b>、<b>云闪付 App"一键查卡"</b>：自查名下账号与银行卡。<br>
               · <b>跨境提醒服务</b>：工信部推出，用于甄别境外来电。<br>
               · <b>《防范电信网络诈骗宣传手册》</b>：公安部刑侦局、国家反诈中心编写（现行 2025 版），含 10 类高发诈骗的套路拆解与 20 个防诈关键词，可在各地公安官方渠道查阅。<br>
-              · <b>报警</b>：110（紧急）、96110（反诈咨询）；涉家暴可拨 110 并申请人身安全保护令，妇联维权热线 <b>12338</b>。<br>
+              · <b>报警与求助</b>：110（紧急）、96110（反诈咨询）；涉家暴可拨 110 并申请人身安全保护令；<b>各级妇联</b>维权热线 <b>12338</b>；<b>各地反诈中心</b>可通过本地 110 或当地公安的官方账号查询。<br>
               <span style="color:var(--text-secondary);font-size:var(--fs-xs);">以上均为公开官方渠道：<b>国家反诈中心 App</b> 请在手机应用商店搜索官方名称下载；<b>96110 / 12381 / 110 / 12338</b> 为电话号码与短信端口，直接拨打或查看即可。<br>
               查法条与判例可访问官方网站：<a href="https://www.court.gov.cn" target="_blank" rel="noopener" style="color:var(--brand-700);">最高人民法院</a> · <a href="https://wenshu.court.gov.cn" target="_blank" rel="noopener" style="color:var(--brand-700);">中国裁判文书网</a>（需联网；本产品不隶属任何机构，也不代为报案或追损）</span>
             </p>
