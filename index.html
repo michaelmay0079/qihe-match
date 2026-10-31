@@ -39,7 +39,13 @@
   .sub{color:var(--text-secondary);font-size:var(--fs-sm);margin:0 0 18px;}
 
   /* ---------- 步骤条 ---------- */
-  .stepper{display:flex;align-items:center;margin:16px 0 6px;padding:0;list-style:none;}
+  .stepper{display:flex;align-items:center;margin:16px 0 6px;padding:0 0 2px;list-style:none;
+    overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;-webkit-overflow-scrolling:touch;}
+  .step .name{white-space:nowrap;}
+  @media(max-width:900px){
+    .step{flex:0 0 auto;min-width:38px;}
+    .step .name{display:none;}
+  }
   .step{display:flex;align-items:center;flex:1;min-width:0;}
   .step:last-child{flex:0 0 auto;}
   .step-dot{appearance:none;background:transparent;border:none;padding:0;margin:0;
@@ -391,9 +397,8 @@
 <body>
 <div class="wrap">
   <!-- 步骤条 -->
-  <div class="langbar" style="display:flex;align-items:center;gap:8px;margin:0 0 10px;flex-wrap:wrap;">
-    <button type="button" id="btnLang" style="min-height:28px;padding:0 10px;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:#fff;color:var(--text-secondary);font-size:var(--fs-xs);font-weight:600;cursor:pointer;">EN</button>
-    <span class="fielddesc" id="langTip" style="margin:0;">语言只影响显示，序列内容仍按中文枚举生成。</span>
+  <div class="langbar" style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 4px;">
+    <button type="button" id="btnLang" title="切换界面语言" style="min-height:26px;padding:0 9px;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background:#fff;color:var(--text-secondary);font-size:var(--fs-xs);font-weight:600;cursor:pointer;">EN</button>
   </div>
   <nav class="stepper" aria-label="步骤">
     <div class="step" data-step="1"><button type="button" class="step-dot" onclick="goTo(1)"><i>1</i></button><span class="name">了解契合码</span><span class="line"></span></div>
@@ -1201,8 +1206,18 @@
     <div class="card">
       <h2 tabindex="-1">防诈与相处 · 资料 <span style="font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400;">识人、防骗、见面、异地</span></h2>
 <div class="spec-item">
-          <div class="spec-h">〇、平等与防诈 · 核心要点</div>
-          <p class="fielddesc" style="margin:0 0 8px;">亲密关系的第一性原理是<b>主体平等</b>。下面是可以对照执行的硬标准。</p>
+          <div class="spec-h">〇、交友防诈手册</div>
+          <p class="fielddesc" style="margin:0 0 8px;">
+            本手册只做一件事：把可核验的规则、法律条文与公开渠道列出来，供你在需要时对照。<b>不劝分、不劝合、不替任何人判断对方人品</b>——关系是两个人的事，判断权在你自己手里。
+          </p>
+          <p class="fielddesc" style="margin:0 0 10px;padding:8px 10px;border-left:3px solid var(--brand-600);background:rgba(243,240,255,0.6);">
+            <b>几句不太中听、但值得想一想的话：</b><br>
+            · <b>激情与责任不是一回事。</b>心动是生理反应，能不能一起把日子过下去是另一回事；用前者去判断后者，多半会看错。<br>
+            · <b>爱情与婚姻也不是一回事。</b>爱情可以是两个人的事，婚姻会牵进两个家庭、财产、生育与长期照护。想清楚你要的是哪一个，再决定投入多少。<br>
+            · <b>为自己的人生负责。</b>没有任何一段关系值得你交出独立生活的能力、职业通道与退出权。<br>
+            · <b>人生在世，冷暖自知。</b>别人家的标准、亲戚的评价、朋友圈的样子，都不能替你过日子。<br>
+            · <b>将心比心。</b>你希望被怎样对待，就用同样的标准要求自己，也用同样的标准检验对方——单向的要求，无论出自哪一方，都不是平等。
+          </p>
 
           <div class="spec-pair">
             <div class="spec-col plain">
@@ -1263,6 +1278,20 @@
           <p class="fielddesc" style="margin:8px 0 0;font-size:var(--fs-xs);color:var(--text-secondary);">
             公开案例警示：网恋"海外工程师 / 军官"人设诱导先付"手续费"；K 歌软件结识后三日从网恋到"日赚 5000"被骗数十万元；虚构身份长年嘘寒问暖累计骗取数十万元；交友 App"充值才能聊天"团伙案涉案数亿元；主播以"打赏可抵扣彩礼"骗财被判诈骗罪。<b>男性同样是被害重点群体</b>，切勿以"男人不该上当"为由阻止身边男性求助；被骗不是道德缺陷，指责受害者只会让下一个人不敢报警。
           </p>
+          <div style="margin-top:10px;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:rgba(248,247,252,0.7);">
+            <div style="font-weight:700;font-size:var(--fs-sm);margin-bottom:4px;">官方渠道（可自行核验，勿信任何"代办""内部"说法）</div>
+            <p class="fielddesc" style="margin:0;">
+              · <b>国家反诈中心 App</b>：2021 年 3 月 15 日上线，公安部官方防骗软件，具预警劝阻、举报涉诈线索、检测涉诈 App、识别虚假图文等功能。<br>
+              · <b>96110 预警劝阻专线</b>：2019 年 11 月 8 日启用，用于预警劝阻、防骗咨询与涉诈举报。<b>接到该号码来电请务必接听。</b><br>
+              · <b>12381 涉诈预警劝阻短信</b>：2021 年 7 月 14 日由工信部联合公安部推出，向潜在受害用户发送预警短信。<br>
+              · <b>全国移动电话卡"一证通查"</b>：凭身份证查询本人名下全国电话卡数量，结果由 10699000 端口回复。<br>
+              · <b>全国互联网账号"一证通查"</b>、<b>云闪付 App"一键查卡"</b>：自查名下账号与银行卡。<br>
+              · <b>跨境提醒服务</b>：工信部推出，用于甄别境外来电。<br>
+              · <b>《防范电信网络诈骗宣传手册》</b>：公安部刑侦局、国家反诈中心编写（现行 2025 版），含 10 类高发诈骗的套路拆解与 20 个防诈关键词，可在各地公安官方渠道查阅。<br>
+              · <b>报警</b>：110（紧急）、96110（反诈咨询）；涉家暴可拨 110 并申请人身安全保护令，妇联维权热线 <b>12338</b>。<br>
+              <span style="color:var(--text-secondary);font-size:var(--fs-xs);">以上均为公开官方渠道。本产品不隶属任何机构，也不代为报案或追损；具体以当地公安机关与司法机关的现行规定为准。</span>
+            </p>
+          </div>
         </div>
 
 <div class="spec-item">
@@ -4774,7 +4803,6 @@ $('p_contact').addEventListener('input',()=>$('hint_contact').classList.remove('
   if(lb) lb.addEventListener('click',()=>{
     LANG=(LANG==='zh')?'en':'zh';
     try{ localStorage.setItem('qh_lang',LANG); }catch(e){}
-    const tip=$('langTip'); if(tip) tip.textContent=t('lang_tip');
     applyLang();
   });
   try{ applyLang(); }catch(e){}
