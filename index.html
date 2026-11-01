@@ -3064,8 +3064,8 @@ const FIELD_DEFS=[
   {k:'pcgame',g:'D',label:'电脑游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「几乎不玩」'},
   {k:'mobilegame',g:'D',label:'手机游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填'},
   {k:'sports',g:'D',label:'运动',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每周跑步两次」'},
-  {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
-  {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
+  {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'hidden',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
+  {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'hidden',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'intro',g:'D',label:'自我介绍',ctrl:'textarea',maxlen:200,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'≤200 字，本项不做荒谬拦截（「我属猪」是正常自述）'},
   {k:'personality',g:'D',label:'性格码',ctrl:'readonly',L:'L1a',def:'encrypted',dirs:[],desc:'来自第 3 步测评，此处只读；披露级别在第 3 步调整'}
 ];
