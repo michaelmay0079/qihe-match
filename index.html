@@ -3134,6 +3134,47 @@ const UNMARRIED_RATE={
    参数来源：《中国居民营养与慢性病状况报告（2020 年）》18–44 岁平均身高 男 169.7cm / 女 158.0cm。
    标准差取 男 7.0 / 女 6.5（与该报告"男 160–178、女 148–166 为常见区间"的 ±1σ 描述自洽）。
    ⚠ 粗估：真实身高分布略右偏，且越高年龄段均值略低；本函数只用于量级判断，不做个体判断。 */
+/* 分年龄「离婚 / 丧偶」占比（《中国人口和就业统计年鉴 2023》表 2-32，
+   2022 年全国抽样，20–49 岁分性别）。
+   用途：区分「未婚」与「单身」两个层级——
+   基准池按「未婚」标定（法律与现实都要求未婚对未婚），
+   若用户接受离异/丧偶，池子应按 (未婚+离婚+丧偶)/未婚 放大。
+   ⚠ 年龄越大，离婚占比越高，「仅未婚」筛掉的越多：
+      男 30–34 仅未婚≈88.7% 的单身池，35–39≈70%，40–44≈53.8%
+      女 30–34≈81.5%，35–39≈56.6%，40–44≈35.4% */
+const DIVORCE_WIDOW={
+  '男':[[20,24,0.001,0.000],[25,29,0.011,0.001],[30,34,0.031,0.001],[35,39,0.047,0.002],[40,44,0.052,0.003],[45,60,0.046,0.010]],
+  '女':[[20,24,0.001,0.000],[25,29,0.011,0.001],[30,34,0.024,0.001],[35,39,0.033,0.002],[40,44,0.039,0.003],[45,60,0.039,0.012]]
+};
+/* 按年龄区间加权平均，返回 {d:离婚占比, w:丧偶占比} */
+function dwAvg(gender,aMin,aMax){
+  const g=(gender==='男')?'男':'女';
+  const rows=DIVORCE_WIDOW[g];
+  const lo=Math.min(aMin,aMax), hi=Math.max(aMin,aMax);
+  let sd=0, sw=0, wt=0;
+  for(const r of rows){
+    const a=Math.max(lo,r[0]), b=Math.min(hi,r[1]);
+    if(b>=a){ const w=b-a+1; sd+=r[2]*w; sw+=r[3]*w; wt+=w; }
+  }
+  if(wt<=0) return {d:0,w:0};
+  return {d:sd/wt, w:sw/wt};
+}
+/* 婚史放宽系数：仅未婚=1（基准），接受离异/丧偶则放大池子
+   档位强度：短婚未育 < 离异无孩 < 离异有孩 / 全接受
+   注：短婚未育与离异有孩/无孩的细分无权威数据，按强度近似分级，属粗估。 */
+function maritalFactor(gender,aMin,aMax,maritalMax){
+  if(!maritalMax||maritalMax==='不限'||maritalMax==='仅未婚') return 1;
+  const u=ageRateAt(gender,(Math.min(aMin,aMax)+Math.max(aMin,aMax))/2);
+  if(u===null||u<=0) return 1;
+  const {d,w}=dwAvg(gender,aMin,aMax);
+  const extra=(d+w)/u;          /* 相对未婚池的额外倍数 */
+  let k=1;
+  if(maritalMax==='可到短婚未育') k=0.35;
+  else if(maritalMax==='可到离异无孩') k=0.70;
+  else k=1.00;                   /* 可到离异有孩 / 全接受 */
+  return 1 + extra*k;
+}
+
 const HEIGHT_MU={ '男':169.7, '女':158.0 };
 const HEIGHT_SD={ '男':7.0,   '女':6.5   };
 function normCdf(z){
@@ -3799,10 +3840,13 @@ function calibrate(p){
     hf=Math.min(1,Math.max(0.002,hf));   /* 下界保护：极严身高不低于 0.2%，避免直接归零 */
   }
 
-  const strict=pop*E*I*af*hf;
-  const widenEdu=pop*I*af*hf;
-  const widenInc=pop*E*af*hf;
-  const widen2=pop*af*hf;
+  /* 婚史放宽：接受离异/丧偶时池子放大（按年龄动态，年龄越大放大越多） */
+  const mf=(_aMin!==null&&_aMax!==null)?maritalFactor(_ag,_aMin,_aMax,rq0.maritalMax):1;
+
+  const strict=pop*E*I*af*hf*mf;
+  const widenEdu=pop*I*af*hf*mf;
+  const widenInc=pop*E*af*hf*mf;
+  const widen2=pop*af*hf*mf;
 
   /* 逐项放宽：收入降 1 档 / 学历降 1 档 / 地区不限 */
   const rows=[];
@@ -3877,7 +3921,7 @@ function calibrate(p){
   return {pop:pop*W,popAll:popAll*W,E,I,
     strict:strict*W,widenEdu:widenEdu*W,widenInc:widenInc*W,widen2:widen2*W,
     /* score = 严格档 / 该年龄段未婚异性总量 = E×I：分数制，不随地区人口规模变化 */
-    score:(E*I),af,aif,hf,marital:rq0.maritalMax||'不限',
+    score:(E*I),af,aif,hf,mf,marital:rq0.maritalMax||'不限',
     widenRegion:popAll*(sE/popAll)*(sI/popAll)*W,
     interval:[strict*lo*W,strict*hi*W],best,
     eCode,nCode,rCode,gender,rows:scaledRows,notCounted};
@@ -4211,6 +4255,11 @@ function renderInfoFields(){
   refreshChanged();
   updateRestoreHint();
   updateHeightRef();
+  /* BMI 随身高/体重实时更新 */
+  ['p_height','p_weight'].forEach(function(id){
+    const e=$(id);
+    if(e) e.addEventListener('input', updateHeightRef);
+  });
   ['p_gender','p_age_y','p_age_m'].forEach(id=>{
     const el2=$(id);
     if(el2&&!el2.dataset.hrefBound){
@@ -4229,6 +4278,24 @@ const HEIGHT_BY_AGE={
   '男':[[18,24,173],[25,29,172],[30,34,171],[35,39,170],[40,100,169]],
   '女':[[18,24,161],[25,29,160],[30,34,159],[35,39,158],[40,100,157]]
 };
+/* BMI：按中国成人标准分档（WS/T 428-2013）
+   <18.5 偏瘦 / 18.5–23.9 正常 / 24.0–27.9 超重 / ≥28.0 肥胖
+   仅作自我核对，不参与匹配判定，也不写入公开摘要。 */
+function bmiOf(hcm, wkg){
+  if(!hcm || !wkg) return null;
+  const m = hcm / 100;
+  if(m <= 0) return null;
+  const v = wkg / (m * m);
+  if(!isFinite(v) || v < 8 || v > 80) return null;
+  return v;
+}
+function bmiBand(v){
+  if(v === null) return null;
+  if(v < 18.5) return { t: '偏瘦', c: 'var(--warning-text)' };
+  if(v < 24.0) return { t: '正常', c: 'var(--success-text)' };
+  if(v < 28.0) return { t: '超重', c: 'var(--warning-text)' };
+  return { t: '肥胖', c: 'var(--danger-text)' };
+}
 function updateHeightRef(){
   const el=$('hrefTip'); if(!el) return;
   const g=$('p_gender')?$('p_gender').value:'';
@@ -4241,6 +4308,17 @@ function updateHeightRef(){
     else txt='<br>参考：18–44 岁平均 '+(g==='男'?'169.7':'158.0')+' cm';
   }else{
     txt='<br>参考：18–44 岁平均 男 169.7 cm / 女 158.0 cm（选性别与年龄可给更细的参考）';
+  }
+  /* BMI：身高与体重都填了才显示 */
+  const h=toNum($('p_height')?$('p_height').value:'');
+  const w=toNum($('p_weight')?$('p_weight').value:'');
+  const v=bmiOf(h,w);
+  const bd=bmiBand(v);
+  if(v!==null && bd){
+    txt+='<br><b>BMI '+v.toFixed(1)+'</b> · <span style="color:'+bd.c+';font-weight:600;">'+bd.t+'</span>';
+    txt+='<span style="color:var(--text-secondary);">（中国成人标准：18.5–23.9 正常，24–27.9 超重，≥28 肥胖）</span>';
+  }else if(h && !w){
+    txt+='<br><span style="color:var(--text-secondary);">填体重后自动算 BMI</span>';
   }
   el.innerHTML=txt;
 }
@@ -4796,6 +4874,7 @@ function renderCalHTML(c,params){
     : '房车、彩礼、生育意愿这几项你没有设门槛，所以上面的数字已接近可估上限。';
   const baseNote='<b>基准口径</b>：以该年龄段<b>未婚</b>人群为基准（法律与现实都要求未婚对未婚）'
     +(c.hf<0.999?('；<b>已计入身高</b>，通过率约 '+Math.round(c.hf*100)+'%'):'；未设身高要求')
+    +(c.mf>1.001?('；<b>接受离异后池子放大约 '+Math.round((c.mf-1)*100)+'%</b>（年龄越大，离婚占比越高，放大越多）'):'')
     +'；年龄区间已计入。';
   const excl='<div class="cal-excluded">'+nc+'<br>'+baseNote+'</div>';
 
