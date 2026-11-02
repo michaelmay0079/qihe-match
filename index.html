@@ -110,10 +110,18 @@
 
   /* ---------- 披露分段控件 ---------- */
   .seg{display:inline-flex;gap:2px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:2px;align-self:flex-start;flex:none;}
-  .seg button{border-radius:8px;padding:0 10px;height:var(--seg-h);min-width:44px;font-size:var(--fs-xs);background:transparent;color:var(--text-secondary);font-weight:500;}
-  .seg button.on-public{background:var(--state-public-bg);color:var(--seg-fg-public);font-weight:600;}
-  .seg button.on-encrypted{background:var(--state-encrypted-bg);color:var(--seg-fg-enc);font-weight:600;}
-  .seg button.on-hidden{background:var(--state-hidden-bg);color:var(--seg-fg-hidden);font-weight:600;}
+  .seg button{border:1px solid transparent;border-radius:8px;padding:0 10px;height:var(--seg-h);min-width:44px;font-size:var(--fs-xs);background:transparent;color:var(--text-secondary);font-weight:500;cursor:pointer;
+    transition:background-color var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease);}
+  /* 选中·公开：实线绿边 + 绿底 */
+  .seg button.on-public{background:var(--state-public-bg);color:var(--seg-fg-public);font-weight:700;border-color:var(--green-700);}
+  /* 选中·加密：实线紫边 + 紫底，字重最重 —— 有内容、受保护 */
+  .seg button.on-encrypted{background:var(--state-encrypted-bg);color:var(--seg-fg-enc);font-weight:700;border-color:var(--brand-600);}
+  /* 选中·隐藏：虚线中性边 + 灰底，字重次重 —— 不写入、语义为"空" */
+  .seg button.on-hidden{background:var(--state-hidden-bg);color:var(--seg-fg-hidden);font-weight:600;border-style:dashed;border-color:var(--border-strong);}
+  .seg button:not(.on-public):not(.on-encrypted):not(.on-hidden):hover{background:var(--gray-100);color:var(--gray-600);}
+  .seg button:active{transform:translateY(1px);}
+  .seg button:focus-visible{outline:none;box-shadow:var(--focus-ring);border-color:var(--brand-600);}
+  .seg button:disabled{background:var(--gray-200);color:var(--gray-600);border-color:transparent;opacity:1;cursor:not-allowed;transform:none;}
 
   /* ---------- 横幅 / 输出 ---------- */
   .banner{border-radius:var(--radius-sm);padding:10px 12px;font-weight:600;font-size:var(--fs-md);margin:var(--sp-2) 0;}
@@ -202,14 +210,21 @@
   .ai-card h2{color:var(--text-primary);}
 
   /* ---------- 屏3：性格测评 ---------- */
-  .qrow{display:flex;gap:var(--sp-2);align-items:center;padding:var(--sp-2) 0;border-bottom:1px dashed var(--border-subtle);flex-wrap:wrap;}
-  .qrow:nth-of-type(even){background:rgba(247,248,252,0.85);border-radius:var(--radius-sm);}
-  .qrow:last-of-type{border-bottom:none;}
-  .qtext{flex:1;min-width:220px;font-size:var(--fs-sm);}
-  .likert{display:flex;gap:6px;align-items:center;}
-  .likert label{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--text-secondary);cursor:pointer;}
-  .likert input{accent-color:var(--brand-600);width:15px;height:15px;cursor:pointer;}
-  .qdim{font-size:10px;color:var(--gray-500);background:var(--gray-100);border-radius:var(--radius-pill);padding:1px 8px;}
+  .qrow{display:grid;grid-template-columns:76px minmax(0,1fr) repeat(5,minmax(0,88px));align-items:stretch;border-bottom:1px dashed var(--border-subtle);}
+  .qrow:first-of-type{border-top:1px dashed var(--border-subtle);}
+  .qrow:nth-of-type(even){background:var(--surface-recessed);}
+  .qrow.qmiss{background:var(--danger-bg);}
+  .qdim,.qtext{display:flex;align-items:center;padding:6px 8px;}
+  .qdim{font-size:10px;color:var(--gray-600);background:var(--gray-100);border-radius:var(--radius-pill);padding:1px 8px;align-self:center;justify-self:start;}
+  .qtext{font-size:var(--fs-sm);color:var(--text-primary);}
+  .qopt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:56px;padding:4px 2px;
+    border-left:1px dashed var(--border-subtle);font-size:10px;color:var(--gray-600);cursor:pointer;
+    transition:background-color var(--dur-fast) var(--ease);}
+  .qopt input{accent-color:var(--brand-600);width:16px;height:16px;cursor:pointer;margin:0;}
+  .qopt:hover{background:var(--gray-100);}
+  .qopt:focus-within{box-shadow:inset 0 0 0 2px var(--brand-600);}
+  .qopt.sel{background:var(--brand-100);box-shadow:inset 0 0 0 2px var(--brand-600);color:var(--brand-700);font-weight:600;}
+  .qopt.sel:focus-within{box-shadow:inset 0 0 0 2px var(--brand-600),var(--focus-ring);}
   .pbar{display:flex;align-items:center;gap:8px;margin:4px 0;}
   .pbar .plab{width:96px;font-size:var(--fs-xs);color:var(--text-secondary);flex:none;}
   .pbar .ptrack{flex:1;height:8px;border-radius:6px;background:var(--gray-200);overflow:hidden;}
@@ -242,6 +257,13 @@
   .zone.hl{background:var(--brand-100);box-shadow:0 0 0 10px var(--brand-100);}
   .zone-h{font-size:var(--fs-lg);font-weight:600;margin:0 0 var(--sp-1);line-height:1.45;}
   .zone + .zone{border-top:1px solid var(--border-strong);padding-top:var(--sp-4);margin-top:var(--sp-4);}
+  /* 发布方分区：极浅灰底 + 细边 + 圆角，与白底回应方区形成明度差 */
+  .zone#zonePublisher{background:var(--surface-sunken);border:1px solid var(--border-subtle);border-radius:var(--radius-md);
+    padding:var(--sp-4);margin-top:var(--sp-4);border-top:1px solid var(--border-subtle);}
+  .zone#zonePublisher .zone-h{color:var(--text-primary);}
+  .zone#zonePublisher .fielddesc,
+  .zone#zonePublisher .sec-t{color:var(--gray-600);}
+  .zone#zonePublisher.hl{background:var(--brand-100);}
   @media(max-width:640px){ .pick .btn-ghost{flex:1 0 100%;} }
   @media(prefers-reduced-motion:reduce){ .zone{transition:none;} }
 
@@ -276,6 +298,14 @@
   .f.cond{display:none;}
   .f.cond.on{display:flex;animation:condIn 180ms var(--ease);}
   .f.cond{position:relative;padding-left:12px;border-left:2px solid var(--gray-200);}
+  /* child_sex 依赖婚史：置灰态 */
+  .f[data-k="child_sex"].dep-off{background:var(--surface-sunken);border-radius:var(--radius-sm);padding:var(--sp-2);}
+  .f[data-k="child_sex"].dep-off label,
+  .f[data-k="child_sex"].dep-off .fielddesc{color:var(--gray-600);}
+  .f[data-k="child_sex"].dep-off select{background:var(--gray-200);color:var(--gray-600);border-color:transparent;opacity:1;cursor:not-allowed;}
+  .f[data-k="child_sex"].dep-off .seg{opacity:.55;}
+  .f[data-k="child_sex"] .depexp{display:none;font-size:var(--fs-xs);color:var(--gray-600);margin-top:var(--sp-1);}
+  .f[data-k="child_sex"].dep-off .depexp{display:block;}
   @keyframes condIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
   .condhead{font-size:var(--fs-xs);color:var(--text-secondary);margin:0 0 var(--sp-1);}
   .cntnum{font-size:var(--fs-xs);color:var(--text-secondary);font-variant-numeric:tabular-nums;flex:none;}
@@ -400,10 +430,18 @@
     .wrow .wval,.wrow .winc{grid-column:2;text-align:left;}
     .wh .c3,.wh .c4{display:none;}
     .btnrow .btn-primary{flex:1 0 100%;}
+    .qrow{grid-template-columns:repeat(5,minmax(0,1fr));}
+    .qdim,.qtext{grid-column:1 / -1;}
+    .qdim{justify-self:start;margin:6px 0 0 6px;}
+    .qtext{padding:4px 8px;}
+    .qopt{min-height:60px;border-top:1px dashed var(--border-subtle);}
+    .qopt:first-of-type{border-left:1px dashed var(--border-subtle);}
   }
   @media(prefers-reduced-motion:reduce){
     .breaker-track i{animation:none;transform:scaleX(0);}
     .f.cond.on{animation:none;}
+    .zone{transition:none;}
+    .seg button,.qopt{transition:none;}
   }
 </style>
 </head>
@@ -565,7 +603,7 @@
         <summary><span>想打印贴相亲角？<span class="fold-sub">打印会毁掉载体数据，需改用二维码</span></span></summary>
         <div class="fold-body">
           <p class="fielddesc" style="margin:0;">
-            照片载体是<b>文件</b>，打印会毁掉数据。打印版需<b>两个二维码并排</b>：左「下载软件」指发布页短链，右「我的契合码」（约 1,300 字符，印 8cm 宽即可扫）。打印版请在手机上下载软件后扫码，或直接用<b>文件传输</b>发送原图。
+            照片载体是<b>文件</b>，打印会毁掉数据。打印版需<b>两个二维码并排</b>：左「下载软件」指本页短链，右「我的契合码」。契合码约 1,300 字符，二维码较密（约 121×121 模块），<b>右码请印 ≥10cm 宽</b>；印 8cm 宽时普通手机难以稳定识别。纸张保持平整，不要折叠压痕。打印版请在手机上下载软件后扫码，或直接用<b>文件传输</b>发送原文件。
           </p>
         </div>
       </details>
@@ -1038,6 +1076,13 @@
           <button type="button" class="btn-ghost" onclick="qrPng('download')">下载「软件码」PNG</button>
           <button type="button" class="btn-ghost" onclick="qrPng('mine')">下载「契合码」PNG</button>
         </div>
+        <div class="btnrow" style="margin:0 0 10px;">
+          <button type="button" class="btn-primary btn-sm" id="btnPrintSheet" aria-describedby="printSheetHint" onclick="downloadPrintSheet()">下载照片（含双码）</button>
+        </div>
+        <p class="fielddesc" id="printSheetHint" style="margin:0 0 8px;font-size:var(--fs-xs);color:var(--gray-600);">
+          已选照片则用照片，未选则自动用风景图；两张二维码一并拼入，可直接打印，也可作为载体文件发送。
+        </p>
+        <p class="hint" id="printSheetHintLive" role="status" aria-live="polite"></p>
         <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
           <div style="text-align:center;">
             <div id="qrDownload" style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:6px;min-height:120px;"></div>
@@ -1049,7 +1094,7 @@
           </div>
         </div>
         <p class="fielddesc" style="margin:8px 0 0;font-size:var(--fs-xs);color:var(--text-secondary);" id="qrHint">
-          提示：契合码内容较长，二维码较密，务必打印足够大；纸张平整、不要折叠压痕。点上方按钮后才会生成。
+          提示：契合码约 1,300 字符，请打印 ≥10cm 宽；纸张平整、不要折叠压痕。点上方按钮后才会生成。
         </p>
       </div>
 
@@ -1737,7 +1782,7 @@
           </div>
           <p class="fielddesc" style="margin:8px 0 0;">
             <b>接收方怎么取：</b>在屏7「粘贴对方的码」输入框上方点「选择文件并自动提取」，选中对方发来的 PNG / SVG / PDF 即可。<br>
-            <b>⚠ 打印场景请注意：</b>打印会把图片里的数据一并毁掉（纸面无法携带文件信息，底部微缩文字印出来只有约 0.4 毫米，拍照必然糊掉）。<b>要贴在公园相亲角，请改用二维码</b>——把「下载软件」和「我的契合码」做成两个二维码并排即可。
+            <b>⚠ 打印场景请注意：</b>打印会把图片里的数据一并毁掉（纸面无法携带文件信息，底部微缩文字印出来只有约 0.4 毫米，拍照必然糊掉）。<b>要贴在公园相亲角，请改用二维码</b>——把「下载软件」和「我的契合码」做成两个二维码并排即可，契合码那张建议 ≥10cm 宽。
           </p>
         </div>
 <div class="spec-item">
@@ -2380,29 +2425,56 @@ function constellOf(month){
   const C=['白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手','摩羯','水瓶','双鱼'];
   return C[(month+8)%12];   /* 按每月 15 日估算 */
 }
+/* 属相/星座回填：仅空值写入，绝不覆盖手选；返回标记文案 */
+function applyZodiacHint(id,val){
+  const el=document.getElementById(id);
+  if(!el) return '';
+  if(el.dataset.manual==='1' && el.value) return '（已保留你的手动选择）';
+  if(!el.value) el.value=val;
+  return '';
+}
 function bindBirth(){
   const ys=$('p_age_y'), ms=$('p_age_m');
   if(!ys||!ms) return;
   const calc=()=>{
     const y=parseInt(ys.value,10), m=parseInt(ms.value,10);
     const hid=$('p_age'), tip=$('p_age_auto');
-    if(!y||!m){ if(hid) hid.value=''; if(tip) tip.textContent=''; return; }
+    if(!y||!m){
+      if(hid) hid.value=''; if(tip) tip.textContent='';
+      /* 属相/星座：有手选标记的保留；无标记（自动回填值）则一并清空 */
+      ['p_zodiac','p_constellation'].forEach(id=>{
+        const e2=document.getElementById(id);
+        if(e2 && e2.dataset.manual!=='1') e2.value='';
+      });
+      return;
+    }
     const now=new Date();
     let age=now.getFullYear()-y;
     if(now.getMonth()+1<m) age-=1;
     if(age<18||age>100){ if(hid) hid.value=''; if(tip){ tip.textContent='年龄需在 18–100 岁之间'; tip.style.color='var(--warning-text)'; } return; }
     if(hid) hid.value=String(age);
     const z=zodiacOf(y), c=constellOf(m);
-    const pz=$('p_zodiac'); if(pz) pz.value=z;
-    const pc=$('p_constellation'); if(pc) pc.value=c;
+    /* 只填空值，绝不覆盖用户手选（data-manual 标记） */
+    const keptZ=applyZodiacHint('p_zodiac',z);
+    const keptC=applyZodiacHint('p_constellation',c);
     if(tip){
       tip.style.color='var(--text-secondary)';
-      tip.textContent='自动算出：'+age+' 岁 · 属'+z+' · '+c+'座（星座按该月中旬估算，交界日附近请以实际日期为准）';
+      tip.textContent='年龄自动算出：'+age+' 岁；推算 属'+z+' / '+c+'座'
+        +((keptZ||keptC)?'（已保留你的手动选择）':'')
+        +'（属相按公历年份，星座按该月中旬估算，交界日附近请以实际日期为准）';
     }
     try{ updateHeightRef(); }catch(e){}
   };
   ys.addEventListener('change',calc);
   ms.addEventListener('change',calc);
+  /* 用户手动改过 → 打标记，此后不再自动覆盖；清空则移除标记允许重填 */
+  ['p_zodiac','p_constellation'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && !el.dataset.manualBound){
+      el.dataset.manualBound='1';
+      el.addEventListener('change',()=>{ el.dataset.manual = el.value ? '1' : ''; });
+    }
+  });
 }
 
 /* 默认风景图（无照片时用）：矢量绘制，配色由序列哈希决定 */
@@ -3031,10 +3103,10 @@ const GROUP_META={
 };
 /* dirs：L1a / L2 不渲染「公开」按钮（SPEC §0.1 + 验收 #3）；L1b / L0 三项都有 */
 const FIELD_DEFS=[
-  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'public',dirs:['encrypted','hidden'],
+  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],
    desc:'选年月即可，<b>年龄、属相、星座会自动算出</b>，不用自己填。留空则不参与年龄匹配'},
-  {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'public',dirs:['encrypted','hidden']},
-  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'public',dirs:['encrypted','hidden'],desc:'130–230cm；只作自愿披露，不参与匹配判定。<span id="hrefTip"></span>'},
+  {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
+  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'130–230cm；只作自愿披露，不参与匹配判定。<span id="hrefTip"></span>'},
   {k:'weight',g:'A',label:'体重',ctrl:'number',min:30,max:150,unit:'kg',L:'L1a',def:'public',dirs:['public','encrypted','hidden'],desc:'行业基本信息，建议保持公开'},
   {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
   {k:'region',g:'A',label:'地点',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
@@ -3043,7 +3115,7 @@ const FIELD_DEFS=[
   {k:'marital',g:'B',label:'婚史',ctrl:'select',opts:['未婚','短婚未育','离异无孩','离异有孩（归对方）','离异有孩（自己抚养）','丧偶'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
   {k:'child_sex',g:'B',label:'孩子性别',ctrl:'select',opts:['无','有男孩','有女孩','男女都有'],L:'L1a',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'离异带孩子的填这项；不带孩子选「无」'},
   {k:'fertility',g:'B',label:'生育意愿',ctrl:'select',opts:['想要 1 个','想要 2 个','想要 3 个及以上','顺其自然','不想要','可商量'],L:'L1b',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'含数量倾向；判定按「是否可调和」，数量不同只提示沟通、不算不合格'},
-  {k:'health',g:'B',label:'健康状况',ctrl:'select',opts:['健康','有慢性病（可控）','有既往病史（已愈）','不便告知'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'自述项，本产品不做核验；仅作自愿披露'},
+  {k:'health',g:'B',label:'本人健康状况',ctrl:'select',opts:['健康','有慢性病（可控）','有既往病史（已愈）','不便告知'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'自述项，本产品不做核验；仅作自愿披露'},
   {k:'checkup',g:'B',label:'近期体检',ctrl:'select',opts:['一年內已体检（正常）','一年內已体检（有异常项）','两年内体检过','两年以上未体检','不便告知'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'自述项；建议在确认关系前交换正规体检报告，不以本项替代'},
   {k:'marry_timeline',g:'B',label:'结婚时间预期',ctrl:'select',opts:['半年内','一年内','两年内','不急'],L:'L1b',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'仅作自述展示，不参与匹配判定与人数估算'},
 
@@ -3064,8 +3136,8 @@ const FIELD_DEFS=[
   {k:'pcgame',g:'D',label:'电脑游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「几乎不玩」'},
   {k:'mobilegame',g:'D',label:'手机游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填'},
   {k:'sports',g:'D',label:'运动',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每周跑步两次」'},
-  {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'hidden',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
-  {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'hidden',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
+  {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。由出生年月推算，可手动修改；修改后不再自动覆盖。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
+  {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。由出生年月推算，可手动修改；修改后不再自动覆盖。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'intro',g:'D',label:'自我介绍',ctrl:'textarea',maxlen:200,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'≤200 字，本项不做荒谬拦截（「我属猪」是正常自述）'},
   {k:'personality',g:'D',label:'性格码',ctrl:'readonly',L:'L1a',def:'encrypted',dirs:[],desc:'来自第 3 步测评，此处只读；披露级别在第 3 步调整'}
 ];
@@ -4226,6 +4298,7 @@ function fieldHTML(d){
     ctrl+
     (d.ctrl==='readonly'?'':(d.desc?'<div class="fielddesc">'+d.desc+'</div>':''))+
     '<div class="errmsg" id="err_'+pid+'"></div>'+
+    (d.k==='child_sex'?'<p class="depexp">婚史为「未婚 / 短婚未育 / 离异无孩」时本项自动留空；改回带孩档位后可重新填写。</p>':'')+
     (d.ghint?('<p class="grphint">'+d.ghint+'</p>'):'')+
     '</div>';
 }
@@ -4270,6 +4343,10 @@ function renderInfoFields(){
   });
   /* 出生年月 → 自动算年龄 / 属相 / 星座 */
   try{ bindBirth(); }catch(e){}
+  /* 重建 DOM 后必须重新绑定分段按钮，否则切语言后点击无反应 */
+  if (typeof initSeg === 'function') initSeg();
+  /* 孩子性别依赖婚史：初始化时跑一次 */
+  try{ applyChildSexDep(); }catch(e){}
 }
 /* 身高参考：按性别 + 年龄段（代际增长按 0.5–1cm/5 年递减估算）
    基准：18–44 岁平均身高 男 169.7 / 女 158.0（中国居民营养与慢性病状况报告 2020）；
@@ -4347,6 +4424,30 @@ function effectiveVis(d){
   let v=sel?sel.value:d.def;
   if(raw==='') return 'hidden';            /* 留空 = 不写入，任何级别都无效 */
   return v;
+}
+/* 孩子性别依赖婚史：未婚/短婚未育/离异无孩 → 置灰并清空 */
+const CHILD_SEX_OFF=['未婚','短婚未育','离异无孩'];
+function applyChildSexDep(){
+  const inp=document.getElementById('p_child_sex');
+  if(!inp) return;
+  const box=document.querySelector('.f[data-k="child_sex"]');
+  const vsel=document.getElementById('v_child_sex');
+  const mEl=document.getElementById('p_marital');
+  const mv=mEl?String(mEl.value||''):'';
+  const off=CHILD_SEX_OFF.indexOf(mv)>=0;
+  if(off){
+    if(box) box.classList.add('dep-off');
+    inp.disabled=true;
+    inp.setAttribute('aria-disabled','true');
+    inp.value='';
+    if(vsel){ vsel.value='hidden'; try{ syncSeg('v_child_sex'); }catch(e){} }
+  }else{
+    if(box) box.classList.remove('dep-off');
+    inp.disabled=false;
+    inp.removeAttribute('aria-disabled');
+    if(vsel){ vsel.value='encrypted'; try{ syncSeg('v_child_sex'); }catch(e){} }
+  }
+  try{ refreshChanged(); refreshGroupCounts(); }catch(e){}
 }
 function applyCond(){
   ['house','car'].forEach(k=>{
@@ -4630,7 +4731,8 @@ function t(k){ const d=I18N[LANG]||I18N.zh; return (d[k]!==undefined)?d[k]:(I18N
 const FIELD_EN={age:'Age',gender:'Gender',height:'Height',edu:'Education',region:'Region',city:'City',
   marital:'Marital history',fertility:'Children',marry_timeline:'Marriage timing',income:'Monthly income (after tax)',
   housecar:'Home & car',house:'Housing detail',car:'Car detail',asset:'Savings',brideprice:'Bride price expectation',
-  longdist:'Long distance',zodiac:'Chinese zodiac',constellation:'Zodiac sign',intro:'Self intro',personality:'Trait code'};
+  longdist:'Long distance',zodiac:'Chinese zodiac',constellation:'Zodiac sign',intro:'Self intro',personality:'Trait code',
+  health:'My health'};
 const OPT_EN={
   gender:['Male','Female'],
   edu:['Junior high or below','High school','Associate degree',"Bachelor's","Master's",'PhD or above'],
@@ -4664,6 +4766,7 @@ function applyLang(){
     });
   }catch(e){}
   try{ renderQuiz(); renderInfoFields(); renderPcard(); updateStepper(); }catch(e){}
+  try{ refreshPrintSheetGate(); }catch(e){}
 }
 function overseasWanted(){
   const el=$('p_intro');
@@ -4671,10 +4774,34 @@ function overseasWanted(){
   return /外国|海外|老外|欧美|白人|洋人|出国|异国/.test(t);
 }
 function renderQuiz(){
+  const labs=(LANG==='en'&&typeof LIKERT_EN!=='undefined')?LIKERT_EN:LIKERT;
   $('quiz').innerHTML=QUESTIONS.map((q,i)=>
-    '<div class="qrow" id="qrow'+i+'"><span class="qdim">'+(q.dim==='Anx'||q.dim==='Av'?(LANG==='en'?'Attach':'依恋'):q.dim)+'</span><span class="qtext">'+(i+1)+'. '+(LANG==='en'?(QUESTIONS_EN[i]||q.t):q.t)+'</span>'+
-    '<span class="likert">'+LIKERT.map((lab,j)=>'<label><input type="radio" name="q'+i+'" value="'+(j+1)+'">'+lab+'</label>').join('')+'</span></div>'
+    '<div class="qrow" id="qrow'+i+'">'+
+      '<span class="qdim">'+(q.dim==='Anx'||q.dim==='Av'?(LANG==='en'?'Attach':'依恋'):q.dim)+'</span>'+
+      '<span class="qtext">'+(i+1)+'. '+(LANG==='en'?(QUESTIONS_EN[i]||q.t):q.t)+'</span>'+
+      labs.map((lab,j)=>
+        '<label class="qopt"><input type="radio" name="q'+i+'" value="'+(j+1)+'">'+
+        '<span>'+lab+'</span></label>').join('')+
+    '</div>'
   ).join('');
+  bindQuizOpts();
+}
+/* 每次重建 DOM 后重新绑定，防止切语言后丢监听（与 BUG-2 同型） */
+function bindQuizOpts(){
+  const box=$('quiz'); if(!box) return;
+  box.querySelectorAll('.qopt input').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      const row=inp.closest('.qrow');
+      row.querySelectorAll('.qopt').forEach(c=>c.classList.remove('sel'));
+      inp.closest('.qopt').classList.add('sel');
+      row.classList.remove('qmiss');
+    });
+  });
+  /* 回填已选答案的选中态（重建后保持） */
+  for(let i=0;i<QUESTIONS.length;i++){
+    const chk=box.querySelector('input[name="q'+i+'"]:checked');
+    if(chk){ const o=chk.closest('.qopt'); if(o) o.classList.add('sel'); }
+  }
 }
 let P_ready=false, P_data=null;
 const B5_KEYS=['E','A','C','N','O'];
@@ -4731,7 +4858,7 @@ function validateQuiz(){
   let missing=0;
   for(let i=0;i<QUESTIONS.length;i++){
     const answered=!!document.querySelector('input[name="q'+i+'"]:checked');
-    $('qrow'+i).style.background=answered?'':'var(--red-100)';
+    $('qrow'+i).classList.toggle('qmiss',!answered);
     if(!answered)missing++;
   }
   $('quizErr').classList.toggle('show',missing>0);
@@ -4742,7 +4869,7 @@ function doQuiz(){
   if(!s){validateQuiz();return false;}
   P_ready=true;P_data=s;
   $('quizErr').classList.remove('show');
-  QUESTIONS.forEach((_,i)=>{$('qrow'+i).style.background='';});
+  QUESTIONS.forEach((_,i)=>{const r=$('qrow'+i); if(r) r.classList.remove('qmiss');});
   $('quizResult').style.display='block';
   $('p_narrative').textContent=narrative(s);
   $('p_bars').innerHTML=B5_KEYS.map(k=>{
@@ -5033,7 +5160,7 @@ function renderQR(){
   if (!box1 || !box2) return;
   try {
     box1.innerHTML = QRLite.qrSvg(QH_SITE, { ec: 'M', scale: 4, quiet: 4 });
-    const s1 = ($('out_s1') && $('out_s1').value || '').trim();
+    const s1 = ($('out_s1') ? String($('out_s1').textContent||'') : '').trim();
     if (s1.length > 20) {
       box2.innerHTML = QRLite.qrSvg(s1, { ec: 'L', scale: 3, quiet: 4 });
       const hint = $('qrHint');
@@ -5043,6 +5170,171 @@ function renderQR(){
     }
   } catch (e) {
     box1.innerHTML = '<p class="fielddesc">生成失败：' + (e && e.message || e) + '</p>';
+  }
+  try{ refreshPrintSheetGate(); }catch(e){}
+}
+function setPrintHint(msg,ok,err){
+  const el=$('printSheetHintLive'); if(!el) return;
+  el.textContent=msg||'';
+  el.className='hint'+(msg?' show':'')+(err?' err':'');
+  if(msg&&ok) el.style.color='var(--success)';
+  else if(msg&&err) el.style.color='var(--warning-text)';
+  else el.style.color='';
+}
+function refreshPrintSheetGate(){
+  const b=$('btnPrintSheet'); if(!b) return;
+  const wire=($('out_s1')?String($('out_s1').textContent||''):'').trim();
+  const hasQR=!!($('qrDownload')&&$('qrDownload').querySelector('svg'))
+           && !!($('qrMine')&&$('qrMine').querySelector('svg'));
+  b.disabled = !(wire.indexOf('QH3.')===0 && hasQR);
+  setPrintHint(b.disabled ? (wire.indexOf('QH3.')!==0
+      ? '请先生成序列 S1，再下载整张打印版。'
+      : '请先点「生成 / 刷新二维码」，再下载整张打印版。') : '');
+}
+/* SVG 元素 → Image（等比，指定目标边长） */
+function svgToImage(svgEl,px){
+  return new Promise((resolve,reject)=>{
+    try{
+      const txt=new XMLSerializer().serializeToString(svgEl);
+      const blob=new Blob([txt],{type:'image/svg+xml;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const img=new Image();
+      img.onload=()=>{ resolve({img,url}); };
+      img.onerror=()=>{ try{URL.revokeObjectURL(url);}catch(e){} reject(new Error('二维码渲染失败')); };
+      img.src=url;
+    }catch(e){ reject(e); }
+  });
+}
+/* PNG/Uint8Array → Image */
+function bytesToImage(bytes,type){
+  return new Promise((resolve,reject)=>{
+    try{
+      const blob=new Blob([bytes],{type:type||'image/png'});
+      const url=URL.createObjectURL(blob);
+      const img=new Image();
+      img.onload=()=>resolve({img,url});
+      img.onerror=()=>{ try{URL.revokeObjectURL(url);}catch(e){} reject(new Error('图片解码失败')); };
+      img.src=url;
+    }catch(e){ reject(e); }
+  });
+}
+async function downloadPrintSheet(){
+  const wire=($('out_s1')?String($('out_s1').textContent||''):'').trim();
+  const b=$('btnPrintSheet');
+  const prev=b?b.textContent:'';
+  if(b){ b.disabled=true; b.textContent='正在拼版…'; }
+  setPrintHint('正在拼版，请稍候。');
+  const urls=[];
+  try{
+    const svgL=$('qrDownload')&&$('qrDownload').querySelector('svg');
+    const svgR=$('qrMine')&&$('qrMine').querySelector('svg');
+    if(!svgL||!svgR) throw new Error('二维码未生成');
+
+    /* 底图：有照片用照片载体，否则用风景图 */
+    let baseBytes=null, baseSvg=null, upCap=1;
+    if(PHOTO&&PHOTO.img){ baseBytes=await makePhotoCarrier(wire); upCap=1.5; }
+    else{
+      /* SVG 是矢量：先按目标像素改 width/height 再栅格化，避免"600px 源放大到 2100px"发糊 */
+      baseSvg=makeCarrierSVG(wire);
+      const sc0=Math.min(2200/600,1400/400);
+      const tw=Math.round(600*sc0), th=Math.round(400*sc0);
+      baseSvg=baseSvg.replace('width="600" height="400"','width="'+tw+'" height="'+th+'"');
+      upCap=1;
+    }
+
+    /* 画布：A4 纵向 300dpi；失败降 200dpi */
+    let W=2480,H=3508;
+    let cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+    let cx=cv.getContext('2d');
+    if(!cx){ throw new Error('画布不可用'); }
+
+    const L720=await svgToImage(svgL,720); urls.push(L720.url);
+    const R1200=await svgToImage(svgR,1200); urls.push(R1200.url);
+    let base=null;
+    if(baseBytes){ base=await bytesToImage(baseBytes,'image/png'); urls.push(base.url); }
+    else { base=await bytesToImage(new TextEncoder().encode(baseSvg),'image/svg+xml'); urls.push(base.url); }
+
+    const PAD=140;
+    cx.fillStyle='#fff'; cx.fillRect(0,0,W,H);
+    const FONT='-apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+    /* 标题 */
+    cx.fillStyle='#1d1d28';
+    cx.font='600 56px '+FONT;
+    cx.fillText('契合码 · 可打印版',PAD,PAD+56);
+
+    /* 码上标注 */
+    const x0=Math.round((W-(720+120+1200))/2);
+    const labY=PAD+56+70;
+    cx.fillStyle='#4a4e58';
+    cx.font='40px '+FONT;
+    cx.fillText('① 扫码下载软件',x0,labY);
+    cx.fillText('② 我的契合码',x0+720+120,labY);
+
+    /* 两码顶部对齐（标注基线下方留 40px，避免字与码贴死） */
+    const qrTop=labY+40;
+    cx.imageSmoothingEnabled=false;
+    cx.drawImage(L720.img,x0,qrTop,720,720);
+    cx.drawImage(R1200.img,x0+720+120,qrTop,1200,1200);
+    const qrBottom=qrTop+1200;
+
+    /* 页脚两行基线 */
+    const footY1=H-PAD-56, footY2=H-PAD;
+    /* 载体图区：从"码底+80"到"页脚上方 60"，区域内部垂直居中 */
+    const areaTop=qrBottom+80;
+    const areaBottom=footY1-60;
+    const maxW=2200, maxH=Math.min(1400,areaBottom-areaTop);
+    const iw=base.img.naturalWidth||base.img.width, ih=base.img.naturalHeight||base.img.height;
+    const sc=Math.min(maxW/iw,maxH/ih,upCap);
+    const dw=Math.round(iw*sc), dh=Math.round(ih*sc);
+    const bx=Math.round((W-dw)/2);
+    const by=Math.round(areaTop+(areaBottom-areaTop-dh)/2);
+    cx.imageSmoothingEnabled=true;
+    cx.drawImage(base.img,bx,by,dw,dh);
+
+    /* 底部说明 */
+    cx.fillStyle='#4a4e58';
+    cx.font='40px '+FONT;
+    cx.fillText('左码扫码下载软件；右码为我的契合码，请印 ≥10cm 宽。',PAD,footY1);
+    cx.fillText('纸张保持平整，不要折叠压痕。',PAD,footY2);
+
+    let blob=null;
+    try{
+      blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+    }catch(e){ blob=null; }
+    if(!blob){
+      /* 降级 200dpi 重画一次（等比缩放） */
+      const W2=1654,H2=2339,k=W2/W;
+      const cv2=document.createElement('canvas'); cv2.width=W2; cv2.height=H2;
+      const c2=cv2.getContext('2d');
+      c2.scale(k,k); c2.drawImage(cv,0,0,W,H);
+      blob=await new Promise(r=>cv2.toBlob(r,'image/png'));
+      if(!blob) throw new Error('图片导出失败');
+    }
+    /* 关键：canvas 重绘会丢 tEXt，必须重新写回 qh-code */
+    const raw=await blob.arrayBuffer();
+    const out=pngAddText(new Uint8Array(raw),'qh-code',wire);
+
+    const a=document.createElement('a');
+    const objUrl=URL.createObjectURL(new Blob([out],{type:'image/png'}));
+    a.href=objUrl;
+    a.download=qiheFileName('png').replace('.png','-打印版.png');
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ try{URL.revokeObjectURL(objUrl);}catch(e){} a.remove(); },1500);
+
+    setPrintHint('已下载打印版（约 '+Math.round(out.length/1024)+' KB）· 契合码请印 ≥10cm 宽。',true);
+  }catch(e){
+    setPrintHint('生成失败：'+zhErr(e,'图片合成失败')+'。可改用「下载照片载体」+ 两个二维码分别保存。',false,true);
+  }finally{
+    urls.forEach(u=>{ try{URL.revokeObjectURL(u);}catch(e){} });
+    if(b){
+      b.textContent=prev||'下载照片（含双码）';
+      /* 只恢复可用性，不覆盖上面刚设的成功/失败提示
+         （refreshPrintSheetGate 在门控打开时会 setPrintHint('')，会把结果提示吃掉） */
+      const w2=($('out_s1')?String($('out_s1').textContent||''):'').trim();
+      const has2=!!($('qrDownload')&&$('qrDownload').querySelector('svg'))
+              && !!($('qrMine')&&$('qrMine').querySelector('svg'));
+      b.disabled=!(w2.indexOf('QH3.')===0&&has2);
+    }
   }
 }
 function qrPng(which){
@@ -5101,6 +5393,7 @@ async function uiGenS1(){
       if(need){ $('go7Hint').style.display='inline'; $('go7Hint').textContent='请先完成第 2 步：导出密钥备份'; }
       else{ $('go7Hint').style.display='none'; }
     }
+    try{ refreshPrintSheetGate(); }catch(e){}
     $('s1Result').style.display='block';
     updateStepper();
   }catch(e){
@@ -5428,7 +5721,6 @@ fillSelect($('b_income'),INC_LABEL,'未披露');
 fillSelect($('b_r_income'),INC_LABEL,'不限');
 
 renderInfoFields();
-initSeg();
 renderQuiz();
 updateStepper();
 
@@ -5436,7 +5728,7 @@ updateStepper();
 (function(){
   const card=$('cardInfo');
   if(card&&card.addEventListener){
-    const on=()=>{ applyCond(); refreshGroupCounts(); refreshChanged(); };
+    const on=()=>{ applyCond(); try{ applyChildSexDep(); }catch(e){} refreshGroupCounts(); refreshChanged(); };
     card.addEventListener('input',on);
     card.addEventListener('change',on);
   }
