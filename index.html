@@ -916,7 +916,7 @@
         </div>
 
         <div class="req-sub span2">可选门槛</div>
-        <p class="fielddesc span2" style="margin:0 0 4px;">这几项没有权威数据，<b>不参与人数估算</b>，只作为匹配硬条件。</p>
+        <p class="fielddesc span2" style="margin:0 0 4px;">房车、彩礼、生育意愿这三项没有权威数据，<b>不参与人数估算</b>，只作为匹配硬条件；婚史已按分年龄离婚率计入估算。</p>
         <div class="f span2">
           <div class="f-head"><label for="r_marital">婚史接受上限</label></div>
           <select id="r_marital"><option>不限</option><option>仅未婚</option><option>可到短婚未育</option><option>可到离异无孩</option><option>可到离异有孩</option><option>全接受</option></select>
@@ -3112,7 +3112,7 @@ const FIELD_DEFS=[
   {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],
    desc:'选年月即可，<b>年龄、属相、星座会自动算出</b>，不用自己填。留空则不参与年龄匹配'},
   {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
-  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'130–230cm；只作自愿披露，不参与匹配判定。<span id="hrefTip"></span>'},
+  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'130–230cm；对方设身高要求时会参与判定，未披露则判定为「未披露」。<span id="hrefTip"></span>'},
   {k:'weight',g:'A',label:'体重',ctrl:'number',min:30,max:150,unit:'kg',L:'L1a',def:'public',dirs:['public','encrypted','hidden'],desc:'行业基本信息，建议保持公开'},
   {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
   {k:'region',g:'A',label:'地点',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
