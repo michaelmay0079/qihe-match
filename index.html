@@ -1201,6 +1201,12 @@
           </div>
           <div class="errmsg" id="err_in_s1" role="alert"></div>
 
+          <div id="peerPublic" style="display:none;margin:12px 0 0;">
+            <div class="fielddesc" style="margin:0 0 4px;font-weight:600;color:var(--text-primary);font-size:var(--fs-sm);">对方的公开资料</div>
+            <div class="judge-list" id="peerPublicList"></div>
+            <div class="fielddesc" style="margin:4px 0 0;font-size:var(--fs-xs);">对方只公开了这些。其余项对方选了加密或不写入，需要双方达标后才可见。</div>
+          </div>
+
           <div class="fielddesc" style="margin:12px 0 6px;font-weight:600;color:var(--text-primary);font-size:var(--fs-sm);">我的资料（用于让对方判断我是否达标）</div>
           <div class="grid">
             <div class="f"><label for="b_age">我的年龄</label><input type="number" id="b_age" value="27" inputmode="numeric"></div>
@@ -2713,6 +2719,7 @@ function loadCarrier(input){
         hint.className='hint show';
       }
       $('err_in_s1').classList.remove('show');
+      try{ renderPeerPublic(wire); }catch(e){}
     }catch(e){
       if(hint){ hint.textContent='读取失败：'+zhErr(e,'文件格式不支持'); hint.className='hint show err'; }
     }
@@ -3660,7 +3667,8 @@ function briefOfS1(S1obj){
   try{
     const rq=S1obj&&S1obj.rq||{};
     const bits=[];
-    if(rq.g) bits.push('找'+(rq.g==='1'?'男':rq.g==='2'?'女':'不限'));
+    /* rq.g 是数字（1=男 / 2=女），用严格相等比较字符串永远不成立 → 曾经恒显示"不限" */
+    if(rq.g!==undefined&&rq.g!==null&&rq.g!=='') bits.push('找'+(Number(rq.g)===1?'男':Number(rq.g)===2?'女':'不限'));
     if(Array.isArray(rq.a)) bits.push(rq.a[0]+'–'+rq.a[1]+' 岁');
     if(Array.isArray(rq.ht)) bits.push(rq.ht[0]+'–'+rq.ht[1]+' cm');
     if(rq.e!==undefined&&rq.e!==null){
@@ -3770,12 +3778,18 @@ function importProfiles(input){
         const latest=arr.slice().sort((a,b)=>(b.ts||0)-(a.ts||0))[0];
         if(latest&&latest.jwk){
           const priv=await crypto.subtle.importKey('jwk',latest.jwk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+          /* 注意：这里的 A_kp 只有 privateKey，没有 publicKey。
+             目前只有 genS1() 用 A_kp.publicKey，且那里必然重赋完整密钥对，所以当前安全。
+             任何新增的、需要 publicKey 的路径必须先走 genS1()。 */
           A_kp={privateKey:priv};
           A_self=latest.self; A_req=latest.req; A_contact=latest.contact;
           try{ fillAContactBack(latest.contact); refreshContactHint(); }catch(e){}
         }
       }catch(e){}
       refreshProfileBar();
+      /* 导入后 btnGo7 会立即变成可用，但步骤条第 7 步的可点性存在 updateStepper 里，
+         不同步的话要切一次屏才刷新（P2-1）。 */
+      try{ updateStepper(); }catch(e){}
       setProfileHint('已导入 '+added+' 份发布档案、'+addedB+' 份回应密钥');
     }catch(e){ setProfileHint('导入失败：'+zhErr(e,'文件不是有效的密钥备份'),true); }
     if(input) input.value='';
@@ -5667,6 +5681,49 @@ function focusZone(id){
   clearTimeout(el._hlTimer);
   el._hlTimer=setTimeout(()=>el.classList.remove('hl'), reduce?300:600);
 }
+/* 把 S1 里的公开字段（fd）渲染成「学历：本科」这样的行。
+   fd 是 [{k:短码, v:码值}]；用现成的 decodeField 反解，再用 FIELD_DEFS 的 label/unit 显示。
+   解不开（用户还没贴完 / 不是 pub 码）就清空，不报错——输入过程中报错只会打扰人。 */
+function renderPeerPublic(wire){
+  const box=$('peerPublic'), list=$('peerPublicList');
+  if(!box||!list) return;
+  let obj=null;
+  try{
+    const u=unpackWire(wire);
+    if(u&&u.obj&&u.obj.role==='pub') obj=u.obj;
+  }catch(e){ obj=null; }
+  if(!obj || !Array.isArray(obj.fd) || !obj.fd.length){
+    box.style.display='none';
+    list.innerHTML='';
+    /* 是有效的 pub 码但没有公开项 → 明确说一句，别留白 */
+    if(obj){
+      list.innerHTML='<div class="fielddesc" style="margin:0;">对方没有公开任何资料。</div>';
+      box.style.display='block';
+    }
+    return;
+  }
+  const rows=[];
+  for(let i=0;i<obj.fd.length;i++){
+    const f=obj.fd[i];
+    if(!f||typeof f.k!=='string') continue;
+    let dec=null;
+    try{ dec=decodeField(f.k,f.v); }catch(e){ dec=null; }
+    if(!dec) continue;
+    const def=FIELD_BY_K[dec.k];
+    const label=def?def.label:dec.k;
+    const unit=(def&&def.unit)?(' '+def.unit):'';
+    rows.push('<div class="judge-row"><span class="cond">'+escapeHtml(label)+'</span>'+
+      '<span class="thr">'+escapeHtml(String(dec.v))+unit+'</span></div>');
+  }
+  if(!rows.length){
+    list.innerHTML='<div class="fielddesc" style="margin:0;">对方没有公开任何资料。</div>';
+    box.style.display='block';
+    return;
+  }
+  list.innerHTML=rows.join('');
+  box.style.display='block';
+}
+
 /* 从码里读出 role（pub/resp/unlock）；读不出返回空串 —— 不猜 */
 function wireRole(raw){
   const v=String(raw||'').trim();
@@ -5812,6 +5869,9 @@ async function uiResolveS2(){
         : '本机没有保存发布档案，无法解密。请先在第 6 步生成 S1（会自动保存档案），或导入密钥备份文件。');
       return;
     }
+    /* 注意：这里的 A_kp 只有 privateKey，没有 publicKey。
+       目前只有 genS1() 用 A_kp.publicKey，且那里必然重赋完整密钥对，所以当前安全。
+       任何新增的、需要 publicKey 的路径必须先走 genS1()。 */
     A_kp={privateKey:hit.priv};
     A_self=hit.rec.self; A_req=hit.rec.req; A_contact=hit.rec.contact;
     const r=await resolveS2($('in_s2').value,hit.priv,hit.rec.self,hit.rec.req,hit.rec.contact);
@@ -5952,6 +6012,16 @@ updateStepper();
     card.addEventListener('input',on);
     card.addEventListener('change',on);
   }
+})();
+
+/* 贴码即见对方公开资料：input / change / paste 都要触发（粘贴有时只来 paste 不来 input） */
+(function(){
+  const ta=$('in_s1');
+  if(!ta) return;
+  const refresh=()=>{ try{ renderPeerPublic(ta.value); }catch(e){} };
+  ['input','change','paste'].forEach(function(ev){
+    ta.addEventListener(ev,function(){ if(ev==='paste'){ setTimeout(refresh,0); } else refresh(); });
+  });
 })();
 
 $('quiz').addEventListener('change',()=>{ if(scoreQuiz())doQuiz(); });
