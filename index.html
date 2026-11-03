@@ -3969,8 +3969,13 @@ function calibrate(p){
     hf=Math.min(1,Math.max(0.002,hf));   /* 下界保护：极严身高不低于 0.2%，避免直接归零 */
   }
 
-  /* 婚史放宽：接受离异/丧偶时池子放大（按年龄动态，年龄越大放大越多） */
-  const mf=(_aMin!==null&&_aMax!==null)?maritalFactor(_ag,_aMin,_aMax,rq0.maritalMax):1;
+  /* 婚史放宽：接受离异/丧偶时池子放大（按年龄动态，年龄越大放大越多）
+     ⚠ 无年龄区间时不能直接给 mf=1：af（ageShrink）在无区间时等于 1，等价于「基准区间 AGE_BASE」，
+       婚史因子必须用同一基准，否则「婚史已按分年龄离婚率计入估算」这句文案就是有条件成立、
+       清空年龄后静默失效。故用 AGE_BASE 兜底，与 af=1 的口径保持一致。 */
+  const _mLo=(_aMin!==null&&_aMax!==null)?_aMin:AGE_BASE[0];
+  const _mHi=(_aMin!==null&&_aMax!==null)?_aMax:AGE_BASE[1];
+  const mf=maritalFactor(_ag,_mLo,_mHi,rq0.maritalMax);
 
   const strict=pop*E*I*af*hf*mf;
   const widenEdu=pop*I*af*hf*mf;
@@ -4280,7 +4285,10 @@ function syncSeg(id){
   const v=el.value;
   seg.querySelectorAll('button').forEach(b=>{
     b.classList.remove('on-public','on-encrypted','on-hidden');
-    if(b.dataset.val===v)b.classList.add('on-'+v);
+    const on=(b.dataset.val===v);
+    if(on)b.classList.add('on-'+v);
+    /* aria-pressed 与 on-* class 同源同步（不另写一套状态判断） */
+    b.setAttribute('aria-pressed', on?'true':'false');
   });
 }
 function initSeg(){
@@ -4337,7 +4345,7 @@ function fieldHTML(d){
   if(d.dirs&&d.dirs.length){
     seg='<div class="seg" data-for="'+vid+'" role="group" aria-label="'+d.label+'披露级别"'+
       ((d.L==='L1a'||d.L==='L2')?(' aria-describedby="vishint_'+d.k+'"'):'')+'>'+
-      d.dirs.map(v=>'<button type="button" data-val="'+v+'">'+(LANG==='en'?(v==='public'?'Public':v==='encrypted'?'Encrypted':'Hidden'):(v==='public'?'公开':v==='encrypted'?'加密':'隐藏'))+'</button>').join('')+
+      d.dirs.map(v=>'<button type="button" data-val="'+v+'" aria-pressed="false">'+(LANG==='en'?(v==='public'?'Public':v==='encrypted'?'Encrypted':'Hidden'):(v==='public'?'公开':v==='encrypted'?'加密':'隐藏'))+'</button>').join('')+
       '</div>'+
       '<select class="sr-only" id="'+vid+'" tabindex="-1" aria-hidden="true"><option>public</option><option>encrypted</option><option>hidden</option></select>'+
       ((d.L==='L1a'||d.L==='L2')?('<span class="sr-only" id="vishint_'+d.k+'">本项只能加密或隐藏，不会出现在公开摘要里</span>'):'');
