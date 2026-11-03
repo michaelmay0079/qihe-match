@@ -3157,9 +3157,9 @@ const FIELD_DEFS=[
    desc:'选年月即可，<b>年龄、属相、星座会自动算出</b>，不用自己填。留空则不参与年龄匹配'},
   {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
   {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'130–230cm；对方设身高要求时会参与判定，未披露则判定为「未披露」。<span id="hrefTip"></span>'},
-  {k:'weight',g:'A',label:'体重',ctrl:'number',min:30,max:150,unit:'kg',L:'L1a',def:'public',dirs:['public','encrypted','hidden'],desc:'行业基本信息，建议保持公开'},
-  {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
-  {k:'region',g:'A',label:'地点',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'public',dirs:['public','encrypted','hidden']},
+  {k:'weight',g:'A',label:'体重',ctrl:'number',min:30,max:150,unit:'kg',L:'L1a',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'行业基本信息，建议保持公开'},
+  {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'encrypted',dirs:['public','encrypted','hidden']},
+  {k:'region',g:'A',label:'地点',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'encrypted',dirs:['public','encrypted','hidden']},
   {k:'city',g:'A',label:'城市',ctrl:'text',maxlen:20,L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
 
   {k:'marital',g:'B',label:'婚史',ctrl:'select',opts:['未婚','短婚未育','离异无孩','离异有孩（归对方）','离异有孩（自己抚养）','丧偶'],L:'L1a',def:'encrypted',dirs:['encrypted','hidden']},
@@ -3177,15 +3177,15 @@ const FIELD_DEFS=[
   {k:'asset',g:'C',label:'存款',ctrl:'select',opts:['无','10万以内','10–50万','50–100万','100万以上'],L:'L2',def:'hidden',dirs:['encrypted','hidden'],blank:'不愿透露'},
   {k:'brideprice',g:'C',label:'彩礼期望',ctrl:'select',opts:['0（不要）','10万以内','10–20万','20–30万','30万以上','视情况'],L:'L2',def:'hidden',dirs:['encrypted','hidden']},
 
-  {k:'longdist',g:'D',label:'异地接受度',ctrl:'select',opts:['接受异地','同省可接受','仅同城'],L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'只是自述，不参与自动判定；A 解密后会看到这一项'},
+  {k:'longdist',g:'D',label:'异地接受度',ctrl:'select',opts:['接受异地','同省可接受','仅同城'],L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'只是自述，不参与自动判定；A 解密后会看到这一项'},
   {k:'smoking',g:'D',label:'吸烟',ctrl:'select',opts:SMOKING,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'按程度选择'},
   {k:'drinking',g:'D',label:'喝酒',ctrl:'select',opts:DRINKING,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'按程度选择'},
-  {k:'mahjong',g:'D',label:'打麻将',ctrl:'select',opts:FREQ3,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'娱乐习惯'},
-  {k:'fishing',g:'D',label:'钓鱼',ctrl:'select',opts:FREQ3,L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'休闲习惯'},
-  {k:'reading',g:'D',label:'读书',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每月 2 本，偏好历史与科幻」'},
-  {k:'pcgame',g:'D',label:'电脑游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「几乎不玩」'},
-  {k:'mobilegame',g:'D',label:'手机游戏',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填'},
-  {k:'sports',g:'D',label:'运动',ctrl:'text',L:'L0',def:'public',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每周跑步两次」'},
+  {k:'mahjong',g:'D',label:'打麻将',ctrl:'select',opts:FREQ3,L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'娱乐习惯'},
+  {k:'fishing',g:'D',label:'钓鱼',ctrl:'select',opts:FREQ3,L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'休闲习惯'},
+  {k:'reading',g:'D',label:'读书',ctrl:'text',L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每月 2 本，偏好历史与科幻」'},
+  {k:'pcgame',g:'D',label:'电脑游戏',ctrl:'text',L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'自己填，例如「几乎不玩」'},
+  {k:'mobilegame',g:'D',label:'手机游戏',ctrl:'text',L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'自己填'},
+  {k:'sports',g:'D',label:'运动',ctrl:'text',L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'自己填，例如「每周跑步两次」'},
   {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。由出生年月推算，可手动修改；修改后不再自动覆盖。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'encrypted',dirs:['public','encrypted','hidden'],desc:'民俗项，可跳过。由出生年月推算，可手动修改；修改后不再自动覆盖。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'intro',g:'D',label:'自我介绍',ctrl:'textarea',maxlen:200,L:'L1a',def:'encrypted',dirs:['encrypted','hidden'],desc:'≤200 字，本项不做荒谬拦截（「我属猪」是正常自述）'},
@@ -3556,7 +3556,12 @@ async function buildS1(self,vis,reqChinese,contact,rsaPub,pubB64){
   const cm=(cmEl&&cmEl.value)?cmEl.value:'locked';
   const S1={v:PROTO_VER,cod:CODER_VER,role:'pub',pk:pubB64,rq,cm,fd:Object.keys(pub).map(k=>({k,v:pub[k]}))};
   if(cm==='open'&&String(contact||'').trim()) S1.ct=String(contact).trim();
-  if(Object.keys(enc).length) S1.blk=await blockEncrypt(enc,rsaPub);
+  /* 已移除 S1.blk：全文件没有任何地方解这个块（blockDecrypt 的 4 个调用点分别是
+     S2.enc_self / S2.self_enc / S3.c / S3.contact_enc，都不碰 S1.blk），
+     它占整条序列约 40% 的体积却永远打不开，且内容是重复的——A 的完整资料已在
+     localStorage 档案里（savePubProfile 的 rec.self），换设备可用备份 JSON 恢复。
+     enc 仍然照常计算：既便于后续需要"有没有加密字段"的判断，也让老码的结构认知不变。
+     读侧无需改动：migrateV2 只是把老码里的 blk 原样透传，没人读它。 */
   return {S1,wire:packWire(S1)};
 }
 
