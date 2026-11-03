@@ -535,7 +535,7 @@
       </svg>
       <div class="hero-big" aria-hidden="true">契合</div>
       <h1 tabindex="-1">契合码</h1>
-      <p class="lead">把你的信息编码成一个可传播的「序列」，双向达标，才解锁联系方式。</p>
+      <p class="lead">把你的<b>要求</b>写成一段码，谁满足谁才能回应你——<b>你的资料不出门</b>。</p>
       <p class="lead2">适用于相亲交友、灵魂伴侣、搭子——让红娘成为软件，消除信息壁垒。<br>所有资料均为自述，本产品不做学历 / 房产 / 婚史核验。</p>
             <p class="fielddesc" style="margin-top:var(--sp-3);">往下先看「三步完成匹配」了解整体，再看「四种用法」选你的一条路 ↓</p>
     </div>
@@ -544,18 +544,21 @@
       <div class="flow">
         <div class="flow-step">
           <div class="flow-num">1</div>
-          <div class="flow-t">生成序列 S1</div>
-          <div class="flow-d">填信息与要求，本地编码 + 整块加密生成自包含序列</div>
+          <div class="flow-t">只把「要求」发出去</div>
+          <div class="flow-d">你想找什么样的人，写成一段码。发到贴吧、群、私信都行。</div>
+          <div class="flow-d" style="font-weight:600;color:var(--text-primary);">你的资料留在自己手机上，不随码走</div>
         </div>
         <div class="flow-step">
           <div class="flow-num">2</div>
-          <div class="flow-t">匹配握手 S2</div>
-          <div class="flow-d">对方本地判定是否达标，回传加密应答</div>
+          <div class="flow-t">对方在自己手机上对照</div>
+          <div class="flow-d">够了才会回应你。他会附上他自己的要求。</div>
+          <div class="flow-d" style="font-weight:600;color:var(--text-primary);">他读不到你的资料；你只看到他愿意公开的部分</div>
         </div>
         <div class="flow-step">
           <div class="flow-num">3</div>
-          <div class="flow-t">解锁联系方式 S3</div>
-          <div class="flow-d">双向达标后互留联系方式（你给主渠道，对方给你身份标识）</div>
+          <div class="flow-t">双方都够，交换渠道</div>
+          <div class="flow-d">你给他一个网址或留言板，他给你一个身份标识。之后你们自己聊。</div>
+          <div class="flow-d" style="font-weight:600;color:var(--text-primary);">互不达标的人，连渠道都换不到</div>
         </div>
       </div>
     </div>
@@ -624,7 +627,7 @@
     </div>
     <div class="card">
       <details class="fold">
-        <summary><span>使用须知 <span class="fold-sub">隐私与加密 · 服务器设置 · 解密原则 · 使用建议 · 数据来源（中/英）</span></span></summary>
+        <summary><span>使用须知 <span class="fold-sub">隐私与保密 · 服务器设置 · 谁能看到什么 · 使用建议 · 数据来源（中/英）</span></span></summary>
         <div class="fold-body">
 <div class="notice-lang" data-lang="zh">
         <div class="spec">
@@ -633,11 +636,11 @@
             <div class="spec-h">一、信息与隐私保密</div>
             <div class="spec-pair">
               <div class="spec-col enc">
-                <div class="spec-tag">加密</div>
-                <p class="fielddesc" style="margin:0;">字段值经 <b>AES-256-GCM</b> 加密；加密所用的 AES 密钥再由接收方的 <b>RSA-2048 公钥（RSA-OAEP）</b> 封装，并随序列一同传输。私钥仅在生成方本机产生与保存，不写入序列、不上传、不向任何第三方提供。未解锁状态下，序列持有者只能看到密文与已设为公开的字段。整块加密意味着读取结果只有两种：完整读出，或完全读不到，不存在「读出一部分」的中间状态。</p>
+                <div class="spec-tag">保密（不发出去）</div>
+                <p class="fielddesc" style="margin:0;">字段值经 <b>AES-256-GCM</b> 加密；加密所用的 AES 密钥再由接收方的 <b>RSA-2048 公钥（RSA-OAEP）</b> 封装，并随序列一同传输。私钥仅在生成方本机产生与保存，不写入序列、不上传、不向任何第三方提供。未交换状态下，序列持有者只能看到码里现有的内容（要求 + 你主动公开的字段）。保密项不在码里，因此读取结果只有两种：完整读出，或完全读不到，不存在「读出一部分」的中间状态。</p>
               </div>
               <div class="spec-col plain">
-                <div class="spec-tag">不加密（公开）</div>
+                <div class="spec-tag">公开（谁都能看）</div>
                 <p class="fielddesc" style="margin:0;">字段以短码明文写入序列外壳。任何取得序列者可使用公开工具 base64 解码，并对照码表读出全部公开字段。其作用是避免资料在贴文、评论、私信中被一眼看全，<b>不具备保密性</b>。</p>
               </div>
             </div>
@@ -647,25 +650,30 @@
             <div class="spec-h">二、服务器设置</div>
             <div class="spec-pair">
               <div class="spec-col enc">
-                <div class="spec-tag">加密</div>
-                <p class="fielddesc" style="margin:0;">本产品不设服务器，亦无后端接口、数据库与账号体系。编码、加密、判定、解密全部在本机浏览器内完成（Web Crypto API）。序列为自包含密文，可经任意渠道传播，其安全性不依赖任何中心服务是否在线。</p>
+                <div class="spec-tag">保密（不发出去）</div>
+                <p class="fielddesc" style="margin:0;">本产品不设服务器，亦无后端接口、数据库与账号体系。编码、加密、判定、解密全部在本机浏览器内完成（Web Crypto API）。码里只有你的<b>要求</b>（明文）和你<b>主动公开</b>的资料。<b>保密项不在里面。</b>因此码可经任意渠道传播，其安全性不依赖任何中心服务是否在线。</p>
               </div>
               <div class="spec-col plain">
-                <div class="spec-tag">不加密（公开）</div>
+                <div class="spec-tag">公开（谁都能看）</div>
                 <p class="fielddesc" style="margin:0;">公开字段随序列一同传播，因此传播范围即等于可见范围。该范围不由本产品控制，亦无法在转发后回收。凡设为公开的内容，应视为已向所有可能取得该序列的人公开。</p>
               </div>
             </div>
           </div>
 
           <div class="spec-item">
-            <div class="spec-h">三、解密原则：双向达标，或超大计算机集群破解</div>
+            <div class="spec-h">三、谁能看到什么（两个方向不一样，这里说实话）</div>
             <div class="spec-pair">
               <div class="spec-col enc">
-                <div class="spec-tag">加密</div>
-                <p class="fielddesc" style="margin:0;">解密路径有两条，且均不由本产品掌握。① 双方条件互相判定达标后，由持有私钥的一方解开；② 不持有私钥时，需对 RSA-2048 与 AES-256 实施暴力破解——这需要超大计算机集群与不可行的耗时，在可接受时间内不可行。本产品未设置后门，不能代为解密，亦无法找回私钥。私钥一旦泄露，相应内容即失去保护；私钥一旦丢失，相应内容无法恢复。</p>
+                <div class="spec-tag">保密（不发出去）</div>
+                <p class="fielddesc" style="margin:0;">
+            <b>· 你设成保密的资料 → 对方：拿不到。</b>这类内容<b>根本不进码</b>（码里没有这些字段），所以对方拿到码也无从解起——不是"很难解"，是"码里没有"。<br>
+            <b>· 对方填的资料 → 你：只有你勾选的部分会随码发给你。</b>对方可以选择哪些项给你看；<b>没勾选的项不在码里，你也拿不到</b>。勾选的部分会加密送到你这里，由你的软件解开显示。<br>
+            <b>· 需要说明的一点：</b>对方的资料会加密送到你设备上，能不能看到取决于本产品的软件怎么显示。所以请用本产品的原版页面，不要用别人改过的版本。<br>
+            <b>· 密钥：</b>本产品未设置后门，不能代为解密，亦无法找回私钥。私钥一旦泄露，相应内容即失去保护；一旦丢失，相应内容无法恢复。
+          </p>
               </div>
               <div class="spec-col plain">
-                <div class="spec-tag">不加密（公开）</div>
+                <div class="spec-tag">公开（谁都能看）</div>
                 <p class="fielddesc" style="margin:0;">无需解密，任何取得序列者可在任何时刻直接读取。公开档位不应包含任何不愿被陌生人完整获知的信息。</p>
               </div>
             </div>
@@ -675,12 +683,12 @@
             <div class="spec-h">四、使用建议</div>
             <div class="spec-pair">
               <div class="spec-col enc">
-                <div class="spec-tag">加密（建议默认）</div>
-                <p class="fielddesc" style="margin:0;">年龄、性别、身高、城市、收入、婚史、房车、健康等敏感项建议保持默认加密档。联系方式建议填写<b>昵称 + 匿名渠道链接（贴吧 / 留言板 / 主页）</b>；<b>不建议填写手机号</b>——手机号一经写入序列，其可见范围即等同于序列的传播范围。</p>
+                <div class="spec-tag">保密（建议默认）</div>
+                <p class="fielddesc" style="margin:0;">年龄、性别、身高、城市、收入、婚史、房车、健康等敏感项建议保持默认的<b>「保密」档</b>——它们<b>不会发给对方</b>，留着只是为了你自己以后能改。联系方式建议填写<b>昵称 + 匿名渠道链接（贴吧 / 留言板 / 主页）</b>；<b>不建议填写手机号</b>——手机号一经写入序列，其可见范围即等同于序列的传播范围。</p>
               </div>
               <div class="spec-col plain">
-                <div class="spec-tag">不加密（公开）/ 隐藏</div>
-                <p class="fielddesc" style="margin:0;">仅建议将学历、地区、异地接受度等低敏感项设为公开，用于让对方在解锁前做初步判断。存款、彩礼期望建议保持「隐藏」：隐藏项完全不写入序列，连字段本身都不存在。所有字段均可留空，留空项不写入序列。</p>
+                <div class="spec-tag">公开（谁都能看）</div>
+                <p class="fielddesc" style="margin:0;">仅建议将学历、地区、异地接受度等低敏感项设为<b>公开</b>，用于让对方对你有个初步印象。存款、彩礼期望这类建议保持<b>保密</b>：不会发给对方，也不会出现在码里。所有字段均可留空，<b>留空项不写入</b>。</p>
               </div>
             </div>
           </div>
@@ -689,11 +697,11 @@
             <div class="spec-h">五、数据来源及测评原则</div>
             <div class="spec-pair">
               <div class="spec-col enc">
-                <div class="spec-tag">加密</div>
-                <p class="fielddesc" style="margin:0;">性格测评结果（大五人格 + 依恋倾向）默认加密写入序列，仅双向达标后对方可见。测评采用公开学术量表 <b>BFI-44</b>（John &amp; Srivastava, 1999 / Goldberg, 1993；44 题）与依恋倾向自评，共 48 题，仅在本机计分，不上传。结果为倾向描述，不构成心理诊断，亦不作为能力或品行评价。</p>
+                <div class="spec-tag">保密（不发出去）</div>
+                <p class="fielddesc" style="margin:0;">性格测评结果（大五人格 + 依恋倾向）默认<b>保密</b>：只存在你这台设备上，<b>不写入码、对方看不到</b>。它只用于你自己的画像，以及你在本地判定对方时参考。测评采用公开学术量表 <b>BFI-44</b>（John &amp; Srivastava, 1999 / Goldberg, 1993；44 题）与依恋倾向自评，共 48 题，仅在本机计分，不上传。结果为倾向描述，不构成心理诊断，亦不作为能力或品行评价。</p>
               </div>
               <div class="spec-col plain">
-                <div class="spec-tag">不加密（公开）</div>
+                <div class="spec-tag">公开（谁都能看）</div>
                 <p class="fielddesc" style="margin:0;">现实校准来自人口普查、年度抽样、婚姻登记与收入统计等<b>多源公开数据的粗估</b>（各源年份与口径不同），收入按到手（税后）口径。结果为粗估量级，非官方逐城统计，仅供认知锚定，不作为任何决策依据。本产品不核验任何资料，所有内容均为用户自述。</p>
               </div>
             </div>
@@ -784,7 +792,7 @@
       <div class="mission"><b>产品使命</b>：让红娘成为软件——消除信息壁垒，促进真诚沟通，降低交友成本。
 
                 <p class="fielddesc" style="margin:0;">
-          <b>想认真找长期伴侣，却缺少可靠途径的人</b>——这里不看你社交多会来事，只看条件与为人。资料逐项可选加密，条件不匹配的人根本看不到你；双向都达标才交换联系方式；联系方式建议用<b>昵称 + 匿名留言板 / 贴吧链接</b>，<b>不必留手机号</b>。性格测评（大五人格 + 依恋倾向）才是重点：你需要知道相处起来什么感觉，而不是表格上填了什么。
+          <b>想认真找长期伴侣，却缺少可靠途径的人</b>——这里不看你社交多会来事，只看条件与为人。资料逐项可选<b>保密</b>：<b>不匹配的人看不到，匹配的人同样看不到</b>——你的资料只留在自己手机上。双向都达标才交换联系方式；联系方式建议用<b>昵称 + 匿名留言板 / 贴吧链接</b>，<b>不必留手机号</b>。性格测评（大五人格 + 依恋倾向）才是重点：你需要知道相处起来什么感觉，而不是表格上填了什么。
         </p>
         <p class="fielddesc" style="margin:8px 0 0;">
           <b>愿意花 5–8 分钟填完 48 题，本身就是一种筛选</b>——它替你挡掉只想速成的人，也向对方证明你是认真的。碰运气、广撒网、短期关系、搭讪，这里不适合。
@@ -800,10 +808,14 @@
   <section class="screen" id="screen2">
     <div class="card" id="cardInfo">
       <h2 tabindex="-1">我的信息</h2>
-      <p class="fielddesc" style="margin-top:-6px;">所有资料均为自述，本产品不做学历 / 房产 / 婚史核验。所有字段均可留空，<b>留空项不写入序列</b>。填写项可逐项选择披露级别：<b style="color:var(--state-public-text)">公开</b>所有人可见 · <b style="color:var(--state-encrypted)">加密</b>仅双向达标后对方可见 · <b>隐藏</b>完全不写入。填得越少，序列越隐秘。</p>
+      <p class="fielddesc" style="margin-top:-6px;">
+        所有资料均为自述，本产品不做学历 / 房产 / 婚史核验。每个字段都可以留空，<b>留空项不写入</b>。填写项可逐项选择：<br>
+        · <b style="color:var(--state-encrypted)">保密（默认）</b>—— 只存你自己设备上，对方的码里读不到<br>
+        · <b style="color:var(--state-public-text)">公开</b> —— 明文写进你的码，拿到码的人都能看到，转发后收不回
+      </p>
 
       <details class="grp" data-group="A" open>
-        <summary><span class="gdot">A</span><span class="gname">基础</span><span class="gdots" id="dots_A"></span><span class="gcount" id="cnt_A">已填 0/6</span><span class="ghint">默认 加密 · 仅学历/地区可公开</span><span class="chev"></span></summary>
+        <summary><span class="gdot">A</span><span class="gname">基础</span><span class="gdots" id="dots_A"></span><span class="gcount" id="cnt_A">已填 0/6</span><span class="ghint">默认 保密 · 学历/地区可主动公开</span><span class="chev"></span></summary>
         <div class="grid" id="grid_A"></div>
         <div style="margin-top:8px;padding:10px 12px;border:1px dashed var(--border-subtle);border-radius:var(--radius-md);">
           <div style="font-weight:600;font-size:var(--fs-sm);margin-bottom:2px;">照片（可选）</div>
@@ -822,17 +834,17 @@
       </details>
 
       <details class="grp" data-group="B">
-        <summary><span class="gdot">B</span><span class="gname">婚育与健康</span><span class="gdots" id="dots_B"></span><span class="gcount" id="cnt_B">已填 0/5</span><span class="ghint">默认 加密 · 生育意愿可公开</span><span class="chev"></span></summary>
+        <summary><span class="gdot">B</span><span class="gname">婚育与健康</span><span class="gdots" id="dots_B"></span><span class="gcount" id="cnt_B">已填 0/5</span><span class="ghint">默认 保密 · 可逐项主动公开</span><span class="chev"></span></summary>
         <div class="grid" id="grid_B"></div>
       </details>
 
       <details class="grp" data-group="C">
-        <summary><span class="gdot">C</span><span class="gname">经济</span><span class="gdots" id="dots_C"></span><span class="gcount" id="cnt_C">已填 0/7</span><span class="ghint">默认 加密 · 存款/彩礼默认隐藏</span><span class="chev"></span></summary>
+        <summary><span class="gdot">C</span><span class="gname">经济</span><span class="gdots" id="dots_C"></span><span class="gcount" id="cnt_C">已填 0/7</span><span class="ghint">默认 保密 · 均不发给对方</span><span class="chev"></span></summary>
         <div class="grid" id="grid_C"></div>
       </details>
 
       <details class="grp" data-group="D">
-        <summary><span class="gdot">D</span><span class="gname">补充与生活习惯</span><span class="gdots" id="dots_D"></span><span class="gcount" id="cnt_D">已填 0/14</span><span class="ghint">默认 公开（介绍/性格码加密且不可公开）</span><span class="chev"></span></summary>
+        <summary><span class="gdot">D</span><span class="gname">补充与生活习惯</span><span class="gdots" id="dots_D"></span><span class="gcount" id="cnt_D">已填 0/14</span><span class="ghint">默认 保密 · 可逐项主动公开</span><span class="chev"></span></summary>
         <div class="grid" id="grid_D"></div>
       </details>
 
@@ -854,7 +866,7 @@
   <section class="screen" id="screen3">
     <div class="card">
       <h2 tabindex="-1">性格测评（客观计分）</h2>
-      <p class="fielddesc" style="margin-top:-6px;"><b>BFI-44 大五人格完整版</b>（公开学术量表，John &amp; Srivastava 1999 / Goldberg 1993；44 题，含 16 道反向题）+ 依恋倾向 4 题，共 <b>48 题，约 5–8 分钟</b>。仅在本机计算，结果默认<b>加密</b>进序列，可在下方调整披露级别或跳过。结果仅供参考，不构成心理诊断。</p>
+      <p class="fielddesc" style="margin-top:-6px;"><b>BFI-44 大五人格完整版</b>（公开学术量表，John &amp; Srivastava 1999 / Goldberg 1993；44 题，含 16 道反向题）+ 依恋倾向 4 题，共 <b>48 题，约 5–8 分钟</b>。仅在本机计算，结果默认<b>保密</b>——<b>不写入码、对方看不到</b>。可在下方调整或跳过。结果仅供参考，不构成心理诊断。</p>
       <div id="quiz"></div>
       <div id="quizErr" class="errmsg" style="margin-top:var(--sp-2);">还有未作答的题目（标红行），或选择跳过测评</div>
       <div id="quizResult" style="display:none;margin-top:var(--sp-3);">
@@ -961,7 +973,7 @@
       <p class="fielddesc" style="margin-top:-6px;">建议填写<b>昵称 + 匿名渠道链接（贴吧 / 留言板 / 主页）</b>；双向达标前对方看不到此项。<b>不要填手机号。</b></p>
       <div style="margin:10px 0 0;">
         <label style="font-weight:600;font-size:var(--fs-sm);display:block;margin-bottom:4px;">联系方式开放方式</label>
-        <label style="display:block;font-size:var(--fs-sm);margin:2px 0;"><input type="radio" name="cmode" value="locked" checked> <b>双向解锁</b>（推荐）：双方都判定达标后，才由 S3 解锁联系方式。安全性最高。</label>
+        <label style="display:block;font-size:var(--fs-sm);margin:2px 0;"><input type="radio" name="cmode" value="locked" checked> <b>双向交换</b>（推荐）：双方都判定达标后，才互相给出联系方式。安全性最高。</label>
         <label style="display:block;font-size:var(--fs-sm);margin:2px 0;"><input type="radio" name="cmode" value="open"> <b>开放模式</b>（一次判定）：对方判定自己达标即可直接看到我的联系方式，无需我再回判。</label>
         <p class="fielddesc" id="cm_note" style="margin:4px 0 0;">开放模式下联系方式<b>明文随序列传播</b>，任何取得序列的人都可能看到。因此该模式只适用于邮箱、匿名留言板等非实名联系方式，<b>严禁填写手机号</b>——贴吧等平台实行后台实名、前台匿名，只要不把手机号写入序列，即不存在实名信息外泄路径。</p>
       </div>
@@ -978,7 +990,8 @@
         </div>
         <div class="f span2"><label for="p_contact_url">链接（贴吧 / 匿名留言板 / 主页）</label><input type="text" id="p_contact_url" maxlength="120" placeholder="https://…"></div>
       </div>
-      <div class="hintmsg" id="hint_contact">联系方式为空：序列仍可生成，但双向达标后将无法解锁联系方式。</div>
+      <div class="hintmsg" id="hint_contact">联系方式为空：码仍可生成，但双向达标后无法交换联系方式。</div>
+      <p class="fielddesc" style="margin:8px 0 0;">选「<b>公开</b>」的项会明文写进码里，<b>谁拿到谁就能看到，转发后收不回来</b>。</p>
       <div class="btnrow">
         <button type="button" class="btn-ghost" onclick="goTo(3)">上一步</button>
         <button type="button" class="btn-primary" id="btnNext4" onclick="nextFrom4()">下一步：现实评估</button>
@@ -1045,7 +1058,7 @@
       <div class="sum-block">
         <div class="sum-h">我的信息摘要<a href="#" onclick="goTo(2);return false;">修改</a></div>
         <dl class="dl" id="sum_info"></dl>
-        <p class="fielddesc" style="margin:6px 0 0;">你的序列里<b>不会有这些中文</b>——公开项全部换成短码 + 码值，加密项在整块密文里。</p>
+        <p class="fielddesc" style="margin:6px 0 0;">你发出去的码里<b>不会有这些中文</b>——公开项换成短码 + 码值，<b>保密项根本不进码</b>。</p>
       </div>
       <div class="sum-block">
         <div class="sum-h">披露策略<a href="#" onclick="goTo(2);return false;">修改</a></div>
@@ -1065,7 +1078,7 @@
       </div>
       <div id="s1Result" style="display:none;margin-top:var(--sp-3);">
         <label style="font-size:var(--fs-sm);">序列 S1（可直接发布）</label>
-        <div class="sec-note">这不是加密：公开字段可被解码还原，只有标『加密』的字段才受 RSA / AES 保护。</div>
+        <div class="sec-note">公开的内容<b>谁都能读</b>（这是你选的）；保密的内容<b>不在码里</b>。</div>
         <div class="out" id="out_s1"></div>
         <div class="btnrow">
           <button type="button" class="btn-ghost" onclick="copy('out_s1')">复制 S1</button>
@@ -1135,7 +1148,7 @@
             <b style="font-size:var(--fs-sm);">导出密钥备份 —— 这一步不能跳过</b>
           </div>
           <p class="fielddesc" style="margin:0 0 8px;">
-            你选了「<b>双向解锁</b>」，意味着对方不会当场给你联系方式，而是几天后把码贴到贴吧或评论区，等你回来解。<br>
+            你选了「<b>双向交换</b>」，意味着对方不会当场给你联系方式，而是几天后把码贴到贴吧或评论区，等你回来解。<br>
             <b>解密要用你这台电脑里保存的私钥</b>。浏览器清理缓存、换设备、用无痕模式，私钥就没了——对方贴出的码将<b>永远解不开</b>，等于这次匹配作废。<br>
             所以：<b>现在必须导出一次，存到手机或网盘里</b>。文件很小（几 KB），是纯文本 JSON。
           </p>
@@ -1191,7 +1204,7 @@
       <div class="zone" id="zoneResponder">
         <h3 class="zone-h">我是回应方 · 我拿到了别人发的码或图</h3>
         <p class="fielddesc">如果你拿到的是<b>别人</b>发出来的图或一串码，用这一区。<br>
-          你要做两步：先给出你的回应（第 1 步），等对方回复后再解锁对方的联系方式（第 2 步）。两步之间可能隔几天。</p>
+          你要做两步：先给出你的回应（第 1 步），等对方回复后再收下对方的联系方式（第 2 步）。两步之间可能隔几天。</p>
 
         <div class="sec">
           <div class="sec-h"><span class="sec-num">1</span><span class="sec-t">第 1 步 · 给对方我的回应</span></div>
@@ -1208,13 +1221,13 @@
           <div id="peerPublic" style="display:none;margin:12px 0 0;">
             <div class="fielddesc" style="margin:0 0 4px;font-weight:600;color:var(--text-primary);font-size:var(--fs-sm);">对方的公开资料</div>
             <div class="judge-list" id="peerPublicList"></div>
-            <div class="fielddesc" style="margin:4px 0 0;font-size:var(--fs-xs);">对方只公开了这些。其余项对方选了加密或不写入，需要双方达标后才可见。</div>
+            <div class="fielddesc" style="margin:4px 0 0;font-size:var(--fs-xs);">对方只公开了这些。其余项对方选了<b>保密</b>（只存在他设备上）或没有填写。<b>这些你不会看到</b>——你只会得到"他符不符合"这个结论。</div>
           </div>
 
           <div class="fielddesc" style="margin:12px 0 6px;font-weight:600;color:var(--text-primary);font-size:var(--fs-sm);">我的资料（用于让对方判断我是否达标）</div>
           <p class="fielddesc" style="margin:0 0 6px;">
             这些资料<b>默认只有你自己能看到</b>，只用来让<b>你</b>判断自己符不符合对方的要求。
-            勾选「给 A 看」的项，才会随回应码一起发给对方。
+            勾选「给 A 看」的项，才会随回应码一起发给对方。<b>请只勾你愿意让陌生人看到的项。</b>
           </p>
           <div class="grid">
             <div class="f"><label for="b_age">我的年龄</label><input type="number" id="b_age" value="27" inputmode="numeric"></div>
@@ -1231,7 +1244,7 @@
             <div class="f"><label for="b_health">我的健康状况</label><select id="b_health"><option value="">未披露</option><option>健康</option><option>有慢性病（可控）</option><option>有既往病史（已愈）</option></select></div>
             <div class="f"><label for="b_checkup">我的近期体检</label><select id="b_checkup"><option value="">未披露</option><option>一年內已体检（正常）</option><option>一年內已体检（有异常项）</option><option>两年内体检过</option><option>两年以上未体检</option></select></div>
             <div class="f span2">
-              <label for="b_contact">我的联系方式（可选，仅对方达标后可见）</label>
+              <label for="b_contact">我的联系方式（可选，只在双方都达标后交给对方）</label>
               <input type="text" id="b_contact" maxlength="200" placeholder="昵称｜QQ 号｜链接，如：小明｜QQ 12345678；多项用「｜」分隔">
               <div class="fielddesc">这是给对方的<b>身份标识</b>——让对方核实「回应的人是谁」。与对方给你的主渠道性质不同。</div>
             </div>
@@ -1268,7 +1281,7 @@
             <div id="respExportStep" style="margin-top:10px;padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:var(--warning-bg);">
               <b style="font-size:var(--fs-sm);">导出回应密钥 —— 本区第 1 步的最后一步，不能跳过</b>
               <p class="fielddesc" style="margin:6px 0 8px;">
-                你把回应码发出去后，对方可能<b>过几天</b>才回复。解锁对方的回复要用你这台设备里的密钥。<br>
+                你把回应码发出去后，对方可能<b>过几天</b>才回复。收下对方的回复要用你这台设备里的密钥。<br>
                 清缓存、换设备、无痕模式都会让密钥消失——那样对方回给你的码你<b>永远解不开</b>。<br>
                 所以：<b>现在导出一次，存到手机或网盘</b>（几 KB 的 JSON 文件）。
               </p>
@@ -1281,20 +1294,20 @@
         </div>
 
         <div class="sec">
-          <div class="sec-h"><span class="sec-num">2</span><span class="sec-t">第 2 步 · 对方回复后，解锁对方联系方式</span></div>
+          <div class="sec-h"><span class="sec-num">2</span><span class="sec-t">第 2 步 · 对方回复后，收下对方的联系方式</span></div>
           <p class="fielddesc">这一区要等对方回复你之后才会用到。对方回复后，把那串码贴进来就能看到联系方式。</p>
 
           <!-- 我回应过谁：多人台账（位于第 2 步顶部，贴回码时用来认人） -->
           <div id="s2LogBox" style="display:none;margin:0 0 var(--sp-3);padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--gray-50);">
             <div style="font-weight:600;font-size:var(--fs-sm);margin-bottom:4px;">我回应过的人 <span id="s2LogCount" style="font-weight:400;color:var(--gray-600);font-size:var(--fs-xs);"></span></div>
-            <p class="fielddesc" style="margin:0 0 6px;">每回应一个人就记一条。<b>对方把解锁码回给你时，软件会按引用号告诉你这是谁</b>——你不用自己记。</p>
+            <p class="fielddesc" style="margin:0 0 6px;">每回应一个人就记一条。<b>对方把渠道码回给你时，软件会按引用号告诉你这是谁</b>——你不用自己记。</p>
             <div id="s2LogList" style="font-size:var(--fs-xs);color:var(--gray-600);line-height:1.7;"></div>
           </div>
 
           <label for="in_s3" style="font-size:var(--fs-sm);">粘贴对方回给我的码</label>
           <textarea id="in_s3" placeholder="对方回复你的那串码，整段粘贴进来"></textarea>
           <div class="errmsg" id="err_in_s3" role="alert"></div>
-          <div class="btnrow"><button type="button" class="btn-primary" id="btnOpenS3" onclick="uiOpenS3()">解锁对方联系方式</button></div>
+          <div class="btnrow"><button type="button" class="btn-primary" id="btnOpenS3" onclick="uiOpenS3()">收下对方的联系方式</button></div>
           <div class="out" id="out_contact" style="display:none;"></div>
           <div class="btnrow" id="contactCopyRow" style="display:none;">
             <button type="button" class="btn-ghost" id="btnCopyContact" onclick="copy('out_contact_copy')">复制联系方式</button>
@@ -1307,7 +1320,7 @@
       <div class="zone" id="zonePublisher">
         <h3 class="zone-h">我是发布方 · 我发了码，对方回应我了</h3>
         <p class="fielddesc">如果你之前在<b>生成与发布</b>那一步发出了自己的码，现在对方把回应码发给你了，用这一区。<br>
-          你要做的：把对方的回应码贴进来 → 看双方是否互相达标 → 生成解锁码发回给对方。</p>
+          你要做的：把对方的回应码贴进来 → 看双方是否互相达标 → 生成渠道码发回给对方。</p>
 
         <div class="sec-note">走这一区之前，请先在「生成与发布」那一步<b>导出密钥备份</b>。对方的回应码要用你这台设备里的密钥才能解开。</div>
 
@@ -1321,11 +1334,11 @@
           <div class="fielddesc" id="zoneBHint" style="display:none;">先导出密钥备份，才能解密对方的回应。</div>
           <div class="out" id="out_s3" style="display:none;"></div>
           <div id="s3CipherBlock" style="display:none;">
-            <label style="font-size:var(--fs-sm);">解锁码（复制后发回给对方）</label>
+            <label style="font-size:var(--fs-sm);">渠道码（复制后发回给对方）</label>
             <div class="out" id="out_s3_cipher"></div>
             <div class="btnrow">
-              <button type="button" class="btn-ghost" onclick="copy('out_s3_cipher')">复制解锁码</button>
-              <span class="hint" id="hint_out_s3_cipher">解锁码已复制 ✓</span>
+              <button type="button" class="btn-ghost" onclick="copy('out_s3_cipher')">复制渠道码</button>
+              <span class="hint" id="hint_out_s3_cipher">渠道码已复制 ✓</span>
             </div>
           </div>
         </div>
@@ -1456,9 +1469,10 @@
             <div class="spec-col plain">
               <div class="spec-tag">本产品的边界（请明确知道）</div>
               <p class="fielddesc" style="margin:0;">
-                · 本产品<b>不核验任何信息</b>——学历、房产、婚史、健康、收入全部是自述。加密保护的是"谁能看到"，不是"内容是否真实"。<br>
+                · 本产品<b>不核验任何信息</b>——学历、房产、婚史、健康、收入全部是自述。<b>保密只保证"不发给对方"，不保证"内容是否真实"。</b><br>
                 · 本产品<b>不介入任何金钱往来</b>，不代收、不担保、不托管。任何以"契合码客服"名义要求转账、充值、解冻、缴纳保证金的，<b>一律是诈骗</b>，本产品没有客服。<br>
-                · 序列可被任意转发，<b>不要在里面写身份证号、银行卡号、家庭住址、单位全称</b>；联系方式只用<b>昵称与匿名渠道链接（贴吧 / 留言板 / 主页）</b>，<b>不要写手机号、身份证号、家庭住址</b>。<br>
+                <b>· 本产品无法核实任何人的信息。</b>学历、房产、婚史、收入、健康全部是自述。对方自称的条件可能是假的，甚至可能根本没有这个人。我们能做的只是"让信息不落到第三方"，<b>不能保证对方说的是真的</b>。<br>
+                · 码可被任意转发，<b>不要在里面写身份证号、银行卡号、家庭住址、单位全称</b>；联系方式只用<b>昵称与匿名渠道链接（贴吧 / 留言板 / 主页）</b>，<b>不要写手机号、身份证号、家庭住址</b>。<br>
                 · 对方发来的序列若长期"解不开"或反复要求你先付钱，请直接终止接触。
               </p>
             </div>
@@ -1767,9 +1781,9 @@
 <div class="spec-item">
           <div class="spec-h">二、三段序列说明</div>
           <p class="fielddesc" style="margin:0;">
-            <b>S1（发布序列）</b>：发布者生成，含要求码、公开字段与整块密文；可贴在帖子、评论、私信中传播。<br>
+            <b>S1（发布序列）</b>：发布者生成，含<b>要求码</b>与你<b>主动公开</b>的字段；保密项不在其中。可贴在帖子、评论、私信中传播。<br>
             <b>S2（应答序列）</b>：应答者在本机判定自己是否达标后生成，含应答者自述与反向要求，用发布者公钥加密。<br>
-            <b>S3（解锁序列）</b>：发布者判定应答者达标后生成，含发布者联系方式，用应答者公钥加密。<br>
+            <b>S3（渠道序列）</b>：双方都达标后生成，含发布者的渠道，用对方公钥加密。<br>
             <b>开放模式</b>：若发布者选择开放模式，应答者一次判定达标即可直接看到联系方式，无需再走 S3。
           </p>
         </div>
@@ -1777,7 +1791,7 @@
           <div class="spec-h">三、使用建议</div>
           <p class="fielddesc" style="margin:0;">
             · 联系方式建议使用<b>昵称 + 匿名渠道链接</b>，<b>不建议填写手机号</b>；贴吧等平台实行后台实名、前台匿名，只要不把手机号写入序列，即不存在实名信息外泄路径。<br>
-            · 敏感项（年龄、性别、身高、城市、收入、婚史、房车、健康、体检）建议保持默认加密；存款、彩礼期望建议保持隐藏，完全不写入序列。<br>
+            · 敏感项（年龄、性别、身高、城市、收入、婚史、房车、健康、体检）建议保持默认<b>保密</b>；存款、彩礼期望同理。<b>保密项不会发给对方。</b><br>
             · 所有资料均为自述，本产品<b>不做学历 / 房产 / 婚史 / 健康核验</b>；涉及健康与体检事项，建议在确认关系前交换正规医疗机构出具的报告。<br>
             · 现实校准为粗估量级，用于把要求锚定在现实区间，不作为任何决策依据。
           </p>
@@ -3150,10 +3164,10 @@ async function decryptObj(enc, rsaPriv){ return blockDecrypt(enc,rsaPriv,false);
    字段定义：单一真相表（UI 渲染 / genS1 / renderSummary 三处都读它）
    ================================================================== */
 const GROUP_META={
-  A:{name:'基础',hint:'默认 加密 · 仅学历/地区可公开'},
-  B:{name:'婚育与健康',hint:'默认 加密 · 生育意愿可公开'},
-  C:{name:'经济',hint:'默认 加密 · 存款/彩礼默认隐藏'},
-  D:{name:'其他',hint:'默认 公开（介绍/性格码加密且不可公开）'}
+  A:{name:'基础',hint:'默认 保密 · 学历/地区可主动公开'},
+  B:{name:'婚育与健康',hint:'默认 保密 · 可逐项主动公开'},
+  C:{name:'经济',hint:'默认 保密 · 均不发给对方'},
+  D:{name:'其他',hint:'默认 保密 · 可逐项主动公开'}
 };
 /* dirs：L1a / L2 不渲染「公开」按钮（SPEC §0.1 + 验收 #3）；L1b / L0 三项都有 */
 const FIELD_DEFS=[
@@ -3178,8 +3192,8 @@ const FIELD_DEFS=[
   {k:'housecar',g:'C',label:'房车总览',ctrl:'select',opts:['有房有车','有房无车','有车无房','准备购房','无房无车'],L:'L1a',def:'encrypted',dirs:['public','encrypted']},
   {k:'house',g:'C',label:'房产明细',ctrl:'select',opts:['无','有房（贷款中）','有房（无贷）','多套'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],cond:{housecar:['有房有车','有房无车']}},
   {k:'car',g:'C',label:'车辆明细',ctrl:'select',opts:['无','代步车','中高档'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],cond:{housecar:['有房有车','有车无房']}},
-  {k:'asset',g:'C',label:'存款',ctrl:'select',opts:['无','10万以内','10–50万','50–100万','100万以上'],L:'L2',def:'hidden',dirs:['public','encrypted'],blank:'不愿透露'},
-  {k:'brideprice',g:'C',label:'彩礼期望',ctrl:'select',opts:['0（不要）','10万以内','10–20万','20–30万','30万以上','视情况'],L:'L2',def:'hidden',dirs:['public','encrypted']},
+  {k:'asset',g:'C',label:'存款',ctrl:'select',opts:['无','10万以内','10–50万','50–100万','100万以上'],L:'L2',def:'encrypted',dirs:['public','encrypted'],blank:'不愿透露'},
+  {k:'brideprice',g:'C',label:'彩礼期望',ctrl:'select',opts:['0（不要）','10万以内','10–20万','20–30万','30万以上','视情况'],L:'L2',def:'encrypted',dirs:['public','encrypted']},
 
   {k:'longdist',g:'D',label:'异地接受度',ctrl:'select',opts:['接受异地','同省可接受','仅同城'],L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'只是自述，不参与自动判定；A 解密后会看到这一项'},
   {k:'smoking',g:'D',label:'吸烟',ctrl:'select',opts:SMOKING,L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'按程度选择'},
@@ -3201,10 +3215,10 @@ FIELD_DEFS.forEach(d=>GROUP_KEYS[d.g].push(d.k));
 /* D10.1：DOM ID 与序列短码显式并列，避免序列化时手写出错 */
 FIELD_DEFS.forEach(d=>{ d.dom='p_'+d.k; d.wire=FIELD_CODE[d.k]; });
 /* D2.4：每组只在第一个 L1a 字段下给一次可见灰字说明 */
-FIELD_BY_K.age.ghint='年龄、性别、身高、城市只能加密或隐藏，不会出现在公开摘要里';
-FIELD_BY_K.marital.ghint='婚史只能加密或隐藏';
-FIELD_BY_K.income.ghint='收入、房车只能加密或隐藏；存款与彩礼默认隐藏';
-FIELD_BY_K.intro.ghint='自我介绍与性格码只能加密或隐藏';
+FIELD_BY_K.age.ghint='年龄、性别、身高、城市默认保密，不会发给对方';
+FIELD_BY_K.marital.ghint='婚史默认保密，不会发给对方';
+FIELD_BY_K.income.ghint='收入、房车默认保密，不会发给对方';
+FIELD_BY_K.intro.ghint='自我介绍与性格码默认保密，不会发给对方';
 
 /* ==================================================================
    校准系数（协议 §5.1 定稿，替换 SPEC 占位值）
@@ -4017,7 +4031,7 @@ async function openS3(S3wire,Bpriv){
   if(!Bpriv) throw new Error('请先在第 1 段生成 S2');
   const u=unpackWire(S3wire);
   const S3=u.obj;
-  if(S3.role!=='unlock') throw new Error('这不是对方回给你的解锁码，请确认你粘贴的是对方回给你的那串码。');
+  if(S3.role!=='unlock') throw new Error('这不是对方回给你的渠道码，请确认你粘贴的是对方回给你的那串码。');
   if(S3.c) return {contact:await blockDecrypt(S3.c,Bpriv,true), ref:S3.r||null};
   if(S3.contact_enc) return {contact:String(await blockDecrypt(S3.contact_enc,Bpriv,false)), ref:S3.r||null};
   throw new Error('解锁序列缺少密文段');
@@ -4497,7 +4511,7 @@ function fieldHTML(d){
       d.dirs.map(v=>'<button type="button" data-val="'+v+'" aria-pressed="false">'+(LANG==='en'?(v==='public'?'Public':'Private'):(v==='public'?'公开':'保密'))+'</button>').join('')+
       '</div>'+
       '<select class="sr-only" id="'+vid+'" tabindex="-1" aria-hidden="true"><option>public</option><option>encrypted</option><option>hidden</option></select>'+
-      ((d.L==='L1a'||d.L==='L2')?('<span class="sr-only" id="vishint_'+d.k+'">本项只能加密或隐藏，不会出现在公开摘要里</span>'):'');
+      ((d.L==='L1a'||d.L==='L2')?('<span class="sr-only" id="vishint_'+d.k+'">本项默认保密，不会发给对方</span>'):'');
   }else{
     seg='<span class="f-head" style="min-height:0;flex-direction:column;align-items:flex-end;gap:2px;">'+
       '<span class="fielddesc">披露级别在第 3 步调整</span></span>'+
@@ -4694,7 +4708,7 @@ function refreshGroupCounts(){
       else bits.push(false);
     });
     const c=$('cnt_'+g);
-    if(c) c.textContent='已填 '+filled+'/'+keys.length+(hidden?' · '+hidden+' 项隐藏':'');
+    if(c) c.textContent='已填 '+filled+'/'+keys.length+(hidden?' · '+hidden+' 项不写入':'');
     const dd=$('dots_'+g);
     if(dd) dd.innerHTML=bits.map(b=>'<i'+(b?' class="on"':'')+'></i>').join('');
   });
@@ -4710,15 +4724,20 @@ function refreshChanged(){
   }
 }
 function updateRestoreHint(){
-  const c={public:0,encrypted:0,hidden:0};
-  FIELD_DEFS.forEach(d=>{ c[d.def]=(c[d.def]||0)+1; });
+  const c={public:0,encrypted:0};
+  FIELD_DEFS.forEach(d=>{
+    const k=(d.def==='public')?'public':'encrypted';   /* 只有两档；hidden 是内部状态，不参与统计 */
+    c[k]=(c[k]||0)+1;
+  });
   const el=$('restoreHint');
-  if(el) el.textContent='恢复后：'+c.public+' 项公开、'+c.encrypted+' 项加密、'+c.hidden+' 项隐藏';
+  if(el) el.textContent='恢复后：'+c.public+' 项公开、'+c.encrypted+' 项保密';
 }
 function restoreDefaults(){
   for(const d of FIELD_DEFS){
     const sel=$('v_'+d.k);
-    if(sel){ sel.value=d.def; syncSeg('v_'+d.k); }
+    /* 归一：只允许 public/encrypted。否则会把已删除的 'hidden' 写回 select，
+       而那个档位的按钮已不存在 → 选中态丢失。 */
+    if(sel){ sel.value=(d.def==='public')?'public':'encrypted'; syncSeg('v_'+d.k); }
   }
   refreshChanged(); refreshGroupCounts();
 }
@@ -5134,7 +5153,7 @@ function doQuiz(){
       '<div class="fielddesc" style="margin:0 0 6px 104px;">'+B5_INTERP[k][band]+'</div>';
   }).join('');
   $('p_attach').textContent='依恋倾向：'+ATT_INTERP[s.att];
-  $('p_code').textContent='性格码（默认加密进序列）：'+s.code;
+  $('p_code').textContent='性格码（默认保密，不写入码）：'+s.code;
   const pin=$('p_personality'); if(pin) pin.value=s.code;
   const pshow=$('p_personality_show'); if(pshow) pshow.textContent=s.code;
   refreshGroupCounts();
@@ -5812,11 +5831,11 @@ function wireRole(raw){
 const ZONE_MSG={
   empty:'请先粘贴对方的码。',
   bad:'这串码不完整或格式不对，请整段重新复制一次。',
-  s1:'这串码是回应码或解锁码。如果你之前发过自己的码、现在是收到对方回应的那一方，请用下面「我是发布方」那一区。',
+  s1:'这串码是回应码或渠道码。如果你之前发过自己的码、现在是收到对方回应的那一方，请用下面「我是发布方」那一区。',
   s3_pub:'这串码是别人发布的码，不是对方回给你的。要回应别人的码，请贴在「第 1 步 · 粘贴对方的码」那个框里。',
-  s3_resp:'这是回应码，不是对方回给你的解锁码。回应码是要发给对方的，不要贴在这里。',
+  s3_resp:'这是回应码，不是对方回给你的渠道码。回应码是要发给对方的，不要贴在这里。',
   s2_pub:'这串码是别人发布的码。如果你是拿到别人的码去匹配的那一方，请用上面「我是回应方」那一区。',
-  s2_unlock:'这串码是解锁码，不是对方的回应码。解锁码只在「我是回应方」那一区第 2 步使用。'
+  s2_unlock:'这串码是渠道码，不是对方的回应码。渠道码只在「我是回应方」那一区第 2 步使用。'
 };
 /* 返回 null 表示通过；返回字符串表示要显示的错误文案 */
 function zoneRoleGuard(raw,expect,zone){
@@ -5984,7 +6003,7 @@ function postResolveUI(r){
   const bB=verdictBanner(r.meetBdetail,r.meetB);
   const bA=verdictBanner(r.meetAdetail,r.meetA);
   let html='<div class="banner '+(r.both?'banner-success':'banner-warning')+'">双向达标：<b class="'+
-    (r.both?'ok':'undis')+'">'+(r.both?'是 ✓ 已生成解锁码':'否 ✗ 联系方式保持加密')+'</b></div>';
+    (r.both?'ok':'undis')+'">'+(r.both?'是 ✓ 已生成渠道码':'否 ✗ 联系方式不交换')+'</b></div>';
   html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">对方是否满足我的要求</div>'+
     '<div class="banner '+bB[0]+'" style="margin-top:0;">'+bB[1]+'</div>'+judgeListHTML(r.meetBdetail);
   html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">我是否满足对方的要求</div>'+
@@ -6007,7 +6026,7 @@ function postResolveUI(r){
     if(r.contact){
       html+='<div class="banner banner-success" style="margin-top:0;"><b class="ok">'+escapeHtml(r.contact)+'</b></div>';
     }else{
-      html+='<div class="banner banner-warning" style="margin-top:0;">对方没有留下联系方式。你可以先把解锁码发给对方，对方拿到你的联系方式后会主动联系你。</div>';
+      html+='<div class="banner banner-warning" style="margin-top:0;">对方没有留下联系方式。你可以先把渠道码发给对方，对方拿到你的联系方式后会主动联系你。</div>';
     }
   }
   el.style.display='block';
@@ -6036,7 +6055,7 @@ async function uiOpenS3(){
       const hit=await findRespKeyForS3($('in_s3').value);
       if(!hit){
         showFieldErr('err_in_s3', loadRespKeys().length
-          ? '这份解锁码与本机保存的回应密钥都不匹配。请确认对方解锁的是你这一轮发出去的回应码。'
+          ? '这份渠道码与本机保存的回应密钥都不匹配。请确认对方给的是你这一轮发出去的回应码。'
           : '本机没有保存回应密钥，无法解锁。你需要在第 1 段生成过 S2，或导入密钥备份。');
         return;
       }
@@ -6064,7 +6083,7 @@ function postOpenS3UI(contact,ref){
           '</b> 那位 · 你当时在 '+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+
           ' '+pad(d.getHours())+':'+pad(d.getMinutes())+' 发出的码</div>';
       }else{
-        who='<div class="fielddesc" style="margin:6px 0 0;">（这份解锁码没有带引用号，可能是旧版生成的）</div>';
+        who='<div class="fielddesc" style="margin:6px 0 0;">（这份渠道码没有带引用号，可能是旧版生成的）</div>';
       }
     }
   }catch(e){}
