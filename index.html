@@ -878,9 +878,7 @@
       </div>
       <div class="f" style="margin-top:var(--sp-3);">
         <label>测评结果披露级别</label>
-        <div class="seg" data-for="v_personality" role="group" aria-label="测评结果披露级别">
-          <button type="button" data-val="public">公开</button><button type="button" data-val="encrypted">保密</button>
-        </div>
+        <div class="fielddesc" style="margin-top:4px;">仅保密 · 不写入码、对方看不到</div>
         <select class="sr-only" id="v_personality" tabindex="-1" aria-hidden="true"><option>public</option><option>encrypted</option></select>
       </div>
       <div class="btnrow">
@@ -3171,33 +3169,33 @@ const GROUP_META={
 };
 /* dirs：L1a / L2 不渲染「公开」按钮（SPEC §0.1 + 验收 #3）；L1b / L0 三项都有 */
 const FIELD_DEFS=[
-  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'encrypted',dirs:['public','encrypted'],
+  {k:'age',g:'A',label:'出生年月',ctrl:'birth',min:18,max:100,L:'L1a',def:'encrypted',dirs:[],
    desc:'选年月即可，<b>年龄、属相、星座会自动算出</b>，不用自己填。留空则不参与年龄匹配'},
-  {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:['public','encrypted']},
-  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'130–230cm；对方设身高要求时会参与判定，未披露则判定为「未披露」。<span id="hrefTip"></span>'},
+  {k:'gender',g:'A',label:'性别',ctrl:'select',opts:['男','女'],L:'L1a',def:'encrypted',dirs:[]},
+  {k:'height',g:'A',label:'身高',ctrl:'number',min:130,max:230,unit:'cm',L:'L1a',def:'encrypted',dirs:[],desc:'130–230cm；对方设身高要求时会参与判定，未披露则判定为「未披露」。<span id="hrefTip"></span>'},
   {k:'weight',g:'A',label:'体重',ctrl:'number',min:30,max:150,unit:'kg',L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'行业基本信息，建议保持公开'},
   {k:'edu',g:'A',label:'学历',ctrl:'select',opts:['初中及以下','高中','大专','本科','硕士','博士及以上'],L:'L0',def:'encrypted',dirs:['public','encrypted']},
   {k:'region',g:'A',label:'地点',ctrl:'select',opts:['一线','新一线','二线','三线','县域农村'],L:'L0',def:'encrypted',dirs:['public','encrypted']},
-  {k:'city',g:'A',label:'城市',ctrl:'text',maxlen:20,L:'L1a',def:'encrypted',dirs:['public','encrypted']},
+  {k:'city',g:'A',label:'城市',ctrl:'text',maxlen:20,L:'L1a',def:'encrypted',dirs:[]},
 
-  {k:'marital',g:'B',label:'婚史',ctrl:'select',opts:['未婚','短婚未育','离异无孩','离异有孩（归对方）','离异有孩（自己抚养）','丧偶'],L:'L1a',def:'encrypted',dirs:['public','encrypted']},
+  {k:'marital',g:'B',label:'婚史',ctrl:'select',opts:['未婚','短婚未育','离异无孩','离异有孩（归对方）','离异有孩（自己抚养）','丧偶'],L:'L1a',def:'encrypted',dirs:[]},
   {k:'child_sex',g:'B',label:'孩子性别',ctrl:'select',opts:['无','有男孩','有女孩','男女都有'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'离异带孩子的填这项；不带孩子选「无」'},
   {k:'fertility',g:'B',label:'生育意愿',ctrl:'select',opts:['想要 1 个','想要 2 个','想要 3 个及以上','顺其自然','不想要','可商量'],L:'L1b',def:'encrypted',dirs:['public','encrypted'],desc:'含数量倾向；判定按「是否可调和」，数量不同只提示沟通、不算不合格'},
-  {k:'health',g:'B',label:'本人健康状况',ctrl:'select',opts:['健康','有慢性病（可控）','有既往病史（已愈）','不便告知'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'自述项，本产品不做核验；仅作自愿披露'},
-  {k:'checkup',g:'B',label:'近期体检',ctrl:'select',opts:['一年內已体检（正常）','一年內已体检（有异常项）','两年内体检过','两年以上未体检','不便告知'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'自述项；建议在确认关系前交换正规体检报告，不以本项替代'},
+  {k:'health',g:'B',label:'本人健康状况',ctrl:'select',opts:['健康','有慢性病（可控）','有既往病史（已愈）','不便告知'],L:'L1a',def:'encrypted',dirs:[],desc:'自述项，本产品不做核验；仅作自愿披露'},
+  {k:'checkup',g:'B',label:'近期体检',ctrl:'select',opts:['一年內已体检（正常）','一年內已体检（有异常项）','两年内体检过','两年以上未体检','不便告知'],L:'L1a',def:'encrypted',dirs:[],desc:'自述项；建议在确认关系前交换正规体检报告，不以本项替代'},
   {k:'marry_timeline',g:'B',label:'结婚时间预期',ctrl:'select',opts:['半年内','一年内','两年内','不急'],L:'L1b',def:'encrypted',dirs:['public','encrypted'],desc:'仅作自述展示，不参与匹配判定与人数估算'},
 
-  {k:'income',g:'C',label:'月收入（税后）',ctrl:'select',opts:INC_LABEL,L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'收入按<b>到手（税后）</b>口径；按档匹配，不精确到元'},
-  {k:'spend',g:'C',label:'月支出（税后）',ctrl:'select',opts:['2000以内','2001–4000','4001–6000','6001–8000','8001–1万','1万以上'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'用于估算可结余与生活负担，<b>不参与匹配判定</b>；收入减支出才是可动用部分'},
-  {k:'housecar',g:'C',label:'房车总览',ctrl:'select',opts:['有房有车','有房无车','有车无房','准备购房','无房无车'],L:'L1a',def:'encrypted',dirs:['public','encrypted']},
-  {k:'house',g:'C',label:'房产明细',ctrl:'select',opts:['无','有房（贷款中）','有房（无贷）','多套'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],cond:{housecar:['有房有车','有房无车']}},
-  {k:'car',g:'C',label:'车辆明细',ctrl:'select',opts:['无','代步车','中高档'],L:'L1a',def:'encrypted',dirs:['public','encrypted'],cond:{housecar:['有房有车','有车无房']}},
-  {k:'asset',g:'C',label:'存款',ctrl:'select',opts:['无','10万以内','10–50万','50–100万','100万以上'],L:'L2',def:'encrypted',dirs:['public','encrypted'],blank:'不愿透露'},
-  {k:'brideprice',g:'C',label:'彩礼期望',ctrl:'select',opts:['0（不要）','10万以内','10–20万','20–30万','30万以上','视情况'],L:'L2',def:'encrypted',dirs:['public','encrypted']},
+  {k:'income',g:'C',label:'月收入（税后）',ctrl:'select',opts:INC_LABEL,L:'L1a',def:'encrypted',dirs:[],desc:'收入按<b>到手（税后）</b>口径；按档匹配，不精确到元'},
+  {k:'spend',g:'C',label:'月支出（税后）',ctrl:'select',opts:['2000以内','2001–4000','4001–6000','6001–8000','8001–1万','1万以上'],L:'L1a',def:'encrypted',dirs:[],desc:'用于估算可结余与生活负担，<b>不参与匹配判定</b>；收入减支出才是可动用部分'},
+  {k:'housecar',g:'C',label:'房车总览',ctrl:'select',opts:['有房有车','有房无车','有车无房','准备购房','无房无车'],L:'L1a',def:'encrypted',dirs:[]},
+  {k:'house',g:'C',label:'房产明细',ctrl:'select',opts:['无','有房（贷款中）','有房（无贷）','多套'],L:'L1a',def:'encrypted',dirs:[],cond:{housecar:['有房有车','有房无车']}},
+  {k:'car',g:'C',label:'车辆明细',ctrl:'select',opts:['无','代步车','中高档'],L:'L1a',def:'encrypted',dirs:[],cond:{housecar:['有房有车','有车无房']}},
+  {k:'asset',g:'C',label:'存款',ctrl:'select',opts:['无','10万以内','10–50万','50–100万','100万以上'],L:'L2',def:'encrypted',dirs:[],blank:'不愿透露'},
+  {k:'brideprice',g:'C',label:'彩礼期望',ctrl:'select',opts:['0（不要）','10万以内','10–20万','20–30万','30万以上','视情况'],L:'L2',def:'encrypted',dirs:[]},
 
   {k:'longdist',g:'D',label:'异地接受度',ctrl:'select',opts:['接受异地','同省可接受','仅同城'],L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'只是自述，不参与自动判定；A 解密后会看到这一项'},
-  {k:'smoking',g:'D',label:'吸烟',ctrl:'select',opts:SMOKING,L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'按程度选择'},
-  {k:'drinking',g:'D',label:'喝酒',ctrl:'select',opts:DRINKING,L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'按程度选择'},
+  {k:'smoking',g:'D',label:'吸烟',ctrl:'select',opts:SMOKING,L:'L1a',def:'encrypted',dirs:[],desc:'按程度选择'},
+  {k:'drinking',g:'D',label:'喝酒',ctrl:'select',opts:DRINKING,L:'L1a',def:'encrypted',dirs:[],desc:'按程度选择'},
   {k:'mahjong',g:'D',label:'打麻将',ctrl:'select',opts:FREQ3,L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'娱乐习惯'},
   {k:'fishing',g:'D',label:'钓鱼',ctrl:'select',opts:FREQ3,L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'休闲习惯'},
   {k:'reading',g:'D',label:'读书',ctrl:'text',L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'自己填，例如「每月 2 本，偏好历史与科幻」'},
@@ -3206,7 +3204,7 @@ const FIELD_DEFS=[
   {k:'sports',g:'D',label:'运动',ctrl:'text',L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'自己填，例如「每周跑步两次」'},
   {k:'zodiac',g:'D',label:'属相',ctrl:'select',opts:ZODIAC,L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'民俗项，可跳过。由出生年月推算，可手动修改；修改后不再自动覆盖。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
   {k:'constellation',g:'D',label:'星座',ctrl:'select',opts:CONSTELL,L:'L0',def:'encrypted',dirs:['public','encrypted'],desc:'民俗项，可跳过。由出生年月推算，可手动修改；修改后不再自动覆盖。<b>不参与匹配计算，也不用于任何运势或命理推断</b>'},
-  {k:'intro',g:'D',label:'自我介绍',ctrl:'textarea',maxlen:200,L:'L1a',def:'encrypted',dirs:['public','encrypted'],desc:'≤200 字，本项不做荒谬拦截（「我属猪」是正常自述）'},
+  {k:'intro',g:'D',label:'自我介绍',ctrl:'textarea',maxlen:200,L:'L1a',def:'encrypted',dirs:[],desc:'≤200 字，本项不做荒谬拦截（「我属猪」是正常自述）'},
   {k:'personality',g:'D',label:'性格码',ctrl:'readonly',L:'L1a',def:'encrypted',dirs:[],desc:'来自第 3 步测评，此处只读；披露级别在第 3 步调整'}
 ];
 const FIELD_BY_K={}; FIELD_DEFS.forEach(d=>FIELD_BY_K[d.k]=d);
@@ -4513,8 +4511,12 @@ function fieldHTML(d){
       '<select class="sr-only" id="'+vid+'" tabindex="-1" aria-hidden="true"><option>public</option><option>encrypted</option><option>hidden</option></select>'+
       ((d.L==='L1a'||d.L==='L2')?('<span class="sr-only" id="vishint_'+d.k+'">本项默认保密，不会发给对方</span>'):'');
   }else{
+    /* dirs 为空有两种含义，必须区分：
+       · personality —— 披露级别不在这里调（在屏3），要指路
+       · 其余 17 项 —— 敏感项，按协议 L1a/L2 永不给"公开"按钮，只说清"只能保密" */
+    const isPersonality=(d.k==='personality');
     seg='<span class="f-head" style="min-height:0;flex-direction:column;align-items:flex-end;gap:2px;">'+
-      '<span class="fielddesc">披露级别在第 3 步调整</span></span>'+
+      '<span class="fielddesc">'+(isPersonality?'披露级别在第 3 步调整':'仅保密 · 不写入公开信息')+'</span></span>'+
       '<select class="sr-only" id="'+vid+'" tabindex="-1" aria-hidden="true"><option>public</option><option>encrypted</option><option>hidden</option></select>';
   }
   const l2=d.L==='L2'?'<span class="l2tag">极敏感</span>':'';
@@ -5752,10 +5754,25 @@ function breqFromB(){
   };
 }
 
-let forceS2=false, modalLastFocus=null;
-function openS2Modal(r){
-  $('s2ModalBody').innerHTML='对方要求验证：<b>'+r.missing.map(escapeHtml).join('、')+'</b>（共 '+
-    r.missing.length+' 项），你都没披露。发过去一定会被拒。';
+let forceS2=false, modalLastFocus=null, modalMode='missing';
+function openS2Modal(r,mode){
+  modalMode=mode||'missing';
+  const title=$('s2ModalTitle'), body=$('s2ModalBody');
+  const back=$('s2ModalBack'), send=$('s2ModalSend');
+  if(modalMode==='nodisclose'){
+    /* B 一项都没勾给对方看：不是"对方要求你没披露"，而是"你什么都没发出去" */
+    if(title) title.textContent='你还没勾选任何「给 A 看」的项';
+    if(body) body.innerHTML='回应码发出去后，<b>对方拿不到任何可用于判定的资料</b>，会判不出结果。<br>'+
+      '建议回去勾几项——尤其是对方要求涉及的项。也可以仍然发送，但对方可能无法判断是否合适。';
+    if(back) back.textContent='回去勾选几项';
+    if(send) send.textContent='仍然发送（对方可能无法判断）';
+  }else{
+    if(title) title.textContent='对方要求验证，你都没披露';
+    if(body) body.innerHTML='对方要求验证：<b>'+r.missing.map(escapeHtml).join('、')+'</b>（共 '+
+      r.missing.length+' 项），你都没披露。发过去一定会被拒。';
+    if(back) back.textContent='回去公开这几项';
+    if(send) send.textContent='仍然发送（会被判不达标）';
+  }
   modalLastFocus=document.activeElement;
   /* 清掉上一次残留的 S2，否则用户会一边看到旧密文一边被告知"都没披露" */
   $('out_s2').style.display='none'; $('out_s2').innerHTML='';
@@ -5795,7 +5812,9 @@ function renderPeerPublic(wire){
     list.innerHTML='';
     /* 是有效的 pub 码但没有公开项 → 明确说一句，别留白 */
     if(obj){
-      list.innerHTML='<div class="fielddesc" style="margin:0;">对方没有公开任何资料。</div>';
+      list.innerHTML='<div class="fielddesc" style="margin:0;">对方没有公开任何资料。</div>'+
+        '<div class="fielddesc" style="margin:4px 0 0;">对方选择了不公开资料。如果你也希望对方了解你，'+
+        '可以在填写后勾选几项「给 A 看」——但请只勾你愿意让陌生人看到的。</div>';
       box.style.display='block';
     }
     return;
@@ -5814,7 +5833,9 @@ function renderPeerPublic(wire){
       '<span class="thr">'+escapeHtml(String(dec.v))+unit+'</span></div>');
   }
   if(!rows.length){
-    list.innerHTML='<div class="fielddesc" style="margin:0;">对方没有公开任何资料。</div>';
+    list.innerHTML='<div class="fielddesc" style="margin:0;">对方没有公开任何资料。</div>'+
+      '<div class="fielddesc" style="margin:4px 0 0;">对方选择了不公开资料。如果你也希望对方了解你，'+
+      '可以在填写后勾选几项「给 A 看」——但请只勾你愿意让陌生人看到的。</div>';
     box.style.display='block';
     return;
   }
@@ -5876,7 +5897,7 @@ async function uiGenS2(){
       const u=unpackWire($('in_s1').value);
       if(u.obj&&u.obj.cm==='open'&&u.obj.ct&&verdictUnlocks(r.verdict)) r.aOpen=String(u.obj.ct);
     }catch(e){}
-    if(!r.wire&&r.verdict==='nodisclose'){ showFieldErr('err_in_s1',r.reason||'请至少勾选一项「给 A 看」'); return; }
+    if(!r.wire&&r.verdict==='nodisclose'){ openS2Modal(r,'nodisclose'); return; }
     if(!r.wire&&!forceS2){ openS2Modal(r); return; }
     postGenS2UI(r);
     forceS2=false;
@@ -5927,6 +5948,14 @@ function postGenS2UI(r){
   }
   $('out_s2_cipher').textContent=r.wire;
   $('s2CipherBlock').style.display='block';
+  /* 一项都没勾就发出去（走了"仍然发送"）：必须让 B 知道代价 */
+  if(r.sendCount===0){
+    try{
+      $('out_s2').innerHTML+='<div class="banner banner-warning" style="margin-top:6px;">'+
+        '<b>你没有勾选任何「给 A 看」的项。</b>对方只会收到你的回应码，但看不到任何资料，可能无法判断是否合适。'+
+        '如果想让对方了解你，可以回去勾选几项后重新生成回应码。</div>';
+    }catch(e){}
+  }
   /* 开放模式：直接展示对方联系方式 */
   if(r.aOpen){
     const box=$('out_s2_open');
@@ -6174,7 +6203,21 @@ $('quiz').addEventListener('change',()=>{ if(scoreQuiz())doQuiz(); });
 /* ---------- 未披露熔断弹层：Esc 关闭 / 点遮罩关闭 / Tab 焦点陷阱 ---------- */
 (function(){
   const back=$('s2ModalBack'), send=$('s2ModalSend'), mask=$('s2Modal');
-  if(back&&back.addEventListener) back.addEventListener('click',()=>{ closeS2Modal(); goTo(2); });
+  if(back&&back.addEventListener) back.addEventListener('click',()=>{
+    const wasMode=modalMode;
+    closeS2Modal();
+    if(wasMode==='nodisclose'){
+      /* B 的资料区就在本屏，不该把人送去屏2 */
+      const first=$('s_age');
+      if(first){
+        const box=first.closest('.f');
+        try{ if(box) box.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+        try{ first.focus(); }catch(e){}
+      }
+    }else{
+      goTo(2);
+    }
+  });
   if(send&&send.addEventListener) send.addEventListener('click',()=>{ closeS2Modal(); forceS2=true; uiGenS2(); });
   if(mask&&mask.addEventListener) mask.addEventListener('click',e=>{ if(e.target===mask) closeS2Modal(); });
   /* 语言切换：只改显示层，序列仍用中文枚举 */
