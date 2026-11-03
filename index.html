@@ -555,7 +555,7 @@
         <div class="flow-step">
           <div class="flow-num">3</div>
           <div class="flow-t">解锁联系方式 S3</div>
-          <div class="flow-d">双向达标，密文解锁彼此联系方式</div>
+          <div class="flow-d">双向达标后互留联系方式（你给主渠道，对方给你身份标识）</div>
         </div>
       </div>
     </div>
@@ -965,8 +965,15 @@
         <label style="display:block;font-size:var(--fs-sm);margin:2px 0;"><input type="radio" name="cmode" value="open"> <b>开放模式</b>（一次判定）：对方判定自己达标即可直接看到我的联系方式，无需我再回判。</label>
         <p class="fielddesc" id="cm_note" style="margin:4px 0 0;">开放模式下联系方式<b>明文随序列传播</b>，任何取得序列的人都可能看到。因此该模式只适用于邮箱、匿名留言板等非实名联系方式，<b>严禁填写手机号</b>——贴吧等平台实行后台实名、前台匿名，只要不把手机号写入序列，即不存在实名信息外泄路径。</p>
       </div>
-      <label for="p_contact" style="font-weight:600;font-size:var(--fs-sm);display:block;margin:10px 0 4px;">我的联系方式（可选）</label>
-      <input type="text" id="p_contact" placeholder="邮箱或匿名留言板链接" />
+      <div class="fielddesc" style="margin:10px 0 4px;font-weight:600;color:var(--text-primary);font-size:var(--fs-sm);">我的联系方式（可选，至少填一项）</div>
+      <p class="fielddesc" style="margin:0 0 6px;">
+        这是给对方的<b>主渠道</b>——双向达标后对方拿去联系你。三项都会以「昵称｜账号｜链接」的形式一起给出，只拼你填了的项。
+      </p>
+      <div class="grid">
+        <div class="f"><label for="p_contact_nick">昵称 / 称呼</label><input type="text" id="p_contact_nick" maxlength="30" placeholder="如：小明"></div>
+        <div class="f"><label for="p_contact_acc">账号（QQ / 微信号）</label><input type="text" id="p_contact_acc" maxlength="40" placeholder="如：QQ 12345678"></div>
+        <div class="f span2"><label for="p_contact_url">链接（贴吧 / 匿名留言板 / 主页）</label><input type="text" id="p_contact_url" maxlength="120" placeholder="https://…"></div>
+      </div>
       <div class="hintmsg" id="hint_contact">联系方式为空：序列仍可生成，但双向达标后将无法解锁联系方式。</div>
       <div class="btnrow">
         <button type="button" class="btn-ghost" onclick="goTo(3)">上一步</button>
@@ -1209,6 +1216,11 @@
             <div class="f"><label for="b_fertility">我的生育意愿</label><select id="b_fertility"><option value="">未披露</option><option>想要 1 个</option><option>想要 2 个</option><option>想要 3 个及以上</option><option>顺其自然</option><option>不想要</option><option>可商量</option></select></div>
             <div class="f"><label for="b_health">我的健康状况</label><select id="b_health"><option value="">未披露</option><option>健康</option><option>有慢性病（可控）</option><option>有既往病史（已愈）</option></select></div>
             <div class="f"><label for="b_checkup">我的近期体检</label><select id="b_checkup"><option value="">未披露</option><option>一年內已体检（正常）</option><option>一年內已体检（有异常项）</option><option>两年内体检过</option><option>两年以上未体检</option></select></div>
+            <div class="f span2">
+              <label for="b_contact">我的联系方式（可选，仅对方达标后可见）</label>
+              <input type="text" id="b_contact" maxlength="200" placeholder="昵称｜QQ 号｜链接，如：小明｜QQ 12345678；多项用「｜」分隔">
+              <div class="fielddesc">这是给对方的<b>身份标识</b>——让对方核实「回应的人是谁」。与对方给你的主渠道性质不同。</div>
+            </div>
           </div>
 
           <details class="fold" style="margin-top:var(--sp-3);">
@@ -3547,7 +3559,7 @@ async function genS1(){
     vis[def.k]=effectiveVis(def);
   }
   A_req=collectReq();
-  A_self=self; A_vis=vis; A_contact=$('p_contact').value;
+  A_self=self; A_vis=vis; A_contact=readAContact();
   const r=await buildS1(self,vis,A_req,A_contact,A_kp.publicKey,pubB64);
   A_wire=r.wire;
   /* 关键：把「发布者档案」落盘，否则刷新后无法解密 S2，整个流程断在第四步 */
@@ -3760,6 +3772,7 @@ function importProfiles(input){
           const priv=await crypto.subtle.importKey('jwk',latest.jwk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
           A_kp={privateKey:priv};
           A_self=latest.self; A_req=latest.req; A_contact=latest.contact;
+          try{ fillAContactBack(latest.contact); refreshContactHint(); }catch(e){}
         }
       }catch(e){}
       refreshProfileBar();
@@ -3884,6 +3897,11 @@ async function genS2(S1wire,Bself,BreqChinese,opts){
   const Apub=await importPub(S1.pk);
   /* rq_B 进 enc_self 的明文内层，不新增任何明文泄露口 */
   const inner={self:encodeP(Bself),rq:encodeReq(BreqChinese)};
+  /* B 的身份标识（昵称/账号）也放进同一个加密内层：
+     只在有值时加 ct，保持老码结构最小；inner 本就是整块加密的 JSON，
+     旧版本解出来会自然忽略这个键，不需要升 PROTO_VER。 */
+  const _bc=String($('b_contact')?$('b_contact').value:'').trim();
+  if(_bc) inner.ct=_bc;
   const S2={v:PROTO_VER,role:'resp',pk:Bpub,enc_self:await blockEncrypt(inner,Apub)};
   B_s2wire=packWire(S2);
   B_self=Bself; B_ctx={Areq,self:S2.pk};
@@ -3916,6 +3934,8 @@ async function resolveS2(S2wire,Apriv,Aself,Areq,Acontact){
   }
   const Bself=decodeP(inner.self||{});
   const Brq=decodeReq(inner.rq||{});
+  /* B 留下的身份标识（老码没有这个键 → 空串） */
+  const Bcontact=String(inner.ct==null?'':inner.ct).trim();
 
   const meetB=meet(Areq,Bself);          /* 对方（回应方）是否满足我的要求 */
   const meetA=meet(Brq,Aself);           /* 我是否满足对方的要求 */
@@ -3942,7 +3962,7 @@ async function resolveS2(S2wire,Apriv,Aself,Areq,Acontact){
   return {meetB:statsOf(meetB),meetA:statsOf(meetA),
     meetBdetail:meetB.details,meetAdetail:meetA.details,
     verdictB:meetB.verdict,verdictA:meetA.verdict,
-    both,s3wire,contact:null,reason,Bself,legacy:u.legacy};
+    both,s3wire,contact:(Bcontact||null),reason,Bself,legacy:u.legacy};
 }
 
 async function openS3(S3wire,Bpriv){
@@ -4674,10 +4694,39 @@ function validateScreen2(){
   return a&&h;
 }
 /* 联系方式为空提示：加载、进入屏4、输入时都要能刷新（原实现只在点「下一步」时算） */
+/* 联系方式复合结构：昵称｜账号｜链接，只拼非空项，用全角「｜」分隔 */
+const CONTACT_SEP='｜';
+function joinContact3(nick,acc,url){
+  return [nick,acc,url].map(function(x){ return String(x==null?'':x).trim(); })
+    .filter(function(x){ return x!==''; }).join(CONTACT_SEP);
+}
+/* 读屏4 的三段，拼成存入 contact 字段的字符串 */
+function readAContact(){
+  const g=function(id){ const el=$(id); return el?el.value:''; };
+  return joinContact3(g('p_contact_nick'), g('p_contact_acc'), g('p_contact_url'));
+}
+/* 把已有的单段 contact 回填到三个框：
+   - 含「｜」→ 按我们自己的格式拆开（这是解析自己的格式，不是猜）
+   - 不含 → 原样放进「链接」栏（历史值多半是邮箱/链接） */
+function fillAContactBack(value){
+  const v=String(value==null?'':value).trim();
+  const nick=$('p_contact_nick'), acc=$('p_contact_acc'), url=$('p_contact_url');
+  if(!nick||!acc||!url) return;
+  nick.value=''; acc.value=''; url.value='';
+  if(!v) return;
+  if(v.indexOf(CONTACT_SEP)>=0){
+    const parts=v.split(CONTACT_SEP);
+    nick.value=parts[0]||'';
+    acc.value=parts[1]||'';
+    url.value=parts.slice(2).join(CONTACT_SEP)||'';
+  }else{
+    url.value=v;
+  }
+}
 function refreshContactHint(){
-  const inp=$('p_contact'), h=$('hint_contact');
-  if(!inp||!h) return;
-  h.classList.toggle('show', String(inp.value||'').trim()==='');
+  const h=$('hint_contact');
+  if(!h) return;
+  h.classList.toggle('show', readAContact()==='');
 }
 function validateScreen4(){
   /* r_income 已是 select，不再做数字校验（UI_SPEC §9.2 坑 3） */
@@ -5784,6 +5833,15 @@ function postResolveUI(r){
   html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">我是否满足对方的要求</div>'+
     '<div class="banner '+bA[0]+'" style="margin-top:0;">'+bA[1]+'</div>'+judgeListHTML(r.meetAdetail);
   if(r.reason) html+='<div class="mutline" style="white-space:normal;">原因：'+escapeHtml(r.reason)+'</div>';
+  /* B 留下的身份标识：只在双向达标（含解锁码）时才有意义，避免没解锁就先露出来 */
+  if(r.both){
+    html+='<div class="sum-h" style="margin-top:10px;font-size:var(--fs-sm);">对方留下的联系方式（用于核实是谁）</div>';
+    if(r.contact){
+      html+='<div class="banner banner-success" style="margin-top:0;"><b class="ok">'+escapeHtml(r.contact)+'</b></div>';
+    }else{
+      html+='<div class="banner banner-warning" style="margin-top:0;">对方没有留下联系方式。你可以先把解锁码发给对方，对方拿到你的联系方式后会主动联系你。</div>';
+    }
+  }
   el.style.display='block';
   el.innerHTML=html;
   if(r.s3wire){
@@ -5911,7 +5969,11 @@ $('quiz').addEventListener('change',()=>{ if(scoreQuiz())doQuiz(); });
     if(btn&&!lockedNow()) btn.disabled=bad;
   });
 });
-$('p_contact').addEventListener('input',()=>$('hint_contact').classList.remove('show'));
+['p_contact_nick','p_contact_acc','p_contact_url'].forEach(function(id){
+  const el=$(id);
+  if(el) el.addEventListener('input',()=>{ try{ refreshContactHint(); }catch(e){} });
+  if(el) el.addEventListener('change',()=>{ try{ refreshContactHint(); }catch(e){} });
+});
 /* ---------- 未披露熔断弹层：Esc 关闭 / 点遮罩关闭 / Tab 焦点陷阱 ---------- */
 (function(){
   const back=$('s2ModalBack'), send=$('s2ModalSend'), mask=$('s2Modal');
