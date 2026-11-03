@@ -878,8 +878,8 @@
       </div>
       <div class="f" style="margin-top:var(--sp-3);">
         <label>测评结果披露级别</label>
-        <div class="fielddesc" style="margin-top:4px;">仅保密 · 不写入码、对方看不到</div>
-        <select class="sr-only" id="v_personality" tabindex="-1" aria-hidden="true"><option>public</option><option>encrypted</option></select>
+        <div class="fielddesc" style="margin-top:4px;">仅保密 · 不写入码、对方看不到（此项不提供公开选项）</div>
+        <select class="sr-only" id="v_personality_q3" tabindex="-1" aria-hidden="true"><option value="encrypted" selected>encrypted</option><option value="public">public</option></select>
       </div>
       <div class="btnrow">
         <button type="button" class="btn-ghost" onclick="goTo(2)">上一步</button>
@@ -4643,21 +4643,29 @@ function condOk(d){
   return true;
 }
 function effectiveVis(d){
-  /* 档位归一：'hidden' 在这里是"不写入"的内部状态，不是用户可选档位。
-     只删了按钮，内部状态保留。老数据里若还存着 'hidden'（升级前选的），
-     或任何野值 → 一律当 'encrypted'（保密），避免出现无对应按钮的选中态。 */
-  const norm=function(v){ return (v==='public'||v==='encrypted')?v:'encrypted'; };
+  /* 档位归一 + 白名单兜底。
+     ① 必须以字段自己的 d.dirs 为准：不在 dirs 里的档位一律降到 'encrypted'。
+        只校验"值是否合法"是不够的 —— 改 DOM 把 select.value 强设成 'public'，
+        敏感项（dirs:[]）就会混进明文 fd。这里读的是字段定义，不是 DOM，绕不过去。
+     ② 'hidden' 是"不写入"的内部状态，不是用户可选档位：dirs 里没有它，
+        所以带 hidden 的旧值会自动落到 encrypted —— 正是想要的归一行为。
+     ③ personality 的 dirs 为空 → indexOf 返回 -1 → 归一成 encrypted，
+        它本来就只该能保密。屏3 没有切换按钮，所以不会把谁写死。 */
+  const norm=function(v,dd){
+    const dirs=(dd&&dd.dirs)||[];
+    return (dirs.indexOf(v)>=0)?v:'encrypted';
+  };
   if(d.ctrl==='readonly'){
     const sel=$('v_personality');
     const raw=readField(d);
-    return raw===''?'hidden':norm(sel?sel.value:d.def);
+    return raw===''?'hidden':norm(sel?sel.value:d.def,d);
   }
   if(!condOk(d)) return 'hidden';
   const raw=readField(d);
   const sel=$('v_'+d.k);
   let v=sel?sel.value:d.def;
   if(raw==='') return 'hidden';            /* 留空 = 不写入，任何级别都无效 */
-  return norm(v);
+  return norm(v,d);
 }
 /* 孩子性别依赖婚史：未婚/短婚未育/离异无孩 → 置灰并清空 */
 const CHILD_SEX_OFF=['未婚','短婚未育','离异无孩'];
@@ -6116,7 +6124,7 @@ function postOpenS3UI(contact,ref){
       }
     }
   }catch(e){}
-  el.innerHTML='<div class="banner banner-success contact-banner">🔓 联系方式<br><b class="ok">'+escapeHtml(contact)+
+  el.innerHTML='<div class="banner banner-success contact-banner">对方的联系方式<br><b class="ok">'+escapeHtml(contact)+
     '</b><span id="out_contact_copy" hidden>'+escapeHtml(contact)+'</span></div>'+who;
   $('contactCopyRow').style.display='flex';
 }
