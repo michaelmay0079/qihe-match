@@ -591,6 +591,18 @@
         <button type="button" class="btn-primary" style="margin:0;width:100%;" onclick="goTo(2)">我要发布（单向 / 双向）</button>
         <button type="button" class="btn-ghost" style="margin:0;width:100%;background:rgba(227,240,248,0.9);border-color:#0072B2;color:#0b5c8a;" onclick="goTo(7)">我要匹配别人的图（单向 / 双向）</button>
       </div>
+      <div style="text-align:center;margin:8px 0 0;">
+        <button type="button" class="btn-ghost btn-sm" id="btnResumeHandoff" onclick="resumeHandoff()">我收到对方的码了，去粘贴</button>
+      </div>
+      <div class="hintmsg" id="handoffHint" style="margin:8px 0 0;">
+        <b>要进「匹配握手」，需要这台设备上先有过一次档案。</b><br>
+        因为解密对方的码要用<b>你自己的私钥</b>——没有私钥，即使贴了码也解不开。
+        如果你之前在这台设备生成过、或导出过密钥备份，请用下面任一方式继续：
+        <div class="btnrow" style="margin:8px 0 0;">
+          <button type="button" class="btn-ghost btn-sm" onclick="goTo(2)">去生成我的码</button>
+          <button type="button" class="btn-ghost btn-sm" onclick="document.getElementById('keyFile').click()">导入密钥备份</button>
+        </div>
+      </div>
 
 <p class="fielddesc" style="margin:8px 0 0;font-size:var(--fs-xs);color:var(--text-secondary);">
         图例：<span style="color:#7c3aed;font-weight:600;">紫色 = 我发出的过程</span> ·
@@ -953,7 +965,8 @@
         <label style="display:block;font-size:var(--fs-sm);margin:2px 0;"><input type="radio" name="cmode" value="open"> <b>开放模式</b>（一次判定）：对方判定自己达标即可直接看到我的联系方式，无需我再回判。</label>
         <p class="fielddesc" id="cm_note" style="margin:4px 0 0;">开放模式下联系方式<b>明文随序列传播</b>，任何取得序列的人都可能看到。因此该模式只适用于邮箱、匿名留言板等非实名联系方式，<b>严禁填写手机号</b>——贴吧等平台实行后台实名、前台匿名，只要不把手机号写入序列，即不存在实名信息外泄路径。</p>
       </div>
-      <input type="text" id="p_contact" value="anonymous@example.com" placeholder="邮箱或匿名留言板链接" />
+      <label for="p_contact" style="font-weight:600;font-size:var(--fs-sm);display:block;margin:10px 0 4px;">我的联系方式（可选）</label>
+      <input type="text" id="p_contact" placeholder="邮箱或匿名留言板链接" />
       <div class="hintmsg" id="hint_contact">联系方式为空：序列仍可生成，但双向达标后将无法解锁联系方式。</div>
       <div class="btnrow">
         <button type="button" class="btn-ghost" onclick="goTo(3)">上一步</button>
@@ -1105,15 +1118,23 @@
 
       <!-- 第 2 步：导出密钥（异步模式强制） -->
       <div id="exportStep" style="display:none;margin-top:var(--sp-4);padding:12px;border:2px solid var(--warning-text);border-radius:var(--radius-md);background:var(--warning-bg);">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--warning-text);color:#fff;font-size:12px;font-weight:700;">2</span>
-          <b style="font-size:var(--fs-sm);">导出密钥备份 —— 这一步不能跳过</b>
+        <div id="exportIntro">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--warning-text);color:#fff;font-size:12px;font-weight:700;">2</span>
+            <b style="font-size:var(--fs-sm);">导出密钥备份 —— 这一步不能跳过</b>
+          </div>
+          <p class="fielddesc" style="margin:0 0 8px;">
+            你选了「<b>双向解锁</b>」，意味着对方不会当场给你联系方式，而是几天后把码贴到贴吧或评论区，等你回来解。<br>
+            <b>解密要用你这台电脑里保存的私钥</b>。浏览器清理缓存、换设备、用无痕模式，私钥就没了——对方贴出的码将<b>永远解不开</b>，等于这次匹配作废。<br>
+            所以：<b>现在必须导出一次，存到手机或网盘里</b>。文件很小（几 KB），是纯文本 JSON。
+          </p>
         </div>
-        <p class="fielddesc" style="margin:0 0 8px;">
-          你选了「<b>双向解锁</b>」，意味着对方不会当场给你联系方式，而是几天后把码贴到贴吧或评论区，等你回来解。<br>
-          <b>解密要用你这台电脑里保存的私钥</b>。浏览器清理缓存、换设备、用无痕模式，私钥就没了——对方贴出的码将<b>永远解不开</b>，等于这次匹配作废。<br>
-          所以：<b>现在必须导出一次，存到手机或网盘里</b>。文件很小（几 KB），是纯文本 JSON。
-        </p>
+        <div id="noProfileNote" style="display:none;">
+          <b style="font-size:var(--fs-sm);">本机还没有任何档案记录</b>
+          <p class="fielddesc" style="margin:6px 0 8px;">
+            如果你之前在别的设备或浏览器导出过密钥备份，<b>请先导入它</b>——<b>不要先生成新序列</b>：生成会替换当前密钥，导致之前发出去的码无法解密。
+          </p>
+        </div>
         <div class="btnrow" style="margin:0;flex-wrap:wrap;">
           <button type="button" class="btn-primary btn-sm" id="btnExportKeys" onclick="exportProfiles()" disabled>导出密钥备份（必须）</button>
           <button type="button" class="btn-ghost btn-sm" onclick="document.getElementById('keyFile').click()">导入已有备份</button>
@@ -3711,7 +3732,7 @@ function importProfiles(input){
   const f=input&&input.files&&input.files[0];
   if(!f) return;
   const rd=new FileReader();
-  rd.onload=()=>{
+  rd.onload=async()=>{
     try{
       const obj=JSON.parse(String(rd.result||'{}'));
       const incoming=Array.isArray(obj.profiles)?obj.profiles:(Array.isArray(obj)?obj:null);
@@ -3731,6 +3752,16 @@ function importProfiles(input){
         }
         persistRespKeys(rk);
       }
+      /* 导入后把内存里的密钥对齐到最新一条档案：否则"导入成功但内存还是空的/旧的"，
+         贴身解密时会用错钥匙。 */
+      try{
+        const latest=arr.slice().sort((a,b)=>(b.ts||0)-(a.ts||0))[0];
+        if(latest&&latest.jwk){
+          const priv=await crypto.subtle.importKey('jwk',latest.jwk,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+          A_kp={privateKey:priv};
+          A_self=latest.self; A_req=latest.req; A_contact=latest.contact;
+        }
+      }catch(e){}
       refreshProfileBar();
       setProfileHint('已导入 '+added+' 份发布档案、'+addedB+' 份回应密钥');
     }catch(e){ setProfileHint('导入失败：'+zhErr(e,'文件不是有效的密钥备份'),true); }
@@ -3752,20 +3783,24 @@ function exportGateOpen(){
 function updateExportGate(){
   const step=$('exportStep'), done=$('exportDone');
   const arr=loadProfiles();
-  if(!arr.length){ if(step) step.style.display='none'; if(done) done.style.display='none'; return; }
+  const show=(id,v)=>{ const el=$(id); if(el) el.style.display=v; };
+  if(!arr.length){
+    /* 无档案：这正是最需要「导入备份」的时刻，不能把导入入口连同容器一起藏掉。
+       只保留导入按钮，隐掉「导出」相关与"这一步不能跳过"的说明。 */
+    if(step) step.style.display='block';
+    if(done) done.style.display='none';
+    show('exportIntro','none'); show('btnExportKeys','none'); show('exportGate','none');
+    show('noProfileNote','block');
+    try{ refreshHandoffEntry(); }catch(e){}
+    return;
+  }
+  show('exportIntro',''); show('btnExportKeys',''); show('exportGate','');
+  show('noProfileNote','none');
   const need=!exportGateOpen();
   if(step) step.style.display=need?'block':'none';
   if(done) done.style.display=need?'none':'block';
-  /* 锁定下一步 */
-  const g=$('btnGo7'), hint=$('go7Hint');
-  if(need&&s1Ready){
-    if(g) g.disabled=true;
-    if(hint){ hint.style.display='inline'; hint.textContent='请先完成第 2 步：导出密钥备份'; }
-  }
-  if(!need&&s1Ready){
-    if(g) g.disabled=false;
-    if(hint) hint.style.display='none';
-  }
+  /* 锁定下一步（判定集中在 refreshHandoffEntry，避免两处逻辑打架） */
+  try{ refreshHandoffEntry(); }catch(e){}
 }
 /* 刷新「我回应过的人」列表 */
 function refreshS2Log(){
@@ -4246,6 +4281,52 @@ function lockedNow(){ return Date.now()<lockUntil||hardLocked; }
 const STEP_NAMES=['了解契合码','我的信息','性格测评','我的要求','现实评估','生成序列 S1','匹配握手','说明与资料'];
 let cur=1, s1Ready=false;
 
+/* 本机是否有"能解密对方码"的凭据——有就允许回到匹配握手（隔天回来/换设备导入后都能回去）。
+   依据都是现成的 localStorage：发布档案（解 S2）、回应密钥或台账（解 S3）。 */
+function canEnterScreen7(){
+  try{
+    if(loadProfiles().length) return true;
+    if(loadRespKeys().length) return true;
+    if(loadS2Log().length) return true;
+  }catch(e){}
+  return false;
+}
+/* 「进入匹配握手」按钮与提示的唯一判定源（避免和 updateExportGate 各写一套） */
+function refreshHandoffEntry(){
+  const g=$('btnGo7'), hint=$('go7Hint');
+  if(!g) return;
+  const canEnter=(s1Ready||canEnterScreen7());
+  if(!canEnter){
+    g.disabled=true;
+    if(hint){ hint.style.display='inline'; hint.textContent='先生成 S1，才能进入匹配握手'; }
+    return;
+  }
+  /* 刚生成过（本会话）才强制先导出；隔天回来/导入后不再拿导出状态拦人，
+     否则"私钥明明还在却进不去"——正是要修的那个死结。 */
+  let need=false;
+  try{ need = s1Ready && !exportGateOpen(); }catch(e){}
+  g.disabled=need;
+  if(hint){
+    if(need){ hint.style.display='inline'; hint.textContent='请先完成第 2 步：导出密钥备份'; }
+    else hint.style.display='none';
+  }
+}
+/* 被门控拦下时不静默：落到首页并把原因与两个动作摆出来 */
+function handoffBlocked(){
+  try{
+    const box=$('handoffHint');
+    if(box) box.style.display='block';
+    if(cur!==1){ goTo(1); }
+    if(box){ try{ box.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){} }
+  }catch(e){}
+}
+/* 首页直达：我收到对方的码了 → 进屏7 并定位到「我是回应方」区 */
+function resumeHandoff(){
+  if(!s1Ready && !canEnterScreen7()){ handoffBlocked(); return; }
+  goTo(7);
+  try{ focusZone('zoneResponder'); }catch(e){}
+}
+
 function updateStepper(){
   document.querySelectorAll('nav.stepper .step').forEach(el=>{
     const i=+el.dataset.step;
@@ -4254,7 +4335,7 @@ function updateStepper(){
     el.classList.toggle('current',i===cur);
     el.classList.toggle('done',i<cur);
     dot.textContent = i<cur ? '✓' : i;
-    const clickable = i<=cur || i===8 || (i===7&&s1Ready);
+    const clickable = i<=cur || i===8 || (i===7&&(s1Ready||canEnterScreen7()));
     btn.disabled=!clickable;
     if(!clickable){btn.title='请先完成前面的步骤';}else{btn.removeAttribute('title');}
   });
@@ -4263,12 +4344,13 @@ function updateStepper(){
 }
 function goTo(n){
   if(n<1||n>9)return;
-  if(n===7&&!s1Ready)return;
+  if(n===7&&!s1Ready&&!canEnterScreen7()){ handoffBlocked(); return; }
   cur=n;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   $('screen'+n).classList.add('active');
   if(n===5){prefillCal();renderPcard();}
   if(n===6)renderSummary();
+  if(n===4){try{refreshContactHint();}catch(e){}}
   if(n===7){try{updateZoneGate();}catch(e){}}
   updateStepper();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -4591,13 +4673,19 @@ function validateScreen2(){
   const h=optionalNum('p_height','err_p_height');
   return a&&h;
 }
+/* 联系方式为空提示：加载、进入屏4、输入时都要能刷新（原实现只在点「下一步」时算） */
+function refreshContactHint(){
+  const inp=$('p_contact'), h=$('hint_contact');
+  if(!inp||!h) return;
+  h.classList.toggle('show', String(inp.value||'').trim()==='');
+}
 function validateScreen4(){
   /* r_income 已是 select，不再做数字校验（UI_SPEC §9.2 坑 3） */
   const a=optionalNum('r_ageMin','err_r_ageMin');
   const b=optionalNum('r_ageMax','err_r_ageMax');
   const bad=(a&&b)&&(+$('r_ageMin').value>+$('r_ageMax').value);
   $('err_ageRange').classList.toggle('show',bad);
-  $('hint_contact').classList.toggle('show',$('p_contact').value.trim()==='');
+  refreshContactHint();
   return a&&b&&!bad;
 }
 /* 统一的"跑拦截 → 处理熔断"流程 */
@@ -5561,8 +5649,11 @@ function zoneRoleGuard(raw,expect,zone){
 function updateZoneGate(){
   const btn=$('btnResolveS2'), hint=$('zoneBHint');
   if(!btn||!hint) return;
+  /* 导出闸门只在「本会话刚生成过 S1」时生效（这时密钥还没备份，丢了就废）。
+     隔天回来 / 换设备导入后 s1Ready=false：密钥来自 localStorage 或备份文件，
+     再拿导出状态把「解密」按钮禁用，就等于"私钥明明在却不许用"——那正是要修的 P0。 */
   let need=false;
-  try{ need=!exportGateOpen(); }catch(e){ need=false; }
+  try{ need = s1Ready && !exportGateOpen(); }catch(e){ need=false; }
   btn.disabled=need;
   hint.style.display=need?'block':'none';
 }
@@ -5653,23 +5744,29 @@ async function uiResolveS2(){
   const btn=$('btnResolveS2');
   setBusy(btn,'解密中…');
   try{
-    /* 优先用当前会话的密钥；若已刷新（A_kp 丢失），从本机档案里找匹配的私钥 */
+    /* 先用当前会话的密钥试；解不开（例如刷新后又重新生成过 S1，A_kp 已换成新密钥）时
+       **必须回落到本机历史档案逐个试** —— 旧私钥还躺在 localStorage 里，不能因为
+       "内存里有密钥"就直接判死，否则"隔天回来解不开"永远无解。 */
     if(A_kp){
-      const r=await resolveS2($('in_s2').value);
-      postResolveUI(r);
-    }else{
-      const hit=await findProfileForS2($('in_s2').value);
-      if(!hit){
-        showFieldErr('err_in_s2',loadProfiles().length
-          ? '这份回应码与本机保存的发布档案都不匹配。请确认对方回应的是你发出去的那一版码；或先导入密钥备份文件。'
-          : '本机没有保存发布档案，无法解密。请先在第 6 步生成 S1（会自动保存档案），或导入密钥备份文件。');
+      try{
+        const r=await resolveS2($('in_s2').value);
+        postResolveUI(r);
         return;
+      }catch(e1){
+        /* 内存密钥不对：继续走历史档案兜底 */
       }
-      A_kp={privateKey:hit.priv};
-      A_self=hit.rec.self; A_req=hit.rec.req; A_contact=hit.rec.contact;
-      const r=await resolveS2($('in_s2').value,hit.priv,hit.rec.self,hit.rec.req,hit.rec.contact);
-      postResolveUI(r);
     }
+    const hit=await findProfileForS2($('in_s2').value);
+    if(!hit){
+      showFieldErr('err_in_s2',loadProfiles().length
+        ? '这份回应码与本机保存的发布档案都不匹配。请确认对方回应的是你发出去的那一版码；或先导入密钥备份文件。'
+        : '本机没有保存发布档案，无法解密。请先在第 6 步生成 S1（会自动保存档案），或导入密钥备份文件。');
+      return;
+    }
+    A_kp={privateKey:hit.priv};
+    A_self=hit.rec.self; A_req=hit.rec.req; A_contact=hit.rec.contact;
+    const r=await resolveS2($('in_s2').value,hit.priv,hit.rec.self,hit.rec.req,hit.rec.contact);
+    postResolveUI(r);
   }catch(e){
     showFieldErr('err_in_s2',zhErr(e,'解密失败：此序列不是发给当前身份的'));
   }finally{
@@ -5831,6 +5928,8 @@ $('p_contact').addEventListener('input',()=>$('hint_contact').classList.remove('
   });
   try{ applyLang(); }catch(e){}
   try{ refreshProfileBar(); }catch(e){}
+  try{ refreshContactHint(); }catch(e){}
+  try{ refreshHandoffEntry(); }catch(e){}
   if(document.addEventListener) document.addEventListener('keydown',e=>{
     const m=$('s2Modal');
     if(!m||m.style.display==='none') return;
